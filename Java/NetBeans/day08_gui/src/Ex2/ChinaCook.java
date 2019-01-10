@@ -9,10 +9,11 @@ package Ex2;
  *
  * @author younghoonkim
  */
+//ChinaCook selects random food, and generate result message. 
 public class ChinaCook extends Cook implements OrderInter{
     
-    String[] order={"훠궈","마라탕","팔보채"};
-    String nation="중국";
+    foods={"훠궈","마라탕","팔보채"};
+    nation="중국";
     
     public String order(){
        return randomOrder(order,nation);

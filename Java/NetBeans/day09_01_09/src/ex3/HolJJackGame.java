@@ -17,28 +17,23 @@ public class HolJJackGame extends javax.swing.JFrame {
     /**
      * Creates new form HolJJackGame
      */
-    private ServiceInter service;
-    private CardLayout card;
+    
+    //Service object mainly process business logic
+    private final ServiceInter service;
+    //CardLayout to shift cards
+    private final CardLayout card;
+    //To save informations in format of gameInfo.
+    private GameInfo gameinfo;
     
     public HolJJackGame() {
         
         initComponents();
+        //object initialize
         service=new Service();
         card=(CardLayout) pp.getLayout();
     }
-    private void setGamePlay(int oddEven){
-       
-        if(!service.oddEven(oddEven)){
-           JOptionPane.showMessageDialog(this, "Not Enough Money!");
-        }
-        else{
-             totalNum.setText(Integer.toString(service.getTotal()));
-             winNum.setText(Integer.toString(service.getWin()));
-             moneyLeft.setText(String.valueOf(service.getMoney()));
-        }
-        
-        
-    }
+    
+    
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -312,8 +307,10 @@ public class HolJJackGame extends javax.swing.JFrame {
                 money=Integer.parseInt(moneyS);
                 if(!name.equals("")){
                     namev.requestFocus();
-                    service.setInfo(name, money);
                     
+                    //initialize user information
+                    service.setInfo(name, money);
+                    //initialize card2 window
                     totalNum.setText("0");
                     winNum.setText("0");
                     moneyLeft.setText(String.valueOf(money));
@@ -332,19 +329,42 @@ public class HolJJackGame extends javax.swing.JFrame {
 
     private void oddBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_oddBtnActionPerformed
         // TODO add your handling code here:
+        //oddnumber represents 1.
         setGamePlay(1);
             
     }//GEN-LAST:event_oddBtnActionPerformed
 
     private void evenBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_evenBtnActionPerformed
         // TODO add your handling code here:
+        //evennumber represents 1.
         setGamePlay(0);
     }//GEN-LAST:event_evenBtnActionPerformed
 
+
+//method gets executed every time user click odd/even button
+    private void setGamePlay(int oddEven){
+       
+        //if money is enough to play
+        if(!service.gamePlay(oddEven)){
+           JOptionPane.showMessageDialog(this, "Not Enough Money!");
+        }
+        else{
+        //saves gameinfo from service to gameinfo to display info to window
+        //changes information shown on card2 window. 
+            gameinfo=service.getGameInfo();
+             totalNum.setText(Integer.toString(gameinfo.getTotal()));
+             winNum.setText(Integer.toString(gameinfo.getWin()));
+             moneyLeft.setText(String.valueOf(gameinfo.getMoney()));
+        }
+        
+        
+    }
     private void quitBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quitBtnActionPerformed
         // TODO add your handling code here:
-        if(service.getCount()>1){
-             JOptionPane.showMessageDialog(this, "최소플레이횟수가 "+(service.getCount()-1)+"회 남았습니다.");
+        
+        //If user didn't play minimum rounds of play. 
+        if(gameinfo.getCount()>1){
+             JOptionPane.showMessageDialog(this, "최소플레이횟수가 "+(gameinfo.getCount()-1)+"회 남았습니다.");
         }
         else{
               
@@ -363,7 +383,7 @@ public class HolJJackGame extends javax.swing.JFrame {
 
     private void regameBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_regameBtnActionPerformed
         // TODO add your handling code here:
-        service.init();
+        service.init(5);
         namev.setText("");
         moneyv.setText("");
         card.show(pp, "c1");

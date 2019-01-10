@@ -9,27 +9,21 @@ package ex3;
  *
  * @author younghoonkim
  */
-//Interface of a class for 
+//Interface of a class for Service Class
+//Defines methods to proceed the game. 
 public interface ServiceInter {
     
     public void setInfo(String name, int money);
             
-            
-    public boolean oddEven(int num);
+    //Defines how the game proceed
+    public boolean gamePlay(int num);
+    //Calculate winrate and return in String. 
     public String winRate();
+    //Determines whether winrate is high enough for a prize, return prize String. 
     public String prize();
-    public void init();
+    //initialize gameinfo
+    public void init(int count);
     
-    public int getTotal();
-    public void setTotal(int total) ;
-    public int getWin();
-    public void setWin(int win);
-    public double getWinRate();
-    public void setWinRate(double winRate);
-     public int getMoney();
-     public void setMoney(int money);
-     public String getName();
-     public void setName(String name);
-     public int getCount();
-      public void setCount(int count);
+    //Returns saved gameinfo
+    public GameInfo getGameInfo();
 }

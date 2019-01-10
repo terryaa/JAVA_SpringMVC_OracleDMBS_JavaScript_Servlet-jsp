@@ -11,6 +11,7 @@ import Ex2.Cook;
  *
  * @author younghoonkim
  */
+//KoreaCook selects random food, and generate result message. 
 public class KoreaCook extends Cook implements OrderInter {
     
     

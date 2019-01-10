@@ -8,14 +8,12 @@ package ex3;
 /**
  *
  * @author younghoonkim
+ * @Prize class has one method.
+ * @prize take winrate as a parameter,
+ * returns a congratulations message when winrate is higher then 70. 
  */
-public class Prize {
-    public String prize(double winRate,String name){
-        if((winRate)>70){
-            return name+ "! Congratulation!!You win the prize!";
-        }
-        else
-            return name+"! Failed to win the prize.. try next time";
-    }
+
+public interface Prize {
+    public String prize(double winRate,String name);
     
 }

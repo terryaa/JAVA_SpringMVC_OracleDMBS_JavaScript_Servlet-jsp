@@ -9,6 +9,7 @@ package ex3;
 /**
  *
  * @author younghoonkim
+ * GameInfo class saves essential information generated or changed during the game. 
  */
 public class GameInfo {
     protected int total=0;
@@ -16,8 +17,13 @@ public class GameInfo {
     protected double winRate=0;
     protected int money=0;
     protected String name="";
-    protected int count=8;
+    protected int count=5;
 
+    public GameInfo(){};
+    public GameInfo getGameInfo(){
+        return this;
+    }
+    
     public int getTotal() {
         return total;
     }

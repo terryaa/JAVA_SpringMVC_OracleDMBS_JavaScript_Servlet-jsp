@@ -12,11 +12,13 @@ import Ex2.Cook;
  *
  * @author younghoonkim
  */
+//IndoCook selects random food, and generate result message. 
 public class IndoCook extends Cook implements OrderInter{
     
     String[] order={"커리","난","탄두리"};
     String nation="인도";
     
+    @Override
     public String order(){
        return randomOrder(order,nation);
     }

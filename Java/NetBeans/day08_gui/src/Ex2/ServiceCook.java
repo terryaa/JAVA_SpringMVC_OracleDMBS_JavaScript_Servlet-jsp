@@ -10,6 +10,10 @@ package Ex2;
  *
  * @author younghoonkim
  */
+
+//Service runs Cook's children depending on user's button input. 
+//Them returns a message containing random food,nation, name.
+//
 public class ServiceCook implements ServiceInter{
     
     public String service(int num,String name){

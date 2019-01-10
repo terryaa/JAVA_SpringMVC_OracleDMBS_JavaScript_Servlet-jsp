@@ -13,8 +13,6 @@ package Ex2;
 //Every cook uses this method to get a random food, 
 //and generate result String including nation, food.
 public class Cook {
-    protected String[] foods;
-    protected String nation;
     
     public String randomOrder(String foods[],String nation){
         int size=foods.length;

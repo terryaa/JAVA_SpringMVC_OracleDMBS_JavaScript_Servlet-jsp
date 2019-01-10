@@ -21,7 +21,6 @@ public class LinkedListExample {
         List<String> list1;
         //List<String> list2;
         
-      list1=new ArrayList<>();
         //list2=new LinkedList<>();
         System.out.print("1 or 2 를 입력하세요 : ");
         Scanner sc=new Scanner(System.in);
@@ -45,6 +44,7 @@ public class LinkedListExample {
         long endTime;
         
         startTime=System.nanoTime();
+        
         for(int i=0;i<100000;i++){
             list.add(String.valueOf(i));
         }

@@ -31,8 +31,8 @@ public class Ex2_MemberJoin implements Ex2_MemberJoinInter{
     
     @Override
      public void setAddMember(Map<String,String> map){
-            if(!checkValue()){ //현재클래스의 핵심기능일 수 있다
-            System.out.println("회원가입정보누락");
+            if(!checkValue()){ //this might be the main function of this class
+            System.out.println("There's no member information");
             }
               list.add(map);
               

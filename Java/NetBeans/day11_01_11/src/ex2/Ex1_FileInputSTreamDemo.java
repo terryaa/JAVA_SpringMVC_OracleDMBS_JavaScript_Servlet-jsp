@@ -46,7 +46,7 @@ public class Ex1_FileInputSTreamDemo {
                try {
                    fis.close();
                } catch (IOException ex) {
-                   Logger.getLogger(Ex1_FileInputSTreamDemo.class.getName()).log(Level.SEVERE, null, ex);
+                  ex.printStackTrace();
                }
            }
        }

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 import java.io.File;
+import javax.swing.JOptionPane;
 /**
  *
  * @author younghoonkim
@@ -101,7 +102,11 @@ public class File_GUI extends javax.swing.JFrame {
 
         // TODO add your handling code here:
         File f=new File(searchv.getText());
-        File[] files=f.listFiles();
+        if(!f.isFile()){
+            JOptionPane.showMessageDialog(this, "Wrong Path!");
+        }
+        else{
+            File[] files=f.listFiles();
         for(File e : files){
             if(e.isDirectory()){
                 resultArea.append("[Directory]=>");
@@ -114,6 +119,10 @@ public class File_GUI extends javax.swing.JFrame {
             }
             resultArea.append(e.getAbsolutePath()+"\n");
         }
+        
+        }
+        
+        
                 
         
         

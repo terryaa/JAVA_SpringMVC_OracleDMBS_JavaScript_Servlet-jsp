@@ -77,9 +77,6 @@ public class Ex2_Mock {
         System.out.println(sb);
     }
     
-    public void printMember(){
-        
-    }
 
     
 }

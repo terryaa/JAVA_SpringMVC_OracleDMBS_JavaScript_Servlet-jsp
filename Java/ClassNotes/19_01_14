@@ -1,0 +1,52 @@
+Chapter 18
+18.5.2 성능 향상 보조스트림
+—> Buffered 클래스류.
+장치직접접근 불가하다. 네트워크 혹은 프로그램?을이용하여야한다.
+입력한대로 뽑아라..
+PrintWriter 이 좀 중요함. 
+18.5.5 객체 입출력 보조 스트림
+Object Stream
+Output->직렬화
+Input->역직렬화.
+Serializable 인터페이스는 직렬화가 가능한지 검사를 하고, Stream으로 내보낼수있다. 
+* Static, transient 는 직렬화가 되지 않는다.-->얘네만빼고나머지가되는거임. 
+* 직렬화는 필드만 포함, 생성자및메소드는 포함되지않는다. 
+BufferReader을 사용할때
+New FileReader가 아니라 new InputerStream(new FileInputStream)) 을 사용해야하는이유?
+읽어들이는 파일을 읽을때 바이트 스트림을 문자단위로읽어야할때가있다.
+이런 형태를 Bridge Stream(InputStreamReader)가 bridgestream.이다.이라한다. ByteStream으로 읽어서 문자스트림인 BufferReader를 사용하여 버퍼링한뒤 자료를읽어들인다. 
+따라서, InputeStreamReader는 FileInputStream이 반환하는 바이트 스트림을 BufferReader가 읽을수있게 문자 스트림으로 변환하여주는 Bridge Stream이라한다. 
+**** System.in은 리턴하는값이 inputstream이다.
+****Scanner는 inputStream이 가져오는 바이트스트림을 문자스트림으로 바꿔주는 역할을한다.
+Ex4 : URL 크래스는 HTML파일을 가져옴과동시에 openStream()실행시 inputStream을 세션에 열어둔다. 이 파일은 /var/temp  윈도우는 temporary라는곳에 저장된다.  
+
+1044p-> 코드를 객체지향적으로 바꿔보기. close,flush같은경우 try구문의 finally에넣는것이좋다.
+PrintWriter 
+OutputStream을 인자로하는 생성자를 보면, 자동으로 OutputStream을 StreamWriter를 불러
+버퍼에까지넣는것을 볼수있다. Scanner도 이런식으로작동.
+따라서, PrintWriter는 브릿지역할과 버퍼생성을 내부적으로 구현해놓고있다.
+원래는 이것만있다가 스캐너가등장한다.
+Scanner
+
+
+* Implements Iterator : 반복자를 사용할수있다.(hasNext()
+* 브릿지,버퍼를 내부적으로 캡슐화. (InputStreamReader 가 Bridge, Scanner생성자에서 버퍼생성. 
+IO에서 문제 비비꼬아서 적어도3문제
+
+Chapter12 Thread
+process는 껍데기?
+하나의 프로세스의 최소단위는 쓰레드.
+데몬 : 리눅스는 백그라운드, 자바는 백스레드?
+하나의 프로세스는 포함하고있는 모든 thread 가 종료되어야 프로세스가종료된다. 
+Pull: 어느시점으로 스레드를 합치는것과비슷.
+class에서 thread를 사용하는 방법:
+1. thread클래스를 상속받는다(extends)  /  run메소드를 반드시 구현해야한다. 쓰레드에서 동작할 내용을 run메소드안에 구현한다. 
+2. 익명 내부클래스로 구현하는방법
+3. 
+* Thread들은 순서가없고, race condition을 가지며, 이를 동기화해주기위해서 Mutex가 쓰인다. 
+Thread의 run메소드를 스레드로 실행시키기위해선 .start()를 사용해야만한다.
+추상클래스는 new 를통한생성불가능
+추상클래스를  추상메소드가없어도 추상클래스로 만드는 이유?
+->무조건 상속을 받아서 사용하는 용도로 추상클래스를 만들려고.
+Thread는 추상클래스가아닌 일반클래스(new Thread()가 사용가능)
+.start()는 run()을 호출하는 용도로사용. .start()는 새로운 stack을 만들어 run()메소드를 스택에올려놓게된다. 

@@ -23,6 +23,7 @@ public class Ex1_FileReWrDemo {
     
     private String path;
     public Ex1_FileReWrDemo(){
+        //This path will not apply in Windows. 
         path="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC/Java/NetBeans/day"
                 + "12_01_14/src/ex1/memo.txt";
     }

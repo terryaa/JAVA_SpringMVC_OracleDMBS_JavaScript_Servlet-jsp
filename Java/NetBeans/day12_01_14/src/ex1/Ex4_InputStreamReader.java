@@ -10,8 +10,10 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,10 +30,10 @@ public class Ex4_InputStreamReader {
            String path2="https://search.naver.com/search.naver?where=news&sm=tab_jum&query=%EB%9D%BC%EC%9D%B4%ED%84%B0";
         try {
             br=new BufferedReader(new InputStreamReader(new FileInputStream(path)));
-            
+            Scanner sc;
             //There's need to read ByteStream in form of String stream.
             //In this case we use BridgeStream to change bytestream to stringstream.
-            //Practice : use  Scanner API and create class Ex5_ScannerDemo, which
+            //**Practice : use  Scanner API and create class Ex5_ScannerDemo, which
             //has same functions as this class.
             String str=null;
             while((str=br.readLine())!=null){
@@ -47,7 +49,7 @@ public class Ex4_InputStreamReader {
         try {
             url = new URL(path2);
             br=new BufferedReader(new InputStreamReader(url.openStream(),"euc-kr"));
-            
+            PrintWriter prit;
             String str=null;
             while((str=br.readLine())!=null){
                 System.out.println(str);

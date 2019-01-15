@@ -30,9 +30,12 @@ public class MyCanVasMock extends JFrame{
 
             @Override
             public void paint(Graphics g) {
-                g.drawArc(x, y, 100, 100, 0, arcNUm);
+                g.setColor(Color.red);
+                g.drawArc(100, 100, 100, 100, 0, arcNUm);
                 //super.paint(g); //To change body of generated methods, choose Tools | Templates.
             }
+            
+            
             
         };
         add(can);

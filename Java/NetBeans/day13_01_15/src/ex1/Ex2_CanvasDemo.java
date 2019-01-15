@@ -5,17 +5,59 @@
  */
 package ex1;
 
+import java.awt.Canvas;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 /**
  *
  * @author younghoonkim
  */
-public class Ex2_CanvasDemo extends javax.swing.JFrame {
+public class Ex2_CanvasDemo extends javax.swing.JFrame implements Runnable {
 
+    private int sequence=0;
+    private int arcNUm=0;
+    private int arcNUm2=0;
     /**
      * Creates new form Ex2_CanvasDemo
      */
     public Ex2_CanvasDemo() {
         initComponents();
+        Thread t=new Thread(this);
+        sequence=1;
+        t.start();
+//        try {
+//            t.join();
+//        } catch (InterruptedException ex) {
+//            Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        sequence=2;
+//        t=new Thread(this);
+//        t.start();
+        t=new Thread(new Thread(){
+            @Override
+            public void run(){
+                for(int i=0;i<370;i+=10){
+            
+            try {
+                arcNUm2=i;
+                System.out.println("circle2:"+arcNUm2);
+                Thread.sleep(100);
+                //repaint  = update() / paint()
+                canvas3.repaint();
+            }
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            catch (InterruptedException ex) {
+                Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+                
+            }
+        });
+        t.start();
+       
     }
 
     /**
@@ -27,17 +69,56 @@ public class Ex2_CanvasDemo extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        canvas1 = new java.awt.Canvas(){
+            @Override
+            public void update(Graphics g) {
+                //repaint() -> JVM -> update() -> paint()
+                paint(g);
+                //super.update(g); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void paint(Graphics g) {
+                g.setColor(Color.red);
+                g.fillArc(100, 100, 100, 100, 0, arcNUm);
+                //super.paint(g); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+        canvas3 = new java.awt.Canvas(){
+            @Override
+            public void update(Graphics g) {
+                //repaint() -> JVM -> update() -> paint()
+                paint(g);
+                //super.update(g); //To change body of generated methods, choose Tools | Templates.
+            }
+
+            @Override
+            public void paint(Graphics g) {
+                g.setColor(Color.red);
+                g.fillArc(100, 100, 100, 100, 0, arcNUm2);
+                //super.paint(g); //To change body of generated methods, choose Tools | Templates.
+            }
+        };
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setSize(new java.awt.Dimension(400, 400));
+
+        canvas1.setSize(new java.awt.Dimension(400, 400));
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(canvas3, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addComponent(canvas3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addComponent(canvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -79,5 +160,46 @@ public class Ex2_CanvasDemo extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private java.awt.Canvas canvas1;
+    private java.awt.Canvas canvas3;
     // End of variables declaration//GEN-END:variables
+
+    @Override
+    public void run() {
+        if(sequence==1){
+            for(int i=0;i<370;i+=10){
+            
+            try {
+                arcNUm=i;
+                System.out.println("circle1:"+arcNUm);
+                Thread.sleep(100);
+                //repaint  = update() / paint()
+                canvas1.repaint();
+            }
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            catch (InterruptedException ex) {
+                Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+            
+        }
+        else{
+            for(int i=0;i<370;i+=10){
+            
+            try {
+                arcNUm2=i;
+                System.out.println("circle2:"+arcNUm2);
+                Thread.sleep(100);
+                //repaint  = update() / paint()
+                canvas3.repaint();
+            }
+            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            catch (InterruptedException ex) {
+                Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        }
+            
+        
+    }
 }

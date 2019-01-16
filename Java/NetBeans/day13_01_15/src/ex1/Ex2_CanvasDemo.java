@@ -15,49 +15,79 @@ import java.util.logging.Logger;
  *
  * @author younghoonkim
  */
-public class Ex2_CanvasDemo extends javax.swing.JFrame implements Runnable {
+public class Ex2_CanvasDemo extends javax.swing.JFrame  {
 
     private int sequence=0;
     private int arcNUm=0;
-    private int arcNUm2=0;
+    private int x=100;
+    private int arcNum2=0;
+
+    
+    public int getX(){
+        return x;
+    }
+    public void setX(int x){
+        this.x=x;
+    }
+    public int getArcNUm() {
+        return arcNUm;
+    }
+
+    public void setArcNUm(int arcNUm) {
+        this.arcNUm = arcNUm;
+    }
     /**
      * Creates new form Ex2_CanvasDemo
      */
     public Ex2_CanvasDemo() {
-        initComponents();
-        Thread t=new Thread(this);
-        sequence=1;
-        t.start();
+            initComponents();
+            Thread th=new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    for(int i=0;i<370;i+=10){
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        arcNUm=i;
+                        System.out.println("circle"+arcNUm);
+                        canvas1.repaint();
+                    }
+                }
+            });
+            th.start();
+        try {
+            th.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+            th=new Thread(new Runnable() {
+
+                @Override
+                public void run() {
+                    for(int i=0;i<370;i+=10){
+                        System.out.println("circle"+i);
+                        try {
+                            Thread.sleep(100);
+                        } catch (InterruptedException ex) {
+                            Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+                        }
+                        arcNum2=i;
+                        canvas2.repaint();
+                    }
+                   
+                }
+            });
+            th.start();
 //        try {
-//            t.join();
+//            th.join();
 //        } catch (InterruptedException ex) {
 //            Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
 //        }
-//        sequence=2;
-//        t=new Thread(this);
-//        t.start();
-        t=new Thread(new Thread(){
-            @Override
-            public void run(){
-                for(int i=0;i<370;i+=10){
-            
-            try {
-                arcNUm2=i;
-                System.out.println("circle2:"+arcNUm2);
-                Thread.sleep(100);
-                //repaint  = update() / paint()
-                canvas3.repaint();
-            }
-            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            catch (InterruptedException ex) {
-                Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-                
-            }
-        });
-        t.start();
-       
+        
+        
     }
 
     /**
@@ -80,11 +110,12 @@ public class Ex2_CanvasDemo extends javax.swing.JFrame implements Runnable {
             @Override
             public void paint(Graphics g) {
                 g.setColor(Color.red);
-                g.fillArc(100, 100, 100, 100, 0, arcNUm);
+                g.drawArc(x, 100, 100, 100, 0, arcNUm);
                 //super.paint(g); //To change body of generated methods, choose Tools | Templates.
             }
         };
-        canvas3 = new java.awt.Canvas(){
+        jButton1 = new javax.swing.JButton();
+        canvas2 = new java.awt.Canvas(){
             @Override
             public void update(Graphics g) {
                 //repaint() -> JVM -> update() -> paint()
@@ -95,34 +126,67 @@ public class Ex2_CanvasDemo extends javax.swing.JFrame implements Runnable {
             @Override
             public void paint(Graphics g) {
                 g.setColor(Color.red);
-                g.fillArc(100, 100, 100, 100, 0, arcNUm2);
+                g.drawArc(x, 100, 100, 100, 0, arcNum2);
                 //super.paint(g); //To change body of generated methods, choose Tools | Templates.
             }
         };
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(new java.awt.Dimension(400, 400));
+        setPreferredSize(new java.awt.Dimension(512, 700));
+        setSize(new java.awt.Dimension(500, 500));
 
         canvas1.setSize(new java.awt.Dimension(400, 400));
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, 345, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(canvas3, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jButton1))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(canvas1, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(canvas2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(canvas3, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-            .addComponent(canvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(canvas1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(canvas2, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jButton1)
+                .addContainerGap())
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        try {
+            // TODO add your handling code here:
+            Thread th1=new Thread(new Ex2_Canvas(this));
+            Thread th2=new Thread(new Ex2_Canvas(this));
+            
+            th1.start();
+            th1.join();
+            th2.start();
+            th2.join();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -161,45 +225,18 @@ public class Ex2_CanvasDemo extends javax.swing.JFrame implements Runnable {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Canvas canvas1;
-    private java.awt.Canvas canvas3;
+    private java.awt.Canvas canvas2;
+    private javax.swing.JButton jButton1;
     // End of variables declaration//GEN-END:variables
 
-    @Override
-    public void run() {
-        if(sequence==1){
-            for(int i=0;i<370;i+=10){
-            
-            try {
-                arcNUm=i;
-                System.out.println("circle1:"+arcNUm);
-                Thread.sleep(100);
-                //repaint  = update() / paint()
-                canvas1.repaint();
-            }
-            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            catch (InterruptedException ex) {
-                Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-            
-        }
-        else{
-            for(int i=0;i<370;i+=10){
-            
-            try {
-                arcNUm2=i;
-                System.out.println("circle2:"+arcNUm2);
-                Thread.sleep(100);
-                //repaint  = update() / paint()
-                canvas3.repaint();
-            }
-            //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-            catch (InterruptedException ex) {
-                Logger.getLogger(Ex2_CanvasDemo.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-        }
-            
-        
+    public Canvas getCanvas1() {
+        return canvas1;
     }
+
+    public void setCanvas1(Canvas canvas1) {
+        this.canvas1 = canvas1;
+    }
+    
+
+
 }

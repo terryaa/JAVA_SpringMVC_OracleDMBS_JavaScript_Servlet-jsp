@@ -14,20 +14,20 @@ import java.util.logging.Logger;
  *
  * @author younghoonkim
  */
-public class Ex1_SocketClientDemo {
+public class Ex1_SocketClientDemo_1 {
     private Socket s;
-    public Ex1_SocketClientDemo(String host,int port){
+    public Ex1_SocketClientDemo_1(String host,int port){
         try {
             s=new Socket(host,port);
             System.out.println("succeed");
         } catch (IOException ex) {
             System.out.println("server connection error");
-            Logger.getLogger(Ex1_SocketClientDemo.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Ex1_SocketClientDemo_1.class.getName()).log(Level.SEVERE, null, ex);
         }
         
     }
     public static void main(String[] args) {
-        new Ex1_SocketClientDemo("192.168.0.110", 9999);
+        new Ex1_SocketClientDemo_1("192.168.0.110", 9999);
     }
     
 }

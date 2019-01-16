@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -95,9 +96,12 @@ public class Exam_ClientSocketDemo extends javax.swing.JFrame {
             //connect to server , receive requested data, and disconnect
             Socket s=new Socket("192.168.0.110", 9999);
             PrintWriter pw=new PrintWriter(s.getOutputStream(),true);
-            BufferedReader bis=new BufferedReader(new InputStreamReader(s.getInputStream()));
             pw.println(messagev.getText().trim());
+            
+            BufferedReader bis=new BufferedReader(new InputStreamReader(s.getInputStream()));
             String serverMessage=bis.readLine();
+//            Scanner sc=new Scanner(s.getInputStream());
+//            String serverMessage=sc.nextLine();
             reponsev.append(serverMessage+"\n");
             pw.close();
             s.close();

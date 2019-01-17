@@ -64,7 +64,6 @@ public class Exam_ServerSocketDemo_2 {
                     + "_01_16/src/ex1/client_no00.properties"));
             
             PrintWriter pw=new PrintWriter(os);
-            
             Scanner sc=new Scanner(is);
             String msg="";
             msg=sc.nextLine();
@@ -74,7 +73,7 @@ public class Exam_ServerSocketDemo_2 {
             
             String value=properties.getProperty(msg);
             if(value==null){
-                value="Unknow key value";
+                value="Unknown key value";
             }
             System.out.println("requested value:"+value);
             pw.println(value);

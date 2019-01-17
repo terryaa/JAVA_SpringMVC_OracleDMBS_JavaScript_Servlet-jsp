@@ -28,7 +28,7 @@ public class Ex1_ClientGUI extends javax.swing.JFrame {
         try {
             initComponents();
             //connect to server!
-            s=new Socket("localhost",9999);
+            s=new Socket("192.168.0.50",9999);
             pw=new PrintWriter(s.getOutputStream(),true);
         } catch (IOException ex) {
             Logger.getLogger(Ex1_ClientGUI.class.getName()).log(Level.SEVERE, null, ex);

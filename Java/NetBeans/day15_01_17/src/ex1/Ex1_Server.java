@@ -81,7 +81,7 @@ public class Ex1_Server {
     }
     public static void main(String[] args) {
         Ex1_Server server=new Ex1_Server();
-        server.execute();;
+        server.execute();
     }
     public void sendMessage(String clientMsg){
         //All client's sockets are saved in ArrayList.

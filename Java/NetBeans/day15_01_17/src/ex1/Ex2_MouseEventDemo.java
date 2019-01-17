@@ -26,7 +26,7 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
 
      private int arcNum=360;
     private int x=100,y=100;
-    private int r=50;
+    private int r=7;
     private Color col=Color.CYAN;
     private int token;
     

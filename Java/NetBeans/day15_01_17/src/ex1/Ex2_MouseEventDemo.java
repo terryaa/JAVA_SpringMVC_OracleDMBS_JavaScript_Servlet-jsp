@@ -12,8 +12,10 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import sun.util.locale.StringTokenIterator;
 
 
 /**
@@ -26,15 +28,23 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
     private int x=100,y=100;
     private int r=50;
     private Color col=Color.CYAN;
+    private int token;
     
     private Socket s;
+    private Socket s2;
     private PrintWriter pw;
     /**
      * Creates new form Ex2_MouseEventDemo
      */
     public Ex2_MouseEventDemo() {
-        initComponents();
-        
+         try {
+            initComponents();
+            //connect to server!
+            s=new Socket("localhost",9999);
+            pw=new PrintWriter(s.getOutputStream(),true);
+        } catch (IOException ex) {
+            Logger.getLogger(Ex1_ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
         new Thread(new Runnable(){
 
             @Override
@@ -44,6 +54,13 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
                 (new InputStreamReader(s.getInputStream()));
                     while(true){
                         //target.append(br.readLine()+"\n");
+                        StringTokenizer st=new StringTokenizer(br.readLine(),":");
+                        
+                        x=Integer.parseInt(st.nextToken());
+                        y=Integer.parseInt(st.nextToken());
+                        col = new Color(Integer.parseInt(st.nextToken()), true);
+                        canvas2.repaint();
+                        
                     }
                     //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 } catch (IOException ex) {
@@ -52,6 +69,33 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
             }
             
         }).start();
+        
+//        new Thread(new Runnable(){
+//
+//            @Override
+//            public void run() {
+//                try {
+//                    BufferedReader br=new BufferedReader
+//                (new InputStreamReader(s2.getInputStream()));
+//                    while(true){
+//                        //target.append(br.readLine()+"\n");
+//                        StringTokenizer st=new StringTokenizer(br.readLine(),":");
+//                        
+//                        x=Integer.parseInt(st.nextToken());
+//                        y=Integer.parseInt(st.nextToken());
+//                        col = new Color(Integer.parseInt(st.nextToken()), true);
+//                        canvas2.repaint();
+//                        
+//                    }
+//                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Ex1_ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
+//            
+//        }).start();
+        
+        
     }
 
     /**
@@ -65,7 +109,6 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         chColor = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
         canvas2 = new java.awt.Canvas(){
             @Override
             public void update(Graphics g) {
@@ -90,13 +133,6 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
             }
         });
 
-        jButton1.setText("jButton1");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
         canvas2.setBackground(new java.awt.Color(255, 255, 255));
         canvas2.addMouseMotionListener(new java.awt.event.MouseMotionAdapter() {
             public void mouseDragged(java.awt.event.MouseEvent evt) {
@@ -112,9 +148,7 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
                 .addContainerGap()
                 .addComponent(canvas2, javax.swing.GroupLayout.PREFERRED_SIZE, 276, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(chColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1))
+                .addComponent(chColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -122,10 +156,7 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(chColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(36, 36, 36)
-                        .addComponent(jButton1))
+                    .addComponent(chColor, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(canvas2, javax.swing.GroupLayout.PREFERRED_SIZE, 272, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
@@ -148,9 +179,10 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
         // TODO add your handling code here:
         x=evt.getX();
         y=evt.getY();
-        System.out.println(x+":"+y);
         canvas2.repaint();
         
+        pw.println(x+":"+y+":"+Integer.toString(col.getRGB()));
+        pw.flush();
     }//GEN-LAST:event_canvas2MouseDragged
 
     private void chColorActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chColorActionPerformed
@@ -162,16 +194,6 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
             col=null;
         }
     }//GEN-LAST:event_chColorActionPerformed
-
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-
-        try{
-        String items=(String) chColor.getSelectedItem();
-        col = (Color)Color.class.getField(items).get(null);
-        }catch(Exception e){
-            col=null;
-        }
-    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -211,7 +233,6 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private java.awt.Canvas canvas2;
     private javax.swing.JComboBox chColor;
-    private javax.swing.JButton jButton1;
     private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

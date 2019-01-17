@@ -54,11 +54,10 @@ public class ServerThread implements Runnable{
             
             while(true){
                 String clientMsg=br.readLine();
-                System.out.println("Log:"+clientMsg);
-                if(!clientMsg.equals(null)){
-                  server.sendMessage("From younghoon's server:"+clientMsg);  
-                }
                 
+                if(!clientMsg.equals(null)){
+                    server.sendMessage(clientMsg); 
+                }
             }
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         } catch (IOException ex) {

@@ -5,6 +5,9 @@
  */
 package BeeHiveNumbering;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  *
  * @author younghoonkim
@@ -25,6 +28,12 @@ public class Nation124 {
             num-=Math.pow(3,j+1);
         }
         System.out.println(result);
+        Date dt=new Date();
+       	SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+	String date = sdf.format(new Date()); 
+	System.out.println(date); //15/10/2013
+
+        
     }      
     private int generateNum(int num){
         

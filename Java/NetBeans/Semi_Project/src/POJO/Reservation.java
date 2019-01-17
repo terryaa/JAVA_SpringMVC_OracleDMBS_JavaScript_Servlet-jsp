@@ -5,23 +5,32 @@
  */
 package POJO;
 
-import java.util.Calendar;
+import java.text.SimpleDateFormat;
 
 /**
  *
  * @author younghoonkim
  */
+
+
+//Date 가져오는법.
+//SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+//	String date = sdf.format(new Date()); 
+//	System.out.println(date); //15/10/2013
 public class Reservation extends Member{
-    Calendar calender;
+    
+    SimpleDateFormat sdf;
     String program;
 
-    public Calendar getCalender() {
-        return calender;
+    public SimpleDateFormat getSdf() {
+        return sdf;
     }
 
-    public void setCalender(Calendar calender) {
-        this.calender = calender;
+    public void setSdf(SimpleDateFormat sdf) {
+        this.sdf = sdf;
     }
+    
+   
 
     public String getProgram() {
         return program;

@@ -5,17 +5,72 @@
  */
 package GUI;
 
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.Iterator;
+import java.util.StringTokenizer;
+import java.util.Vector;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.DefaultListModel;
+import javax.swing.JOptionPane;
+
 /**
  *
  * @author younghoonkim
  */
 public class Info_GUI extends javax.swing.JFrame {
 
+    private Socket s;
+    private PrintWriter pw;
+    
+
     /**
      * Creates new form Info_GUI
      */
     public Info_GUI() {
-        initComponents();
+        try {
+            initComponents();
+            //connect to server!
+            s=new Socket("192.168.0.112",9999);
+            pw=new PrintWriter(s.getOutputStream(),true);
+        } catch (IOException ex) {
+            System.out.println("Error Log : Can't connect to the server.");
+            JOptionPane.showMessageDialog(this,"Server connection fail");
+        }
+        new Thread(new Runnable(){
+
+            @Override
+            public void run() {
+                try {
+                    BufferedReader br=new BufferedReader
+                (new InputStreamReader(s.getInputStream()));
+                    System.out.println("buffer");
+                    while(true){
+                        StringTokenizer st=new StringTokenizer(br.readLine(),"\n");
+                        System.out.println("readline");
+                        Vector<String> vector=new Vector<>();
+                        while(st.hasMoreTokens()){
+                            vector.addElement(st.nextToken());
+
+                        }
+                        for(String msg:vector){
+                            System.out.println(msg);
+                        }
+
+                        reservationList.setListData(vector);
+                    }
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                } catch (IOException ex) {
+                    System.out.println("Data transmission failed from Server");
+                }
+            }
+            
+        }).start();
     }
 
     /**
@@ -29,10 +84,10 @@ public class Info_GUI extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        reservationsList = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList();
-        reservationInfo = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        reservationList = new javax.swing.JList();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        reservationInfo = new javax.swing.JTextArea();
         jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -42,16 +97,16 @@ public class Info_GUI extends javax.swing.JFrame {
         jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
         jLabel1.setText("예약현황");
 
-        jList1.setModel(new javax.swing.AbstractListModel() {
-            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
-            public int getSize() { return strings.length; }
-            public Object getElementAt(int i) { return strings[i]; }
+        reservationList.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                reservationListMouseClicked(evt);
+            }
         });
-        reservationsList.setViewportView(jList1);
+        jScrollPane1.setViewportView(reservationList);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        reservationInfo.setViewportView(jTextArea1);
+        reservationInfo.setColumns(20);
+        reservationInfo.setRows(5);
+        jScrollPane2.setViewportView(reservationInfo);
 
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         jLabel2.setText("상세예약정보");
@@ -63,15 +118,15 @@ public class Info_GUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(reservationsList, javax.swing.GroupLayout.PREFERRED_SIZE, 307, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel2)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(10, 10, 10)
-                        .addComponent(reservationInfo, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(84, Short.MAX_VALUE))
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 94, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel2))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -82,9 +137,9 @@ public class Info_GUI extends javax.swing.JFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(reservationInfo)
-                    .addComponent(reservationsList, javax.swing.GroupLayout.DEFAULT_SIZE, 259, Short.MAX_VALUE))
-                .addContainerGap(143, Short.MAX_VALUE))
+                    .addComponent(jScrollPane2)
+                    .addComponent(jScrollPane1))
+                .addContainerGap(151, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -106,6 +161,12 @@ public class Info_GUI extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void reservationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reservationListMouseClicked
+        // TODO add your handling code here:
+        int item=reservationList.getSelectedIndex();
+        
+    }//GEN-LAST:event_reservationListMouseClicked
 
     /**
      * @param args the command line arguments
@@ -145,10 +206,10 @@ public class Info_GUI extends javax.swing.JFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
-    private javax.swing.JList jList1;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JTextArea jTextArea1;
-    private javax.swing.JScrollPane reservationInfo;
-    private javax.swing.JScrollPane reservationsList;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JTextArea reservationInfo;
+    private javax.swing.JList reservationList;
     // End of variables declaration//GEN-END:variables
 }

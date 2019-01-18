@@ -70,31 +70,6 @@ public class Ex2_MouseEventDemo extends javax.swing.JFrame {
             
         }).start();
         
-//        new Thread(new Runnable(){
-//
-//            @Override
-//            public void run() {
-//                try {
-//                    BufferedReader br=new BufferedReader
-//                (new InputStreamReader(s2.getInputStream()));
-//                    while(true){
-//                        //target.append(br.readLine()+"\n");
-//                        StringTokenizer st=new StringTokenizer(br.readLine(),":");
-//                        
-//                        x=Integer.parseInt(st.nextToken());
-//                        y=Integer.parseInt(st.nextToken());
-//                        col = new Color(Integer.parseInt(st.nextToken()), true);
-//                        canvas2.repaint();
-//                        
-//                    }
-//                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-//                } catch (IOException ex) {
-//                    Logger.getLogger(Ex1_ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
-//                }
-//            }
-//            
-//        }).start();
-        
         
     }
 

@@ -70,7 +70,7 @@ public class ServerThread implements Runnable{
             }
             String reservationList=sb.toString();
             System.out.println(reservationList);
-            if(!reservationList.equals(null)){
+            if(!reservationList.equals("")){
                 server.sendReservationList(reservationList);
             }
             

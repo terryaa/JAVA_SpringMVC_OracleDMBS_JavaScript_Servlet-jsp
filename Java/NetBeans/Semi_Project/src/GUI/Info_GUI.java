@@ -6,11 +6,15 @@
 package GUI;
 
 import java.awt.Color;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.StringTokenizer;
 import java.util.Vector;
@@ -18,6 +22,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
+import javax.swing.Timer;
 
 /**
  *
@@ -27,6 +32,8 @@ public class Info_GUI extends javax.swing.JFrame {
 
     private Socket s;
     private PrintWriter pw;
+    private Vector<String> vector;
+    private Timer timer;
     
 
     /**
@@ -35,9 +42,12 @@ public class Info_GUI extends javax.swing.JFrame {
     public Info_GUI() {
         try {
             initComponents();
+            initClock();
+            
+            
             //connect to server!
             s=new Socket("192.168.0.112",9999);
-            pw=new PrintWriter(s.getOutputStream(),true);
+            System.out.println("Server connected");
         } catch (IOException ex) {
             System.out.println("Error Log : Can't connect to the server.");
             JOptionPane.showMessageDialog(this,"Server connection fail");
@@ -47,16 +57,16 @@ public class Info_GUI extends javax.swing.JFrame {
             @Override
             public void run() {
                 try {
+                    vector=new Vector<>();
                     BufferedReader br=new BufferedReader
                 (new InputStreamReader(s.getInputStream()));
                     System.out.println("buffer");
                     while(true){
                         StringTokenizer st=new StringTokenizer(br.readLine(),"\n");
                         System.out.println("readline");
-                        Vector<String> vector=new Vector<>();
+                        
                         while(st.hasMoreTokens()){
                             vector.addElement(st.nextToken());
-
                         }
                         for(String msg:vector){
                             System.out.println(msg);
@@ -83,19 +93,22 @@ public class Info_GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
+        reservationStatus = new javax.swing.JLabel();
         jScrollPane1 = new javax.swing.JScrollPane();
         reservationList = new javax.swing.JList();
         jScrollPane2 = new javax.swing.JScrollPane();
         reservationInfo = new javax.swing.JTextArea();
-        jLabel2 = new javax.swing.JLabel();
+        reservationDetail = new javax.swing.JLabel();
+        currentYearMonthDay = new javax.swing.JLabel();
+        currentTime = new javax.swing.JLabel();
+        currentHourMin = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jPanel1.setBackground(new java.awt.Color(204, 255, 255));
 
-        jLabel1.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        jLabel1.setText("예약현황");
+        reservationStatus.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        reservationStatus.setText("예약현황");
 
         reservationList.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -108,8 +121,10 @@ public class Info_GUI extends javax.swing.JFrame {
         reservationInfo.setRows(5);
         jScrollPane2.setViewportView(reservationInfo);
 
-        jLabel2.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        jLabel2.setText("상세예약정보");
+        reservationDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        reservationDetail.setText("상세예약정보");
+
+        currentTime.setText("현재 시간:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -118,45 +133,50 @@ public class Info_GUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 94, Short.MAX_VALUE))
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
+                            .addComponent(currentTime)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 338, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reservationDetail))
                 .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(74, 74, 74)
+                .addContainerGap(64, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reservationDetail))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jLabel2))
+                    .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(currentHourMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(currentTime)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane2)
-                    .addComponent(jScrollPane1))
-                .addContainerGap(151, Short.MAX_VALUE))
+                    .addComponent(jScrollPane1)
+                    .addComponent(jScrollPane2))
+                .addGap(151, 151, 151))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
         );
 
         pack();
@@ -165,6 +185,7 @@ public class Info_GUI extends javax.swing.JFrame {
     private void reservationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reservationListMouseClicked
         // TODO add your handling code here:
         int item=reservationList.getSelectedIndex();
+        vector.get(item);
         
     }//GEN-LAST:event_reservationListMouseClicked
 
@@ -202,14 +223,35 @@ public class Info_GUI extends javax.swing.JFrame {
             }
         });
     }
+    private void initClock(){
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+            String yearMonthDay = sdf1.format(new Date()); 
+            this.currentYearMonthDay.setText(yearMonthDay);
+            final SimpleDateFormat sdf2=new SimpleDateFormat("HH:mm:ss");
+            timer=new Timer(500,new ActionListener() {
+
+                @Override
+                public void actionPerformed(ActionEvent e) {
+                    String HourMin=sdf2.format(new Date());
+                    currentHourMin.setText(HourMin);
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                }
+            });
+            timer.setInitialDelay(0);
+            timer.start();
+            
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel currentHourMin;
+    private javax.swing.JLabel currentTime;
+    private javax.swing.JLabel currentYearMonthDay;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel reservationDetail;
     private javax.swing.JTextArea reservationInfo;
     private javax.swing.JList reservationList;
+    private javax.swing.JLabel reservationStatus;
     // End of variables declaration//GEN-END:variables
 }

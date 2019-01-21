@@ -33,6 +33,7 @@ public class Ex1_ClientGUI extends javax.swing.JFrame {
         } catch (IOException ex) {
             Logger.getLogger(Ex1_ClientGUI.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
         new Thread(new Runnable(){
 
             @Override

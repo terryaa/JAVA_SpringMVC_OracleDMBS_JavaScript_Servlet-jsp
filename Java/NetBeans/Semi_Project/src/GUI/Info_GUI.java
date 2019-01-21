@@ -5,7 +5,6 @@
  */
 package GUI;
 
-import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.BufferedReader;
@@ -15,14 +14,22 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.Iterator;
+import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.Vector;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.DefaultListModel;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+import Class.DateLabelFormatter;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.TimeZone;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.table.DefaultTableModel;
 
 /**
  *
@@ -33,8 +40,19 @@ public class Info_GUI extends javax.swing.JFrame {
     private Socket s;
     private PrintWriter pw;
     private Vector<String> vector;
+    private ArrayList<String> reservationListArray;
     private Timer timer;
+    private UtilDateModel model1;
+    private JDatePanelImpl datePanel1;
+    private JDatePickerImpl datePicker1;
     
+    private UtilDateModel model2;
+    private JDatePanelImpl datePanel2;
+    private JDatePickerImpl datePicker2;
+    
+    private int admin;
+    
+    private final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 
     /**
      * Creates new form Info_GUI
@@ -42,45 +60,22 @@ public class Info_GUI extends javax.swing.JFrame {
     public Info_GUI() {
         try {
             initComponents();
+            initAdditional();
             initClock();
             
-            
             //connect to server!
-            s=new Socket("192.168.0.112",9999);
+            s=new Socket("localhost",9999);
+            pw=new PrintWriter(s.getOutputStream(),true);
+            pw.println("connect");
+            pw.flush();
             System.out.println("Server connected");
+            
+            initTable();
         } catch (IOException ex) {
             System.out.println("Error Log : Can't connect to the server.");
             JOptionPane.showMessageDialog(this,"Server connection fail");
         }
-        new Thread(new Runnable(){
-
-            @Override
-            public void run() {
-                try {
-                    vector=new Vector<>();
-                    BufferedReader br=new BufferedReader
-                (new InputStreamReader(s.getInputStream()));
-                    System.out.println("buffer");
-                    while(true){
-                        StringTokenizer st=new StringTokenizer(br.readLine(),"\n");
-                        System.out.println("readline");
-                        
-                        while(st.hasMoreTokens()){
-                            vector.addElement(st.nextToken());
-                        }
-                        for(String msg:vector){
-                            System.out.println(msg);
-                        }
-
-                        reservationList.setListData(vector);
-                    }
-                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                } catch (IOException ex) {
-                    System.out.println("Data transmission failed from Server");
-                }
-            }
-            
-        }).start();
+        
     }
 
     /**
@@ -94,14 +89,15 @@ public class Info_GUI extends javax.swing.JFrame {
 
         jPanel1 = new javax.swing.JPanel();
         reservationStatus = new javax.swing.JLabel();
-        jScrollPane1 = new javax.swing.JScrollPane();
-        reservationList = new javax.swing.JList();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        reservationInfo = new javax.swing.JTextArea();
         reservationDetail = new javax.swing.JLabel();
         currentYearMonthDay = new javax.swing.JLabel();
         currentTime = new javax.swing.JLabel();
         currentHourMin = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        reservationTable = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        detailedInfo = new javax.swing.JTextArea();
+        reservationRefresh = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,21 +106,44 @@ public class Info_GUI extends javax.swing.JFrame {
         reservationStatus.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
         reservationStatus.setText("예약현황");
 
-        reservationList.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                reservationListMouseClicked(evt);
-            }
-        });
-        jScrollPane1.setViewportView(reservationList);
-
-        reservationInfo.setColumns(20);
-        reservationInfo.setRows(5);
-        jScrollPane2.setViewportView(reservationInfo);
-
         reservationDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
         reservationDetail.setText("상세예약정보");
 
+        currentYearMonthDay.setText("currentYMD");
+
         currentTime.setText("현재 시간:");
+
+        currentHourMin.setText("currentime");
+
+        reservationTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, "", null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "이름", "예약날짜", "프로그램"
+            }
+        ));
+        jScrollPane3.setViewportView(reservationTable);
+
+        detailedInfo.setColumns(20);
+        detailedInfo.setRows(5);
+        jScrollPane2.setViewportView(detailedInfo);
+
+        reservationRefresh.setText("예약새로고침");
+        reservationRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reservationRefreshActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -133,61 +152,79 @@ public class Info_GUI extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 251, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel1Layout.createSequentialGroup()
-                            .addComponent(currentTime)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 299, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(reservationDetail))
-                .addContainerGap())
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(currentTime)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(reservationRefresh))
+                        .addGap(143, 143, 143)
+                        .addComponent(reservationDetail)))
+                .addGap(0, 8, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addContainerGap(64, Short.MAX_VALUE)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addGap(30, 30, 30)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(reservationDetail))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addComponent(currentHourMin, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(currentTime)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(jScrollPane1)
-                    .addComponent(jScrollPane2))
-                .addGap(151, 151, 151))
+                    .addComponent(reservationDetail)
+                    .addComponent(reservationRefresh))
+                .addGap(34, 34, 34)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(currentHourMin))
+                            .addComponent(currentTime))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(0, 28, Short.MAX_VALUE)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap())
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 87, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jPanel1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(221, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void reservationListMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_reservationListMouseClicked
+    private void reservationRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationRefreshActionPerformed
         // TODO add your handling code here:
-        int item=reservationList.getSelectedIndex();
-        vector.get(item);
-        
-    }//GEN-LAST:event_reservationListMouseClicked
+        Date date=(Date)datePicker1.getModel().getValue();
+        String startEndDate="date"+":"+sdf1.format(date);
+        date=(Date)datePicker2.getModel().getValue();
+        startEndDate+=":"+sdf1.format(date);
+        pw.println(startEndDate);
+        pw.flush();
+        initTable();
+                   
+    }//GEN-LAST:event_reservationRefreshActionPerformed
 
     /**
      * @param args the command line arguments
@@ -223,10 +260,83 @@ public class Info_GUI extends javax.swing.JFrame {
             }
         });
     }
+    private void initTable(){
+        new Thread(new Runnable(){
+
+            @Override
+            public void run() {
+                try {
+                    vector=new Vector<>();
+                    reservationListArray=new ArrayList<>();
+                    BufferedReader br=new BufferedReader
+                (new InputStreamReader(s.getInputStream()));
+                    System.out.println("buffer");
+                    while(true){
+                        StringTokenizer st1=new StringTokenizer(br.readLine(),"\n");
+                        System.out.println("readline");
+                        
+                        
+                        while(st1.hasMoreTokens()){
+                            reservationListArray.add(st1.nextToken());
+                             
+
+                        for(int col=0;col<reservationListArray.size();col++){
+                            StringTokenizer st2=new StringTokenizer(
+                                    reservationListArray.get(col),":");
+                            st2.nextToken();
+                            DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
+                            dtm.setRowCount(reservationListArray.size());
+                            //reservationTable.se
+                            for(int row=0;row<3;row++)
+                            {
+                                reservationTable.setValueAt(st2.nextToken(), col, row);
+                            }
+                        }
+                        
+                        }
+                    }
+                        
+                    
+                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                } catch (IOException ex) {
+                    System.out.println("Data transmission failed from Server");
+                }
+            }
+            
+        }).start();
+    }
     private void initClock(){
-            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+            
             String yearMonthDay = sdf1.format(new Date()); 
             this.currentYearMonthDay.setText(yearMonthDay);
+            
+            
+            Properties p = new Properties();
+            p.put("text.today", "Today");
+            p.put("text.month", "Month");
+            p.put("text.year", "Year");
+            LocalDate now=LocalDate.now();
+            
+            
+            model1=new UtilDateModel();
+            Calendar cal=Calendar.getInstance(TimeZone.getDefault());
+            model1.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
+            model1.setSelected(true);
+            datePanel1=new JDatePanelImpl(model1, p);
+            datePicker1=new JDatePickerImpl(datePanel1, new DateLabelFormatter());
+            datePicker1.setBounds(10,75,130,30);
+            add(datePicker1);
+            
+            
+            model2=new UtilDateModel();
+            model2.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, 1);
+            model2.setSelected(true);
+            datePanel2=new JDatePanelImpl(model2, p);
+            datePicker2=new JDatePickerImpl(datePanel2, new DateLabelFormatter());
+            datePicker2.setBounds(150,75,130,30);
+            add(datePicker2);
+            
+            
             final SimpleDateFormat sdf2=new SimpleDateFormat("HH:mm:ss");
             timer=new Timer(500,new ActionListener() {
 
@@ -241,17 +351,42 @@ public class Info_GUI extends javax.swing.JFrame {
             timer.start();
             
     }
+    private void initAdditional(){
+        reservationTable.addMouseListener(new java.awt.event.MouseAdapter() {
+    @Override
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        detailedInfo.selectAll();
+        detailedInfo.replaceSelection("");
+        
+         int row = reservationTable.rowAtPoint(evt.getPoint());
+        if (row >= 0) {
+            StringTokenizer st=new StringTokenizer(reservationListArray.get(row),":");
+            detailedInfo.append("아이디 : "+st.nextToken()+"\n");
+            detailedInfo.append("이름 : "+st.nextToken()+"\n");
+            detailedInfo.append("예약시간 : "+st.nextToken()+"\n");
+            detailedInfo.append("시술종류 : "+st.nextToken()+"\n");
+            detailedInfo.append("남은 보톡스 예약횟수 : "+st.nextToken()+"\n");
+            detailedInfo.append("남은 레이저 예약횟수 : "+st.nextToken()+"\n");
+            detailedInfo.append("남은 피부관리 예약횟수 : "+st.nextToken()+"\n");
+            detailedInfo.append("의사메모 : "+st.nextToken()+"\n");
+            
+            
+        }
+    }
+});
+    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel currentHourMin;
     private javax.swing.JLabel currentTime;
     private javax.swing.JLabel currentYearMonthDay;
+    private javax.swing.JTextArea detailedInfo;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JLabel reservationDetail;
-    private javax.swing.JTextArea reservationInfo;
-    private javax.swing.JList reservationList;
+    private javax.swing.JButton reservationRefresh;
     private javax.swing.JLabel reservationStatus;
+    private javax.swing.JTable reservationTable;
     // End of variables declaration//GEN-END:variables
 }

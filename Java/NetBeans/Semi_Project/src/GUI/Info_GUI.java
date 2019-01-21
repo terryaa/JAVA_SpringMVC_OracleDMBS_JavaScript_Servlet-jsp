@@ -16,20 +16,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Properties;
 import java.util.StringTokenizer;
-import java.util.Vector;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import Class.DateLabelFormatter;
+import Interface.ServiceInter;
+import POJO.Member;
+import Class.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.TimeZone;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.table.DefaultTableModel;
+
 
 /**
  *
@@ -39,38 +40,60 @@ public class Info_GUI extends javax.swing.JFrame {
 
     private Socket s;
     private PrintWriter pw;
-    private Vector<String> vector;
+    
     private ArrayList<String> reservationListArray;
+    
     private Timer timer;
-    private UtilDateModel model1;
-    private JDatePanelImpl datePanel1;
-    private JDatePickerImpl datePicker1;
+    
+    
+    private UtilDateModel[] model;
+    private JDatePanelImpl[] datePanel;
+    private JDatePickerImpl[] datePicker;
     
     private UtilDateModel model2;
     private JDatePanelImpl datePanel2;
     private JDatePickerImpl datePicker2;
+    private final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
     
     private int admin;
     
-    private final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+    private Member member;
+    
+    private ServiceInter service;
+    
+    
 
     /**
      * Creates new form Info_GUI
      */
     public Info_GUI() {
         try {
+            service=new Service();
+            
             initComponents();
             initAdditional();
             initClock();
             
+            //Test member
+            member=new Member("관리자","admin","password","010-1111-1111",true);
+            
+            
             //connect to server!
+            
             s=new Socket("localhost",9999);
             pw=new PrintWriter(s.getOutputStream(),true);
-            pw.println("connect");
+            
+            
+            
+            if(member.isAdmin())
+                pw.println("connect:admin");
+            else
+                pw.println("connect:"+member.getId());
             pw.flush();
             System.out.println("Server connected");
             
             initTable();
+            //reservationListArray=service.initTable(reservationTable,s);
         } catch (IOException ex) {
             System.out.println("Error Log : Can't connect to the server.");
             JOptionPane.showMessageDialog(this,"Server connection fail");
@@ -216,14 +239,9 @@ public class Info_GUI extends javax.swing.JFrame {
 
     private void reservationRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationRefreshActionPerformed
         // TODO add your handling code here:
-        Date date=(Date)datePicker1.getModel().getValue();
-        String startEndDate="date"+":"+sdf1.format(date);
-        date=(Date)datePicker2.getModel().getValue();
-        startEndDate+=":"+sdf1.format(date);
-        pw.println(startEndDate);
-        pw.flush();
+        service.reservationListRefresh(datePicker,pw,member);
+        //reservationListArray=service.initTable(reservationTable,s);
         initTable();
-                   
     }//GEN-LAST:event_reservationRefreshActionPerformed
 
     /**
@@ -260,13 +278,29 @@ public class Info_GUI extends javax.swing.JFrame {
             }
         });
     }
+    private void initClock(){
+            model=new UtilDateModel[2];
+            datePanel=new JDatePanelImpl[2];
+            datePicker=new JDatePickerImpl[2];
+            service.serviceStart(timer, model, datePanel, datePicker, currentYearMonthDay, currentHourMin, this);
+        
+    }
+    private void initAdditional(){
+        reservationTable.addMouseListener(new java.awt.event.MouseAdapter() {
+    @Override
+    public void mouseClicked(java.awt.event.MouseEvent evt) {
+        service.displayDetailedInfo(detailedInfo,reservationListArray,reservationTable.rowAtPoint(evt.getPoint()));
+    }
+});
+    }
     private void initTable(){
-        new Thread(new Runnable(){
+        
+        
+        new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try {
-                    vector=new Vector<>();
                     reservationListArray=new ArrayList<>();
                     BufferedReader br=new BufferedReader
                 (new InputStreamReader(s.getInputStream()));
@@ -301,80 +335,11 @@ public class Info_GUI extends javax.swing.JFrame {
                 } catch (IOException ex) {
                     System.out.println("Data transmission failed from Server");
                 }
+                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
-            
         }).start();
     }
-    private void initClock(){
-            
-            String yearMonthDay = sdf1.format(new Date()); 
-            this.currentYearMonthDay.setText(yearMonthDay);
-            
-            
-            Properties p = new Properties();
-            p.put("text.today", "Today");
-            p.put("text.month", "Month");
-            p.put("text.year", "Year");
-            LocalDate now=LocalDate.now();
-            
-            
-            model1=new UtilDateModel();
-            Calendar cal=Calendar.getInstance(TimeZone.getDefault());
-            model1.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE));
-            model1.setSelected(true);
-            datePanel1=new JDatePanelImpl(model1, p);
-            datePicker1=new JDatePickerImpl(datePanel1, new DateLabelFormatter());
-            datePicker1.setBounds(10,75,130,30);
-            add(datePicker1);
-            
-            
-            model2=new UtilDateModel();
-            model2.setDate(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH)+1, 1);
-            model2.setSelected(true);
-            datePanel2=new JDatePanelImpl(model2, p);
-            datePicker2=new JDatePickerImpl(datePanel2, new DateLabelFormatter());
-            datePicker2.setBounds(150,75,130,30);
-            add(datePicker2);
-            
-            
-            final SimpleDateFormat sdf2=new SimpleDateFormat("HH:mm:ss");
-            timer=new Timer(500,new ActionListener() {
-
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    String HourMin=sdf2.format(new Date());
-                    currentHourMin.setText(HourMin);
-                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                }
-            });
-            timer.setInitialDelay(0);
-            timer.start();
-            
-    }
-    private void initAdditional(){
-        reservationTable.addMouseListener(new java.awt.event.MouseAdapter() {
-    @Override
-    public void mouseClicked(java.awt.event.MouseEvent evt) {
-        detailedInfo.selectAll();
-        detailedInfo.replaceSelection("");
-        
-         int row = reservationTable.rowAtPoint(evt.getPoint());
-        if (row >= 0) {
-            StringTokenizer st=new StringTokenizer(reservationListArray.get(row),":");
-            detailedInfo.append("아이디 : "+st.nextToken()+"\n");
-            detailedInfo.append("이름 : "+st.nextToken()+"\n");
-            detailedInfo.append("예약시간 : "+st.nextToken()+"\n");
-            detailedInfo.append("시술종류 : "+st.nextToken()+"\n");
-            detailedInfo.append("남은 보톡스 예약횟수 : "+st.nextToken()+"\n");
-            detailedInfo.append("남은 레이저 예약횟수 : "+st.nextToken()+"\n");
-            detailedInfo.append("남은 피부관리 예약횟수 : "+st.nextToken()+"\n");
-            detailedInfo.append("의사메모 : "+st.nextToken()+"\n");
-            
-            
-        }
-    }
-});
-    }
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel currentHourMin;
@@ -389,4 +354,10 @@ public class Info_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel reservationStatus;
     private javax.swing.JTable reservationTable;
     // End of variables declaration//GEN-END:variables
+ 
+    
+    
+
+
+
 }

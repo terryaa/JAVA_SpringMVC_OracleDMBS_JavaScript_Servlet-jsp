@@ -36,6 +36,7 @@ public class ServerThread implements Runnable{
     private BufferedReader br;
     private PrintWriter pw;
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+    private String id;
 
     public BufferedReader getBr() {
         return br;
@@ -68,11 +69,53 @@ public class ServerThread implements Runnable{
              File file=new File("/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
                     + "/Java/NetBeans/Semi_Project/src/Data/reservation.txt");
             Scanner sc=new Scanner(file);
+            StringTokenizer stst;
             while(true){
                 String fromClient=br.readLine();
 
 
-                if(fromClient.contains("date")){
+                if(fromClient.contains("date:admin")){
+                    StringBuffer sb=new StringBuffer();
+
+                    StringTokenizer st=new StringTokenizer(fromClient,":");
+                    st.nextToken();st.nextToken();
+
+
+                    Date startDate=sdf.parse(st.nextToken());
+                    Date endDate=sdf.parse(st.nextToken());
+                    
+                    sc=new Scanner(file);
+                    firstWhile:    
+                    while(sc.hasNext()){
+                        
+                        String readLine=sc.nextLine();
+                        st=new StringTokenizer(readLine, ":");
+
+                        st.nextToken();st.nextToken();
+
+                        Date date=sdf.parse(st.nextToken());
+                        if(startDate.compareTo(date)==0 ||
+                                startDate.compareTo(date)<0){
+                            while(sc.hasNext()){
+                                sb.append(readLine).append("\n");
+                                readLine=sc.nextLine();
+                                st=new StringTokenizer(readLine, ":");
+                                st.nextToken();st.nextToken();
+
+                                date=sdf.parse(st.nextToken());
+                                if(endDate.compareTo(date)<0){
+                                    break firstWhile;
+                                }
+                            }
+                        }
+                    }
+                    String reservationList=sb.toString();
+                    System.out.println(reservationList);
+                    if(!reservationList.equals("")){
+                        server.sendReservationList(reservationList);
+                    }
+                }
+                else if (fromClient.contains("date")){
                     StringBuffer sb=new StringBuffer();
 
                     StringTokenizer st=new StringTokenizer(fromClient,":");
@@ -113,7 +156,7 @@ public class ServerThread implements Runnable{
                         server.sendReservationList(reservationList);
                     }
                 }
-                else{
+                else if(fromClient.contains("connect:admin")) {
 
 
                 StringBuffer sb=new StringBuffer();
@@ -126,9 +169,29 @@ public class ServerThread implements Runnable{
                     if(!reservationList.equals("")){
                         server.sendReservationList(reservationList);
                     }
+                 
 
 
-
+                }
+                else if(fromClient.contains("connect")){
+                    stst=new StringTokenizer(fromClient,":");
+                    stst.nextToken();
+                    id=stst.nextToken();
+                    StringBuffer sb=new StringBuffer();
+                    while(sc.hasNext()){
+                        String readLine=sc.nextLine();
+                        stst=new StringTokenizer(readLine, ":");
+                        if(stst.nextToken().equals(id)){
+                            sb.append(readLine+"\n");
+                        }
+                        
+                    }
+                    String reservationList=sb.toString();
+                    System.out.println(reservationList);
+                    if(!reservationList.equals("")){
+                        server.sendReservationList(reservationList);
+                    }
+                    
                 }
             }
             

@@ -5,13 +5,29 @@
  */
 package Interface;
 
+import GUI.Info_GUI;
+import POJO.Member;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.ArrayList;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JTable;
+import javax.swing.Timer;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+
 /**
  *
  * @author younghoonkim
  */
 public interface ServiceInter {
     
-    public String memberInfo();
-    public boolean isAdmin();
-    public void serviceStart();
+    public void displayDetailedInfo(javax.swing.JTextArea detailedInfo,ArrayList<String> array,int row);
+    public void serviceStart(Timer timer,UtilDateModel[] model,JDatePanelImpl[] datePanel,JDatePickerImpl[] datePicker,
+            JLabel currentYearMonthDay,JLabel currentHourMin,JFrame gui);
+    public void reservationListRefresh(JDatePickerImpl[] datePicker,PrintWriter pw,Member member);
+    public ArrayList<String> initTable(JTable reservationTable,Socket s);
+    
 }

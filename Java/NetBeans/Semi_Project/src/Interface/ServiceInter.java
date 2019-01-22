@@ -28,6 +28,5 @@ public interface ServiceInter {
     public void serviceStart(Timer timer,UtilDateModel[] model,JDatePanelImpl[] datePanel,JDatePickerImpl[] datePicker,
             JLabel currentYearMonthDay,JLabel currentHourMin,JFrame gui);
     public void reservationListRefresh(JDatePickerImpl[] datePicker,PrintWriter pw,Member member);
-    public ArrayList<String> initTable(JTable reservationTable,Socket s);
     
 }

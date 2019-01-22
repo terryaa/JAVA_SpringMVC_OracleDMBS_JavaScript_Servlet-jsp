@@ -67,38 +67,7 @@ public class Info_GUI extends javax.swing.JFrame {
      * Creates new form Info_GUI
      */
     public Info_GUI() {
-        try {
-            service=new Service();
-            
-            initComponents();
-            initAdditional();
-            initClock();
-            
-            //Test member
-            member=new Member("관리자","admin","password","010-1111-1111",true);
-            
-            
-            //connect to server!
-            
-            s=new Socket("localhost",9999);
-            pw=new PrintWriter(s.getOutputStream(),true);
-            
-            
-            
-            if(member.isAdmin())
-                pw.println("connect:admin");
-            else
-                pw.println("connect:"+member.getId());
-            pw.flush();
-            System.out.println("Server connected");
-            
-            initTable();
-            //reservationListArray=service.initTable(reservationTable,s);
-        } catch (IOException ex) {
-            System.out.println("Error Log : Can't connect to the server.");
-            JOptionPane.showMessageDialog(this,"Server connection fail");
-        }
-        
+            initService();
     }
 
     /**
@@ -278,13 +247,6 @@ public class Info_GUI extends javax.swing.JFrame {
             }
         });
     }
-    private void initClock(){
-            model=new UtilDateModel[2];
-            datePanel=new JDatePanelImpl[2];
-            datePicker=new JDatePickerImpl[2];
-            service.serviceStart(timer, model, datePanel, datePicker, currentYearMonthDay, currentHourMin, this);
-        
-    }
     private void initAdditional(){
         reservationTable.addMouseListener(new java.awt.event.MouseAdapter() {
     @Override
@@ -293,51 +255,90 @@ public class Info_GUI extends javax.swing.JFrame {
     }
 });
     }
+    
+    private void initClock(){
+            model=new UtilDateModel[2];
+            datePanel=new JDatePanelImpl[2];
+            datePicker=new JDatePickerImpl[2];
+            service.serviceStart(timer, model, datePanel, datePicker, currentYearMonthDay, currentHourMin, this);
+        
+    }
+    private void initServer(){
+        try {
+            s=new Socket("localhost",9999);
+            pw=new PrintWriter(s.getOutputStream(),true);
+            
+            service.reservationListRefresh(datePicker,pw,member);
+            
+            System.out.println("Server connected-user:"+member.getId());
+                } catch (IOException ex) {
+            System.out.println("Error Log : Can't connect to the server.");
+            JOptionPane.showMessageDialog(this,"Server connection fail");
+        }
+    }
+    
     private void initTable(){
-        
-        
         new Thread(new Runnable() {
 
             @Override
             public void run() {
                 try {
                     reservationListArray=new ArrayList<>();
+                    DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
                     BufferedReader br=new BufferedReader
                 (new InputStreamReader(s.getInputStream()));
-                    System.out.println("buffer");
                     while(true){
-                        StringTokenizer st1=new StringTokenizer(br.readLine(),"\n");
-                        System.out.println("readline");
-                        
-                        
-                        while(st1.hasMoreTokens()){
-                            reservationListArray.add(st1.nextToken());
-                             
+                        String readLine=br.readLine();
+                        if(readLine.equals("no data")){
+                            System.out.println("no data to fetch");
+                            dtm.setRowCount(0);
+                        }
+                        else{
+                        StringTokenizer st1=new StringTokenizer(readLine,"\n");
+                            
 
-                        for(int col=0;col<reservationListArray.size();col++){
-                            StringTokenizer st2=new StringTokenizer(
-                                    reservationListArray.get(col),":");
-                            st2.nextToken();
-                            DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
-                            dtm.setRowCount(reservationListArray.size());
-                            //reservationTable.se
-                            for(int row=0;row<3;row++)
+                            while(st1.hasMoreTokens())
                             {
-                                reservationTable.setValueAt(st2.nextToken(), col, row);
+                                reservationListArray.add(st1.nextToken());
+
+
+                                for(int col=0;col<reservationListArray.size();col++){
+                                    StringTokenizer st2=new StringTokenizer(
+                                            reservationListArray.get(col),":");
+                                    st2.nextToken();
+                                   
+                                    dtm.setRowCount(reservationListArray.size());
+                                    //reservationTable.se
+                                    for(int row=0;row<3;row++)
+                                    {
+                                        reservationTable.setValueAt(st2.nextToken(), col, row);
+                                    }
+                                }
+
                             }
                         }
                         
-                        }
                     }
-                        
-                    
-                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
                 } catch (IOException ex) {
                     System.out.println("Data transmission failed from Server");
                 }
-                //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
             }
         }).start();
+    }
+    
+    private void initService(){
+        service=new Service();
+        //Test member
+        member=new Member("관리자","alizimara","password","010-1111-1111",true);
+
+        initComponents();
+        initAdditional();
+        initClock();
+
+        //connect to server!
+        initServer();
+        initTable();
+        
     }
    
 

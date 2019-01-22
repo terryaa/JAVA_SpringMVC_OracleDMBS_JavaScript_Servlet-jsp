@@ -132,77 +132,12 @@ public class Service implements ServiceInter{
             startEndDate="date:"+"admin:"+sdf.format(date);
         }
         else{
-            startEndDate="date:"+member.getId()+sdf.format(date);
+            startEndDate="date:"+member.getId()+":"+sdf.format(date);
         }
         date=(Date)datePicker[1].getModel().getValue();
         startEndDate+=":"+sdf.format(date);
         pw.println(startEndDate);
         pw.flush();
-    }
-    
-     @Override
-    public ArrayList<String> initTable(JTable reservationTable,Socket s){
-         ArrayList<String>tempList=new ArrayList<>();
-        class ReservationList implements Callable<ArrayList<String>>{
-            ArrayList<String> reservationListArray;
-            @Override
-            public ArrayList<String> call(){
-                try {
-                    reservationListArray=new ArrayList<>();
-                    BufferedReader br=new BufferedReader
-                (new InputStreamReader(s.getInputStream()));
-                    System.out.println("buffer");
-                    while(true){
-                        StringTokenizer st1=new StringTokenizer(br.readLine(),"\n");
-                        System.out.println("readline");
-                        
-                        
-                        while(st1.hasMoreTokens()){
-                            reservationListArray.add(st1.nextToken());
-                             
-
-                        for(int col=0;col<reservationListArray.size();col++){
-                            StringTokenizer st2=new StringTokenizer(
-                                    reservationListArray.get(col),":");
-                            st2.nextToken();
-                            DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
-                            dtm.setRowCount(reservationListArray.size());
-                            //reservationTable.se
-                            for(int row=0;row<3;row++)
-                            {
-                                reservationTable.setValueAt(st2.nextToken(), col, row);
-                            }
-                        }
-                        
-                        }
-                    }
-                        
-                    
-                    //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-                } catch (IOException ex) {
-                    System.out.println("Data transmission failed from Server");
-                }
-                return reservationListArray;
-            }
-                
-            
-        }
-        ExecutorService service = Executors.newFixedThreadPool(3);
-        Future<ArrayList<String>> reservationListArray = service.submit(new ReservationList());
-         
-         try {
-            tempList= reservationListArray.get();
-             System.out.println(tempList.get(0));
-             
-             
-             
-             //return rla.getReservationListArray();
-         } catch (InterruptedException ex) {
-             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (ExecutionException ex) {
-             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
-         }
-         return tempList;
     }
         
 }

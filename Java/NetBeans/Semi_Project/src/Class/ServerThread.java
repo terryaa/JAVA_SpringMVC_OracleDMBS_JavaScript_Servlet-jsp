@@ -37,9 +37,9 @@ public class ServerThread implements Runnable{
     private BufferedReader br;
     private PrintWriter pw;
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-    private String id;
-    private final String path="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
+     private final String path="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
                     + "/Java/NetBeans/Semi_Project/src/Data/reservation.txt";
+   
 
     public BufferedReader getBr() {
         return br;
@@ -67,17 +67,17 @@ public class ServerThread implements Runnable{
     public void run() {
         
         try {
-            //Initializing streams. 
+            //Stream연결 
             pw=new PrintWriter(socket.getOutputStream(),true);
             br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
             
-            //Variables Initialization
+            //필요변수 초기화
             File file=new File(path);
             Scanner sc=new Scanner(file);
             StringTokenizer stst;
             StringBuffer sb=null;
             
-            //Read from client's input stream
+            //readLine을 통해 client가 보내는 자료를 읽어온다.
             while(true){
                 String fromClient=br.readLine();
                 
@@ -131,11 +131,14 @@ public class ServerThread implements Runnable{
                         }
                     }
                 }
-            String reservationList=sb.toString();
-                    System.out.println(reservationList);
-                    if(!reservationList.equals("")){
-                        server.sendReservationList(reservationList);
-                    }
+                //예약정보를 String형태로 정리한다.
+                String reservationList=sb.toString();
+                System.out.println(reservationList);
+                
+                //Server에게 String형태의 검색결과자료를 broadcast하도록한다.
+                if(!reservationList.equals("")){
+                    server.sendReservationList(reservationList);
+                }
             }
             
             

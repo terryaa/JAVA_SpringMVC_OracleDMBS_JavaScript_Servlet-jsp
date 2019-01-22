@@ -5,17 +5,11 @@
  */
 package Class;
 
-import GUI.Info_GUI;
 import Interface.ServiceInter;
 import POJO.Member;
-import POJO.Reservation;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -27,35 +21,21 @@ import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
 import java.time.LocalDate;
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ExecutorService;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTable;
 import javax.swing.Timer;
-import javax.swing.table.DefaultTableModel;
-import java.lang.Thread;
-
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutionException;
-
-import java.util.concurrent.ExecutorService;
-
-import java.util.concurrent.Executors;
-
-import java.util.concurrent.Future;
-
 
 /**
  *
+ * Service클래스는 GUI에서 동작하며, GUI에서 필요한 Business Logic 을 작성 구현클래스이다. 
  * @author younghoonkim
  */
 public class Service implements ServiceInter{
     
      private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
     
+     
+     //예약을 클릭했을시 해당 Table의 행 번호를 얻어와 상세정보를 만들어 출력해준다. 
      @Override
     public void displayDetailedInfo(javax.swing.JTextArea detailedInfo,ArrayList<String> array,int row){
         detailedInfo.selectAll();
@@ -75,6 +55,7 @@ public class Service implements ServiceInter{
          detailedInfo.append(sb.toString());
     }
 
+    //GUI시작시 달력, 시간 초기화 및 GUI에 표시하는 역할을 한다
     @Override
     public void serviceStart(Timer timer,UtilDateModel[] model,JDatePanelImpl[] datePanel,JDatePickerImpl[] datePicker,
             JLabel currentYearMonthDay,JLabel currentHourMin, JFrame gui) {
@@ -122,6 +103,8 @@ public class Service implements ServiceInter{
             timer.setInitialDelay(0);
             timer.start();
     } 
+    
+    //선택되어있는 날짜사이에 있는 예약정보들로 얻어와 예약정보리스트를 새로고침한다. 
      @Override
     public void reservationListRefresh(JDatePickerImpl[] datePicker,PrintWriter pw,Member member){
         

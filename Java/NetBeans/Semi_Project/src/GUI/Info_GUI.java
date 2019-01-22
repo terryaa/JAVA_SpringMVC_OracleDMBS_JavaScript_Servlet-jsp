@@ -5,30 +5,22 @@
  */
 package GUI;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.Properties;
 import java.util.StringTokenizer;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
 import org.jdatepicker.impl.UtilDateModel;
-import Class.DateLabelFormatter;
 import Interface.ServiceInter;
 import POJO.Member;
 import Class.Service;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.TimeZone;
 import javax.swing.table.DefaultTableModel;
 
 
@@ -38,27 +30,21 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Info_GUI extends javax.swing.JFrame {
 
+    //필요 변수 선언
+    //네트워크를 위한 소켓과 printwriter
     private Socket s;
     private PrintWriter pw;
-    
+    //예약정보 리스트 어레이
     private ArrayList<String> reservationListArray;
-    
+    //시간과 달력을위한 변수
     private Timer timer;
-    
-    
     private UtilDateModel[] model;
     private JDatePanelImpl[] datePanel;
     private JDatePickerImpl[] datePicker;
     
-    private UtilDateModel model2;
-    private JDatePanelImpl datePanel2;
-    private JDatePickerImpl datePicker2;
-    private final SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
-    
-    private int admin;
-    
+    //테스트 멤버
     private Member member;
-    
+    //비즈니스 로직 클래스
     private ServiceInter service;
     
     
@@ -67,6 +53,7 @@ public class Info_GUI extends javax.swing.JFrame {
      * Creates new form Info_GUI
      */
     public Info_GUI() {
+        //서비를 위한 모든 메소드 시작
             initService();
     }
 
@@ -208,8 +195,9 @@ public class Info_GUI extends javax.swing.JFrame {
 
     private void reservationRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationRefreshActionPerformed
         // TODO add your handling code here:
+        
+        //예
         service.reservationListRefresh(datePicker,pw,member);
-        //reservationListArray=service.initTable(reservationTable,s);
         initTable();
     }//GEN-LAST:event_reservationRefreshActionPerformed
 
@@ -247,10 +235,15 @@ public class Info_GUI extends javax.swing.JFrame {
             }
         });
     }
+    
+    //선택된 항목의 상세예약정보를 가져와 GUI에보여준다.
     private void initAdditional(){
         reservationTable.addMouseListener(new java.awt.event.MouseAdapter() {
     @Override
     public void mouseClicked(java.awt.event.MouseEvent evt) {
+        //예약리스트,table,선택된 행번호를 매게변수로 가져가
+        //해당 행의 번호를 이용하여 예약정보리스트에서 선택된 정보가 들어있는 arraylist를 선택,
+        //arraylist에들어있는 정보를 출력형태에 맞게 바꾸어 GUI에 표현한다.
         service.displayDetailedInfo(detailedInfo,reservationListArray,reservationTable.rowAtPoint(evt.getPoint()));
     }
 });
@@ -327,16 +320,22 @@ public class Info_GUI extends javax.swing.JFrame {
     }
     
     private void initService(){
+        //서비스 시작
         service=new Service();
         //Test member
         member=new Member("관리자","alizimara","password","010-1111-1111",true);
 
+        //GUI 초기화
         initComponents();
+        //Table클릭시 해당 Table정보의 상세정보를 GUI출력시켜주는 메소드
         initAdditional();
+        //GUI에 시간,달력을 초기화
         initClock();
 
         //connect to server!
+        //서버에 연결하는 메소드
         initServer();
+        //예약정보리스트 테이블을 업데이트하는 메소드 
         initTable();
         
     }

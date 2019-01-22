@@ -15,6 +15,7 @@ import java.util.Date;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -26,6 +27,8 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 
 /**
  *
@@ -37,9 +40,11 @@ public class ServerThread implements Runnable{
     private BufferedReader br;
     private PrintWriter pw;
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
-     private final String path="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
-                    + "/Java/NetBeans/Semi_Project/src/Data/reservation.txt";
+    private final String path="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
+                    + "/Java/NetBeans/Semi_Project/src/Data/";
    
+    JSONParser parser = new JSONParser(); // 불러오기?
+    JSONObject memberInfo = new JSONObject(); // 값에 대한 객체 생성
 
     public BufferedReader getBr() {
         return br;
@@ -72,22 +77,27 @@ public class ServerThread implements Runnable{
             br=new BufferedReader(new InputStreamReader(socket.getInputStream()));
             
             //필요변수 초기화
-            File file=new File(path);
+            File file=new File(path+"reservation.txt");
             Scanner sc=new Scanner(file);
-            StringTokenizer stst;
+            StringTokenizer st;
             StringBuffer sb=null;
+            
+            
+//            StringTokenizer stz = new StringTokenizer(clientMsg, "/");
+//            String token = stz.nextToken();
             
             //readLine을 통해 client가 보내는 자료를 읽어온다.
             while(true){
                 String fromClient=br.readLine();
-                
+                st=new StringTokenizer(fromClient,":");
+                String identifier=st.nextToken();
                 //클라이언트가 날짜를 골랐을경우,시작일과 끝일을 비교하여 그 기간내에
                 //존재하는 예약들을 불러온다.
                 //관리자의경우 모든 예약이, 일반사용자의경우 기간내의 자신의 예약이조회된다. 
-                if(fromClient.contains("date")){
+                if(identifier.equals("date")){
                     sb=new StringBuffer();
 
-                    StringTokenizer st=new StringTokenizer(fromClient,":");
+                    st=new StringTokenizer(fromClient,":");
                     st.nextToken();
                     String clientId=st.nextToken();
 
@@ -131,14 +141,44 @@ public class ServerThread implements Runnable{
                         }
                     }
                 }
+                else if(identifier.equals("login")) {
+                    sb=new StringBuffer();
+                    sb.append("login:");
+                    String id = st.nextToken();
+                    String password = st.nextToken();
+                    JSONObject members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+
+                    JSONObject member_id = (JSONObject) members.get(id);
+
+                    if (member_id == null) {
+                        System.out.println("아이디 없음");
+                        sb.append("none:");
+                    } else {
+                        try {
+                            if (((String) member_id.get("password")).equals(password)) {
+                                sb.append("true:").append(id).append(":");
+                                sb.append((String) member_id.get("Name")).append(":");
+                                sb.append((String) member_id.get("password")).append(":");
+                                sb.append((String) member_id.get("Cell1")).append("-");
+                                sb.append((String) member_id.get("Cell2")).append("-");
+                                sb.append((String) member_id.get("Cell3")).append(":");
+                                
+                            } else {
+                                sb.append("false:");
+                            }
+                        } catch (NullPointerException e) {
+                            System.out.println("Error log : no password saved");
+                            pw.println("login:false:");
+                        }
+                        // 회원가입하는 로직
+                    }
+                }
                 //예약정보를 String형태로 정리한다.
                 String reservationList=sb.toString();
                 System.out.println(reservationList);
                 
                 //Server에게 String형태의 검색결과자료를 broadcast하도록한다.
-                if(!reservationList.equals("")){
-                    server.sendReservationList(reservationList);
-                }
+                server.sendReservationList(reservationList);
             }
             
             
@@ -146,6 +186,8 @@ public class ServerThread implements Runnable{
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         } catch (ParseException ex) {
+            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (org.json.simple.parser.ParseException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

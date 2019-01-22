@@ -5,17 +5,68 @@
  */
 package GUI;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.Socket;
+import java.util.StringTokenizer;
+import javax.swing.JOptionPane;
+import javax.swing.Timer;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
+import Interface.ServiceInter;
+import POJO.Member;
+import Class.Service;
+import Class.ServiceIn;
+import Interface.ServiceInInter;
+import java.awt.CardLayout;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+
+
 /**
  *
  * @author younghoonkim
  */
 public class Grace_GUI extends javax.swing.JFrame {
 
+    //필요 변수 선언
+    //네트워크를 위한 소켓과 printwriter
+    private Socket s;
+    private PrintWriter pw;
+    //JFrame 요소
+    private CardLayout card;
+    //예약정보 리스트 어레이
+    private ArrayList<String> reservationListArray;
+    //시간과 달력을위한 변수
+    private Timer timer;
+    private UtilDateModel[] model;
+    private JDatePanelImpl[] datePanel;
+    private JDatePickerImpl[] datePicker;
+    //테스트 멤버
+    private Member member;
+    //비즈니스 로직 클래스
+    private ServiceInter service;
+    private ServiceInInter serviceIn;
+    
+    
+
     /**
-     * Creates new form Login_GUI
+     * Creates new form Info_GUI
      */
     public Grace_GUI() {
-        initComponents();
+        //서비를 위한 모든 메소드 시작
+            initService();
+            
     }
 
     /**
@@ -27,22 +78,306 @@ public class Grace_GUI extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        cardPanel = new javax.swing.JPanel();
+        cardRervation = new javax.swing.JPanel();
+        reservationStatus = new javax.swing.JLabel();
+        reservationDetail = new javax.swing.JLabel();
+        currentYearMonthDay = new javax.swing.JLabel();
+        currentTime = new javax.swing.JLabel();
+        currentHourMin = new javax.swing.JLabel();
+        jScrollPane3 = new javax.swing.JScrollPane();
+        reservationTable = new javax.swing.JTable();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        detailedInfo = new javax.swing.JTextArea();
+        reservationRefresh = new javax.swing.JButton();
+        cardLogin = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        loginpwv = new javax.swing.JPasswordField();
+        loginidv = new javax.swing.JTextField();
+        loginBtn = new javax.swing.JButton();
+        signupBtn = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setSize(new java.awt.Dimension(2200, 1300));
+
+        cardPanel.setLayout(new java.awt.CardLayout());
+
+        cardRervation.setBackground(new java.awt.Color(204, 255, 255));
+
+        reservationStatus.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        reservationStatus.setText("예약현황");
+
+        reservationDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        reservationDetail.setText("상세예약정보");
+
+        currentYearMonthDay.setText("currentYMD");
+
+        currentTime.setText("현재 시간:");
+
+        currentHourMin.setText("currentime");
+
+        reservationTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, "", null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "이름", "예약날짜", "프로그램"
+            }
+        ));
+        jScrollPane3.setViewportView(reservationTable);
+
+        detailedInfo.setColumns(20);
+        detailedInfo.setRows(5);
+        jScrollPane2.setViewportView(detailedInfo);
+
+        reservationRefresh.setText("예약새로고침");
+        reservationRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reservationRefreshActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cardRervationLayout = new javax.swing.GroupLayout(cardRervation);
+        cardRervation.setLayout(cardRervationLayout);
+        cardRervationLayout.setHorizontalGroup(
+            cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardRervationLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cardRervationLayout.createSequentialGroup()
+                        .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(107, 107, 107)
+                        .addComponent(reservationRefresh))
+                    .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
+                            .addComponent(currentTime)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(86, 86, 86)
+                            .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(reservationDetail))
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
+                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(30, 30, 30)
+                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(0, 195, Short.MAX_VALUE))
+        );
+        cardRervationLayout.setVerticalGroup(
+            cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardRervationLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reservationRefresh))
+                .addGap(65, 65, 65)
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(currentHourMin)
+                        .addComponent(reservationDetail))
+                    .addComponent(currentTime))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                    .addGroup(cardRervationLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+
+        cardPanel.add(cardRervation, "cardReservation");
+
+        jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        jLabel2.setText("PW:");
+
+        jLabel3.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
+        jLabel3.setText(" ID :");
+
+        loginpwv.setText("jPasswordField1");
+        loginpwv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loginpwvMouseClicked(evt);
+            }
+        });
+        loginpwv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginpwvActionPerformed(evt);
+            }
+        });
+        loginpwv.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginpwvKeyPressed(evt);
+            }
+        });
+
+        loginidv.setFont(new java.awt.Font("나눔고딕", 0, 15)); // NOI18N
+        loginidv.setText("아이디를 입력해주세요.");
+        loginidv.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                loginidvMouseClicked(evt);
+            }
+        });
+        loginidv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginidvActionPerformed(evt);
+            }
+        });
+        loginidv.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                loginidvKeyPressed(evt);
+            }
+        });
+
+        loginBtn.setFont(new java.awt.Font("Trebuchet MS", 1, 20)); // NOI18N
+        loginBtn.setForeground(new java.awt.Color(153, 0, 153));
+        loginBtn.setText("LOG IN");
+        loginBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                loginBtnActionPerformed(evt);
+            }
+        });
+
+        signupBtn.setFont(new java.awt.Font("Trebuchet MS", 1, 20)); // NOI18N
+        signupBtn.setForeground(new java.awt.Color(153, 0, 153));
+        signupBtn.setText("JOIN");
+        signupBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                signupBtnActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cardLoginLayout = new javax.swing.GroupLayout(cardLogin);
+        cardLogin.setLayout(cardLoginLayout);
+        cardLoginLayout.setHorizontalGroup(
+            cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardLoginLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(67, 67, 67)
+                .addGroup(cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardLoginLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(18, 18, 18)
+                        .addComponent(loginpwv, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardLoginLayout.createSequentialGroup()
+                        .addComponent(jLabel3)
+                        .addGap(18, 18, 18)
+                        .addComponent(loginidv, javax.swing.GroupLayout.PREFERRED_SIZE, 429, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardLoginLayout.createSequentialGroup()
+                        .addComponent(loginBtn)
+                        .addGap(52, 52, 52)
+                        .addComponent(signupBtn)))
+                .addGap(139, 139, 139))
+        );
+        cardLoginLayout.setVerticalGroup(
+            cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardLoginLayout.createSequentialGroup()
+                .addGroup(cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cardLoginLayout.createSequentialGroup()
+                        .addGap(255, 255, 255)
+                        .addGroup(cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3)
+                            .addComponent(loginidv, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addGroup(cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel2)
+                            .addComponent(loginpwv, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(50, 50, 50)
+                        .addGroup(cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(loginBtn)
+                            .addComponent(signupBtn)))
+                    .addGroup(cardLoginLayout.createSequentialGroup()
+                        .addGap(79, 79, 79)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        cardPanel.add(cardLogin, "cardLogin");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1900, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1000, Short.MAX_VALUE)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(0, 0, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void reservationRefreshActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reservationRefreshActionPerformed
+        // TODO add your handling code here:
+        
+        //예약새로고침버튼을 눌렀을때 선택된 날짜에대하여 기간내의
+        //예약정보를 가져온다. admin과 일반 member를 구분한다. 
+        //선택된 날짜정보,priterwriter객체, 로그인되어있는 member를 변수로받는다.
+        //Server로부터 새로운 정보를 보내게 만든다
+        service.reservationListRefresh(datePicker,pw,member);
+        //Server로부터 오는 새로운 정보를 처리한다.
+        initTable();
+    }//GEN-LAST:event_reservationRefreshActionPerformed
+
+    private void loginpwvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginpwvMouseClicked
+        loginpwv.setText("");
+    }//GEN-LAST:event_loginpwvMouseClicked
+
+    private void loginpwvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginpwvActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loginpwvActionPerformed
+
+    private void loginpwvKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginpwvKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {
+            login();
+        }
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loginpwvKeyPressed
+
+    private void loginidvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginidvMouseClicked
+        loginidv.setText("");
+        loginpwv.setText("");
+    }//GEN-LAST:event_loginidvMouseClicked
+
+    private void loginidvActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginidvActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loginidvActionPerformed
+
+    private void loginidvKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_loginidvKeyPressed
+        if (evt.getKeyCode() == KeyEvent.VK_TAB) {
+            loginpwv.setText("");
+        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_loginidvKeyPressed
+
+    private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
+
+        login();
+        
+    }//GEN-LAST:event_loginBtnActionPerformed
+
+    private void signupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signupBtnActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_signupBtnActionPerformed
 
     /**
      * @param args the command line arguments
@@ -79,7 +414,279 @@ public class Grace_GUI extends javax.swing.JFrame {
             }
         });
     }
+    
+    //선택된 항목의 상세예약정보를 가져와 GUI에보여준다.
+
+   
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel cardLogin;
+    private javax.swing.JPanel cardPanel;
+    private javax.swing.JPanel cardRervation;
+    private javax.swing.JLabel currentHourMin;
+    private javax.swing.JLabel currentTime;
+    private javax.swing.JLabel currentYearMonthDay;
+    private javax.swing.JTextArea detailedInfo;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton loginBtn;
+    private javax.swing.JTextField loginidv;
+    private javax.swing.JPasswordField loginpwv;
+    private javax.swing.JLabel reservationDetail;
+    private javax.swing.JButton reservationRefresh;
+    private javax.swing.JLabel reservationStatus;
+    private javax.swing.JTable reservationTable;
+    private javax.swing.JButton signupBtn;
     // End of variables declaration//GEN-END:variables
+ 
+    
+        private void initAdditional(){
+            
+            //첫 카드를 로그인화면으로 설정 및 카드레이아웃 초기화
+            card=(CardLayout) cardPanel.getLayout();
+            card.show(cardPanel, "cardLogin");
+            
+            
+            reservationTable.addMouseListener(new java.awt.event.MouseAdapter() {
+                @Override
+                public void mouseClicked(java.awt.event.MouseEvent evt) {
+                    //예약리스트,table,선택된 행번호를 매게변수로 가져가
+                    //해당 행의 번호를 이용하여 예약정보리스트에서 선택된 정보가 들어있는 arraylist를 선택,
+                    //arraylist에들어있는 정보를 출력형태에 맞게 바꾸어 GUI에 표현한다.
+                    service.displayDetailedInfo(detailedInfo,reservationListArray,reservationTable.rowAtPoint(evt.getPoint()));
+                }
+            });
+    }
+    //GUI에 날짜,시간을 표시한다.
+    private void initClock(){
+        //달력 2개를 보여주기위한 배열초기화.
+            model=new UtilDateModel[2];
+            datePanel=new JDatePanelImpl[2];
+            datePicker=new JDatePickerImpl[2];
+            //달력 패널을 만들어 해당 패널을 Frame에 추가시킨다.
+            //timer는 swing API중 하나로, 초단위의 타이머역할을한다.
+            service.serviceStart(timer, model, datePanel, datePicker, currentYearMonthDay, currentHourMin
+                    , cardRervation);
+        
+    }
+    private void initServer(){
+        try {
+            //서버소켓연결
+            s=new Socket("localhost",9999);
+            pw=new PrintWriter(s.getOutputStream(),true);
+            
+            //처음 정해져있는 Default 기간내의 member의 예약을 불러옴
+            //service.reservationListRefresh(datePicker,pw,member);
+            
+            System.out.println("Server connected-user:"+member.getId());
+            
+                } catch (IOException ex) {
+            System.out.println("Error Log : Can't connect to the server.");
+            JOptionPane.showMessageDialog(this,"Server connection fail");
+        }
+    }
+
+    
+    public void initTable(){
+        new Thread(new Runnable() {
+
+            @Override
+            public void run() {
+                try {
+                    reservationListArray=new ArrayList<>();
+                    DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
+                    BufferedReader br=new BufferedReader
+                (new InputStreamReader(s.getInputStream()));
+                    while(true){
+                        String readLine=br.readLine();
+                        if(readLine.equals("no data:")){
+                            System.out.println("no data to fetch");
+                            dtm.setRowCount(0);
+                        }
+                        else{
+                        StringTokenizer st1=new StringTokenizer(readLine,"\n");
+                            
+
+                            while(st1.hasMoreTokens())
+                            {
+                                reservationListArray.add(st1.nextToken());
+
+
+                                for(int col=0;col<reservationListArray.size();col++){
+                                    StringTokenizer st2=new StringTokenizer(
+                                            reservationListArray.get(col),":");
+                                    st2.nextToken();
+                                   
+                                    dtm.setRowCount(reservationListArray.size());
+                                    //reservationTable.se
+                                    for(int row=0;row<3;row++)
+                                    {
+                                        reservationTable.setValueAt(st2.nextToken(), col, row);
+                                    }
+                                }
+
+                            }
+                        }
+                        
+                    }
+                } catch (IOException ex) {
+                    System.out.println("Data transmission failed from Server");
+                }
+            }
+        }).start();
+    }
+    
+    private void initService(){
+        //서비스 시작
+        service=new Service();
+        serviceIn=new ServiceIn();
+        //Test member
+        member=new Member("이순신","alizimara","password","010-1111-1111",false);
+        
+
+        //GUI 초기화
+        initComponents();
+        //Table클릭시 해당 Table정보의 상세정보를 GUI출력시켜주는 메소드
+        initAdditional();
+        //GUI에 시간,달력을 초기화
+        initClock();
+
+        //connect to server!
+        //서버에 연결하는 메소드
+        initServer();
+        //예약정보리스트 테이블을 업데이트하는 메소드 
+        
+    }
+
+    private void login(){
+        service.login(this);
+//        StringTokenizer st=null;
+//        BufferedReader br=null;
+//        try {
+//            br = new BufferedReader
+//                        (new InputStreamReader(s.getInputStream()));
+//            String readLine=br.readLine();
+//            st=new StringTokenizer(readLine, ":");
+//            String identifier=st.nextToken();
+//            if(identifier.equals("login")){
+//                String loginResult=st.nextToken();
+//                if (loginResult.equals("true")) {
+//                    JOptionPane.showMessageDialog(this, "로그인 되었습니다.");
+//                    member.setId(st.nextToken());
+//                    member.setName(st.nextToken());
+//                    member.setPassword(st.nextToken());
+//                    member.setCellphone(st.nextToken());
+//                    card.show(cardPanel, "cardReservation");
+//                    service.reservationListRefresh(datePicker,pw,member);
+//                    initTable();
+//                } else if (loginResult.equals("false")) {
+//                    JOptionPane.showMessageDialog(this, "비밀번호를 다시 입력해주세요.");
+//                    loginpwv.setText("");
+//
+//                } else if (loginResult.equals("none")) {
+//                    JOptionPane.showMessageDialog(this, "아이디가 없습니다.");
+//                    loginpwv.setText("");
+//                    loginidv.setText("");
+//                }else{
+//                    JOptionPane.showMessageDialog(this, "알수없는에러.");
+//                }
+//            }
+//        } catch (IOException ex) {
+//            Logger.getLogger(Grace_GUI.class.getName()).log(Level.SEVERE, null, ex);
+//        }
+//        
+        
+    }
+
+    public PrintWriter getPw() {
+        return pw;
+    }
+
+    public void setPw(PrintWriter pw) {
+        this.pw = pw;
+    }
+
+    public CardLayout getCard() {
+        return card;
+    }
+
+    public void setCard(CardLayout card) {
+        this.card = card;
+    }
+
+    public Member getMember() {
+        return member;
+    }
+
+    public void setMember(Member member) {
+        this.member = member;
+    }
+
+    public JTextField getLoginidv() {
+        return loginidv;
+    }
+
+    public void setLoginidv(JTextField loginidv) {
+        this.loginidv = loginidv;
+    }
+
+    public JPasswordField getLoginpwv() {
+        return loginpwv;
+    }
+
+    public void setLoginpwv(JPasswordField loginpwv) {
+        this.loginpwv = loginpwv;
+    }
+
+    public Socket getS() {
+        return s;
+    }
+
+    public void setS(Socket s) {
+        this.s = s;
+    }
+
+    public Timer getTimer() {
+        return timer;
+    }
+
+    public void setTimer(Timer timer) {
+        this.timer = timer;
+    }
+
+    public JDatePanelImpl[] getDatePanel() {
+        return datePanel;
+    }
+
+    public void setDatePanel(JDatePanelImpl[] datePanel) {
+        this.datePanel = datePanel;
+    }
+
+    public JDatePickerImpl[] getDatePicker() {
+        return datePicker;
+    }
+
+    public void setDatePicker(JDatePickerImpl[] datePicker) {
+        this.datePicker = datePicker;
+    }
+
+    public JPanel getCardPanel() {
+        return cardPanel;
+    }
+
+    public void setCardPanel(JPanel cardPanel) {
+        this.cardPanel = cardPanel;
+    }
+
+    public JPanel getCardRervation() {
+        return cardRervation;
+    }
+
+    public void setCardRervation(JPanel cardRervation) {
+        this.cardRervation = cardRervation;
+    }
+ 
 }

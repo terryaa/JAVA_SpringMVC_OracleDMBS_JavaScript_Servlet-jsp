@@ -26,7 +26,9 @@ public interface ServiceInter {
     
     public void displayDetailedInfo(Grace_GUI gui);
     public void serviceStart(Grace_GUI gui);
-    public void reservationListRefresh(JDatePickerImpl[] datePicker,PrintWriter pw,Member member);
+    public void reservationListRefresh(Grace_GUI gui);
     public void login(Grace_GUI gui);
     public void setReservationTable(Grace_GUI gui);
+    public void join(Grace_GUI gui);
+    public void idCheck(Grace_GUI gui);
 }

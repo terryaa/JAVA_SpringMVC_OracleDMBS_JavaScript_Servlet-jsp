@@ -11,7 +11,6 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.StringTokenizer;
-import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import org.jdatepicker.impl.JDatePanelImpl;
 import org.jdatepicker.impl.JDatePickerImpl;
@@ -26,7 +25,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JFrame;
+import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -61,6 +60,10 @@ public class Grace_GUI extends javax.swing.JFrame {
     private ServiceInter service;
     private ServiceInInter serviceIn;
     
+    private String id;
+    boolean check=false;
+            
+    
     
 
     /**
@@ -82,6 +85,28 @@ public class Grace_GUI extends javax.swing.JFrame {
     private void initComponents() {
 
         cardPanel = new javax.swing.JPanel();
+        cardLogin = new javax.swing.JPanel();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        loginpwv = new javax.swing.JPasswordField();
+        loginidv = new javax.swing.JTextField();
+        loginBtn = new javax.swing.JButton();
+        signupBtn = new javax.swing.JButton();
+        cardJoin = new javax.swing.JPanel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        jLabel7 = new javax.swing.JLabel();
+        joinname = new javax.swing.JTextField();
+        joinid = new javax.swing.JTextField();
+        joincell1 = new javax.swing.JTextField();
+        joinCheckBtn = new javax.swing.JButton();
+        joinBtn = new javax.swing.JButton();
+        joinBackBtn = new javax.swing.JButton();
+        joinpw = new javax.swing.JPasswordField();
+        joincell2 = new javax.swing.JTextField();
+        joincell3 = new javax.swing.JTextField();
         cardRervation = new javax.swing.JPanel();
         reservationStatus = new javax.swing.JLabel();
         reservationDetail = new javax.swing.JLabel();
@@ -93,113 +118,11 @@ public class Grace_GUI extends javax.swing.JFrame {
         jScrollPane2 = new javax.swing.JScrollPane();
         detailedInfo = new javax.swing.JTextArea();
         reservationRefresh = new javax.swing.JButton();
-        cardLogin = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        loginpwv = new javax.swing.JPasswordField();
-        loginidv = new javax.swing.JTextField();
-        loginBtn = new javax.swing.JButton();
-        signupBtn = new javax.swing.JButton();
+        fromInfoToLogin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         cardPanel.setLayout(new java.awt.CardLayout());
-
-        cardRervation.setBackground(new java.awt.Color(204, 255, 255));
-
-        reservationStatus.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
-        reservationStatus.setText("예약현황");
-
-        reservationDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
-        reservationDetail.setText("상세예약정보");
-
-        currentYearMonthDay.setText("currentYMD");
-
-        currentTime.setText("현재 시간:");
-
-        currentHourMin.setText("currentime");
-
-        reservationTable.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null},
-                {null, null, null},
-                {null, "", null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null},
-                {null, null, null}
-            },
-            new String [] {
-                "이름", "예약날짜", "프로그램"
-            }
-        ));
-        jScrollPane3.setViewportView(reservationTable);
-
-        detailedInfo.setColumns(20);
-        detailedInfo.setRows(5);
-        jScrollPane2.setViewportView(detailedInfo);
-
-        reservationRefresh.setText("예약새로고침");
-        reservationRefresh.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                reservationRefreshActionPerformed(evt);
-            }
-        });
-
-        javax.swing.GroupLayout cardRervationLayout = new javax.swing.GroupLayout(cardRervation);
-        cardRervation.setLayout(cardRervationLayout);
-        cardRervationLayout.setHorizontalGroup(
-            cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(cardRervationLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(cardRervationLayout.createSequentialGroup()
-                        .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(107, 107, 107)
-                        .addComponent(reservationRefresh))
-                    .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
-                            .addComponent(currentTime)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(86, 86, 86)
-                            .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(reservationDetail))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
-                            .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGap(30, 30, 30)
-                            .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(0, 195, Short.MAX_VALUE))
-        );
-        cardRervationLayout.setVerticalGroup(
-            cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardRervationLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
-                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(reservationRefresh))
-                .addGap(65, 65, 65)
-                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(currentHourMin)
-                        .addComponent(reservationDetail))
-                    .addComponent(currentTime))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
-                    .addGroup(cardRervationLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addContainerGap())
-        );
-
-        cardPanel.add(cardRervation, "cardReservation");
 
         jLabel2.setFont(new java.awt.Font("Trebuchet MS", 1, 24)); // NOI18N
         jLabel2.setText("PW:");
@@ -308,6 +231,246 @@ public class Grace_GUI extends javax.swing.JFrame {
 
         cardPanel.add(cardLogin, "cardLogin");
 
+        jLabel4.setText("ID");
+
+        jLabel5.setText("Name");
+
+        jLabel6.setText("PW");
+
+        jLabel7.setText("CellPhone");
+
+        joinname.setText("이름을 입력하세요");
+        joinname.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                joinnameMouseClicked(evt);
+            }
+        });
+        joinname.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinnameActionPerformed(evt);
+            }
+        });
+
+        joinid.setText("아이디를 입력하세요");
+        joinid.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                joinidMouseClicked(evt);
+            }
+        });
+        joinid.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinidActionPerformed(evt);
+            }
+        });
+
+        joincell1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joincell1ActionPerformed(evt);
+            }
+        });
+
+        joinCheckBtn.setText("중복체크");
+        joinCheckBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinCheckBtnActionPerformed(evt);
+            }
+        });
+
+        joinBtn.setText("회원가입");
+        joinBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinBtnActionPerformed(evt);
+            }
+        });
+
+        joinBackBtn.setText("뒤로");
+        joinBackBtn.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinBackBtnActionPerformed(evt);
+            }
+        });
+
+        joinpw.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                joinpwActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cardJoinLayout = new javax.swing.GroupLayout(cardJoin);
+        cardJoin.setLayout(cardJoinLayout);
+        cardJoinLayout.setHorizontalGroup(
+            cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardJoinLayout.createSequentialGroup()
+                .addContainerGap(412, Short.MAX_VALUE)
+                .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addComponent(jLabel7))
+                .addGap(43, 43, 43)
+                .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(cardJoinLayout.createSequentialGroup()
+                            .addComponent(joinpw, javax.swing.GroupLayout.PREFERRED_SIZE, 180, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGap(0, 0, Short.MAX_VALUE))
+                        .addGroup(cardJoinLayout.createSequentialGroup()
+                            .addGap(0, 89, Short.MAX_VALUE)
+                            .addComponent(joinBackBtn)
+                            .addGap(38, 38, 38)
+                            .addComponent(joinBtn))
+                        .addGroup(cardJoinLayout.createSequentialGroup()
+                            .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addComponent(joinname, javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(joinid, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 180, Short.MAX_VALUE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addComponent(joinCheckBtn)))
+                    .addGroup(cardJoinLayout.createSequentialGroup()
+                        .addComponent(joincell1, javax.swing.GroupLayout.PREFERRED_SIZE, 59, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(joincell2, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(joincell3, javax.swing.GroupLayout.PREFERRED_SIZE, 67, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(222, 222, 222))
+        );
+        cardJoinLayout.setVerticalGroup(
+            cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardJoinLayout.createSequentialGroup()
+                .addGap(181, 181, 181)
+                .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(joinname, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(28, 28, 28)
+                .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(joinid, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(joinCheckBtn))
+                .addGap(27, 27, 27)
+                .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(joinpw, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(29, 29, 29)
+                .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel7)
+                    .addComponent(joincell1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(joincell2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(joincell3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(40, 40, 40)
+                .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(joinBtn)
+                    .addComponent(joinBackBtn))
+                .addContainerGap(105, Short.MAX_VALUE))
+        );
+
+        cardPanel.add(cardJoin, "cardJoin");
+
+        cardRervation.setBackground(new java.awt.Color(204, 255, 255));
+
+        reservationStatus.setFont(new java.awt.Font("Times New Roman", 3, 24)); // NOI18N
+        reservationStatus.setText("예약현황");
+
+        reservationDetail.setFont(new java.awt.Font("Lucida Grande", 0, 24)); // NOI18N
+        reservationDetail.setText("상세예약정보");
+
+        currentYearMonthDay.setText("currentYMD");
+
+        currentTime.setText("현재 시간:");
+
+        currentHourMin.setText("currentime");
+
+        reservationTable.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null},
+                {null, null, null},
+                {null, "", null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null},
+                {null, null, null}
+            },
+            new String [] {
+                "이름", "예약날짜", "프로그램"
+            }
+        ));
+        jScrollPane3.setViewportView(reservationTable);
+
+        detailedInfo.setColumns(20);
+        detailedInfo.setRows(5);
+        jScrollPane2.setViewportView(detailedInfo);
+
+        reservationRefresh.setText("예약조회");
+        reservationRefresh.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reservationRefreshActionPerformed(evt);
+            }
+        });
+
+        fromInfoToLogin.setText("뒤로");
+        fromInfoToLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                fromInfoToLoginActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout cardRervationLayout = new javax.swing.GroupLayout(cardRervation);
+        cardRervation.setLayout(cardRervationLayout);
+        cardRervationLayout.setHorizontalGroup(
+            cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(cardRervationLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(cardRervationLayout.createSequentialGroup()
+                        .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(107, 107, 107)
+                        .addComponent(reservationRefresh)
+                        .addGap(0, 0, Short.MAX_VALUE))
+                    .addGroup(cardRervationLayout.createSequentialGroup()
+                        .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
+                                .addComponent(currentTime)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(86, 86, 86)
+                                .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(reservationDetail))
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
+                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(30, 30, 30)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
+                        .addComponent(fromInfoToLogin)))
+                .addContainerGap())
+        );
+        cardRervationLayout.setVerticalGroup(
+            cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardRervationLayout.createSequentialGroup()
+                .addGap(21, 21, 21)
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reservationRefresh))
+                .addGap(65, 65, 65)
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(currentHourMin)
+                        .addComponent(reservationDetail))
+                    .addComponent(currentTime))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                    .addGroup(cardRervationLayout.createSequentialGroup()
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(fromInfoToLogin)))
+                .addContainerGap())
+        );
+
+        cardPanel.add(cardRervation, "cardReservation");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -335,9 +498,10 @@ public class Grace_GUI extends javax.swing.JFrame {
         //예약정보를 가져온다. admin과 일반 member를 구분한다. 
         //선택된 날짜정보,priterwriter객체, 로그인되어있는 member를 변수로받는다.
         //Server로부터 새로운 정보를 보내게 만든다
-        service.reservationListRefresh(datePicker,pw,member);
+        reservationListArray=new ArrayList<>();
+        service.reservationListRefresh(this);
         //Server로부터 오는 새로운 정보를 처리한다.
-        initTable();
+        //initTable();
         //service.setReservationTable(this);
     }//GEN-LAST:event_reservationRefreshActionPerformed
 
@@ -381,7 +545,56 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     private void signupBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_signupBtnActionPerformed
         // TODO add your handling code here:
+        card.show(cardPanel, "cardJoin");
     }//GEN-LAST:event_signupBtnActionPerformed
+
+    private void joinnameMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_joinnameMouseClicked
+        joinname.setText("");
+    }//GEN-LAST:event_joinnameMouseClicked
+
+    private void joinnameActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinnameActionPerformed
+
+    }//GEN-LAST:event_joinnameActionPerformed
+
+    private void joinidMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_joinidMouseClicked
+        joinid.setText("");
+    }//GEN-LAST:event_joinidMouseClicked
+
+    private void joinidActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinidActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_joinidActionPerformed
+
+    private void joincell1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joincell1ActionPerformed
+
+    }//GEN-LAST:event_joincell1ActionPerformed
+
+    private void joinCheckBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCheckBtnActionPerformed
+        
+        service.idCheck(this);
+    }//GEN-LAST:event_joinCheckBtnActionPerformed
+
+    private void joinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinBtnActionPerformed
+        
+            service.join(this);
+        
+    }//GEN-LAST:event_joinBtnActionPerformed
+
+    private void joinBackBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinBackBtnActionPerformed
+        // 뒤로
+        // 로그인 페이지로 이동
+        card.show(cardPanel,"cardLogin");
+
+    }//GEN-LAST:event_joinBackBtnActionPerformed
+
+    private void joinpwActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinpwActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_joinpwActionPerformed
+
+    private void fromInfoToLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromInfoToLoginActionPerformed
+        // TODO add your handling code here:
+        member=new Member();
+        card.show(cardPanel,"cardLogin");
+    }//GEN-LAST:event_fromInfoToLoginActionPerformed
 
     /**
      * @param args the command line arguments
@@ -424,6 +637,7 @@ public class Grace_GUI extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JPanel cardJoin;
     private javax.swing.JPanel cardLogin;
     private javax.swing.JPanel cardPanel;
     private javax.swing.JPanel cardRervation;
@@ -431,11 +645,25 @@ public class Grace_GUI extends javax.swing.JFrame {
     private javax.swing.JLabel currentTime;
     private javax.swing.JLabel currentYearMonthDay;
     private javax.swing.JTextArea detailedInfo;
+    private javax.swing.JButton fromInfoToLogin;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JButton joinBackBtn;
+    private javax.swing.JButton joinBtn;
+    private javax.swing.JButton joinCheckBtn;
+    private javax.swing.JTextField joincell1;
+    private javax.swing.JTextField joincell2;
+    private javax.swing.JTextField joincell3;
+    private javax.swing.JTextField joinid;
+    private javax.swing.JTextField joinname;
+    private javax.swing.JPasswordField joinpw;
     private javax.swing.JButton loginBtn;
     private javax.swing.JTextField loginidv;
     private javax.swing.JPasswordField loginpwv;
@@ -466,10 +694,11 @@ public class Grace_GUI extends javax.swing.JFrame {
         //서버에 연결하는 메소드
         initServer();
         //예약정보리스트 테이블을 업데이트하는 메소드 
+        initTable();
         
     }
     
-        private void initAdditional(){
+    private void initAdditional(){
             
             //첫 카드를 로그인화면으로 설정 및 카드레이아웃 초기화
             card=(CardLayout) cardPanel.getLayout();
@@ -478,7 +707,8 @@ public class Grace_GUI extends javax.swing.JFrame {
             
             service.displayDetailedInfo(this);
     }
-         private void initClock(){
+    
+    private void initClock(){
         //달력 2개를 보여주기위한 배열초기화.
             model=new UtilDateModel[2];
             datePanel=new JDatePanelImpl[2];
@@ -491,19 +721,72 @@ public class Grace_GUI extends javax.swing.JFrame {
     //GUI에 날짜,시간을 표시한다.
     
     private void initServer(){
-        try {
-            //서버소켓연결
-            s=new Socket("localhost",9999);
-            pw=new PrintWriter(s.getOutputStream(),true);
-            
-            System.out.println("Server connected");
-            
-                } catch (IOException ex) {
-            System.out.println("Error Log : Can't connect to the server.");
-            JOptionPane.showMessageDialog(this,"Server connection fail");
-        }
+//        try {
+//            //서버소켓연결
+//            //s=new Socket("localhost",9999);
+//            //pw=new PrintWriter(s.getOutputStream(),true);
+//            
+//            System.out.println("Server connected");
+//            
+//                } catch (IOException ex) {
+//            System.out.println("Error Log : Can't connect to the server.");
+//            JOptionPane.showMessageDialog(this,"Server connection fail");
+//        }
     }
 
+    
+    
+    public void initTable(){
+        
+        new Thread(() -> {
+            try {
+                Socket s;
+                s=new Socket("localhost",9999);
+                reservationListArray=new ArrayList<>();
+                DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
+                BufferedReader br=new BufferedReader
+                        (new InputStreamReader(s.getInputStream()));
+                while(true){
+                    String readLine=br.readLine();
+                    if(readLine.equals("no data:")){
+                        System.out.println("no data to fetch");
+                        dtm.setRowCount(0);
+                    }
+                    else{
+                        
+                        StringTokenizer st1=new StringTokenizer(readLine,"\n");
+                        
+                        
+                        while(st1.hasMoreTokens())
+                        {
+                            reservationListArray.add(st1.nextToken());
+                            
+                            
+                            for(int col=0;col<reservationListArray.size();col++){
+                                StringTokenizer st2=new StringTokenizer(
+                                        reservationListArray.get(col),":");
+                                st2.nextToken();
+                                
+                                dtm.setRowCount(reservationListArray.size());
+                                //reservationTable.se
+                                for(int row=0;row<3;row++)
+                                {
+                                    reservationTable.setValueAt(st2.nextToken(), col, row);
+                                }
+                            }
+                            
+                        }
+                    }
+
+                }
+            } catch (IOException ex) {
+                System.out.println("Data transmission failed from Server");
+            }finally{
+            }
+            
+        }).start();
+    }
+    
     public ArrayList<String> getReservationListArray() {
         return reservationListArray;
     }
@@ -575,58 +858,6 @@ public class Grace_GUI extends javax.swing.JFrame {
     public void setReservationTable(JTable reservationTable) {
         this.reservationTable = reservationTable;
     }
-
-    
-    public void initTable(){
-        new Thread(new Runnable() {
-
-            @Override
-            public void run() {
-                try {
-                    reservationListArray=new ArrayList<>();
-                    DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
-                    BufferedReader br=new BufferedReader
-                (new InputStreamReader(s.getInputStream()));
-                    while(true){
-                        String readLine=br.readLine();
-                        if(readLine.equals("no data:")){
-                            System.out.println("no data to fetch");
-                            dtm.setRowCount(0);
-                        }
-                        else{
-                        StringTokenizer st1=new StringTokenizer(readLine,"\n");
-                            
-
-                            while(st1.hasMoreTokens())
-                            {
-                                reservationListArray.add(st1.nextToken());
-
-
-                                for(int col=0;col<reservationListArray.size();col++){
-                                    StringTokenizer st2=new StringTokenizer(
-                                            reservationListArray.get(col),":");
-                                    st2.nextToken();
-                                   
-                                    dtm.setRowCount(reservationListArray.size());
-                                    //reservationTable.se
-                                    for(int row=0;row<3;row++)
-                                    {
-                                        reservationTable.setValueAt(st2.nextToken(), col, row);
-                                    }
-                                }
-
-                            }
-                        }
-                        
-                    }
-                } catch (IOException ex) {
-                    System.out.println("Data transmission failed from Server");
-                }
-            }
-        }).start();
-    }
-    
-    
 
     private void login(){
         service.login(this);
@@ -720,5 +951,95 @@ public class Grace_GUI extends javax.swing.JFrame {
     public void setCardRervation(JPanel cardRervation) {
         this.cardRervation = cardRervation;
     }
+    
+
+    public JButton getJoinBackBtn() {
+        return joinBackBtn;
+    }
+
+    public void setJoinBackBtn(JButton joinBackBtn) {
+        this.joinBackBtn = joinBackBtn;
+    }
+
+    public JButton getJoinBtn() {
+        return joinBtn;
+    }
+
+    public void setJoinBtn(JButton joinBtn) {
+        this.joinBtn = joinBtn;
+    }
+
+    public JButton getJoinCheckBtn() {
+        return joinCheckBtn;
+    }
+
+    public void setJoinCheckBtn(JButton joinCheckBtn) {
+        this.joinCheckBtn = joinCheckBtn;
+    }
+
+    public JTextField getJoincell1() {
+        return joincell1;
+    }
+
+    public void setJoincell1(JTextField joincell1) {
+        this.joincell1 = joincell1;
+    }
+
+    public JTextField getJoincell2() {
+        return joincell2;
+    }
+
+    public void setJoincell2(JTextField joincell2) {
+        this.joincell2 = joincell2;
+    }
+
+    public JTextField getJoincell3() {
+        return joincell3;
+    }
+
+    public void setJoincell3(JTextField joincell3) {
+        this.joincell3 = joincell3;
+    }
+
+    public JTextField getJoinid() {
+        return joinid;
+    }
+
+    public void setJoinid(JTextField joinid) {
+        this.joinid = joinid;
+    }
+
+    public JTextField getJoinname() {
+        return joinname;
+    }
+
+    public void setJoinname(JTextField joinname) {
+        this.joinname = joinname;
+    }
+
+    public JPasswordField getJoinpw() {
+        return joinpw;
+    }
+
+    public void setJoinpw(JPasswordField joinpw) {
+        this.joinpw = joinpw;
+    }
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public boolean isCheck() {
+        return check;
+    }
+
+    public void setCheck(boolean check) {
+        this.check = check;
+    }
+    
  
 }

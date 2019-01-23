@@ -24,6 +24,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Scanner;
+import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -81,6 +82,7 @@ public class ServerThread implements Runnable{
             Scanner sc=new Scanner(file);
             StringTokenizer st;
             StringBuffer sb=null;
+            JSONObject members=null;
             
             
 //            StringTokenizer stz = new StringTokenizer(clientMsg, "/");
@@ -146,7 +148,7 @@ public class ServerThread implements Runnable{
                     sb.append("login:");
                     String id = st.nextToken();
                     String password = st.nextToken();
-                    JSONObject members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+                    members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
 
                     JSONObject member_id = (JSONObject) members.get(id);
 
@@ -173,12 +175,43 @@ public class ServerThread implements Runnable{
                         // 회원가입하는 로직
                     }
                 }
+                else if(identifier.equals("id_check")){
+                    // "id_check/아이디/null/null"
+                    
+                    members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+                    Set ids = members.keySet();
+                    if (!ids.contains(st.nextToken())) {
+                        pw.println("id_check:true:");
+                    } else {
+                        pw.println("id_check:false:");
+                    }
+                    // 아이디 체크하는 로직
+                }
+                 else if (identifier.equals("join")) {
+                    // "join/아이디/비밀번호/연락처"
+                    //String id = stz.nextToken();
+                    // 회원가입하는 로직
+                    members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+                    JSONObject memberInfo = new JSONObject();   // 값에 대한 객체 생성
+                    memberInfo.put("Name", st.nextToken());        //입력한 값을 JSon에 저장
+                    memberInfo.put("ID",st.nextToken());            //입력한 값을 JSon에 저장
+                    memberInfo.put("password", st.nextToken());//입력한 값을 JSon에 저장
+                    memberInfo.put("Cell1", st.nextToken()); //입력한 값을 JSon에 저장
+                    memberInfo.put("Cell2", st.nextToken()); //입력한 값을 JSon에 저장
+                    memberInfo.put("Cell3", st.nextToken()); //입력한 값을 JSon에 저장
+                    
+                    members.put(memberInfo,memberInfo.get("ID"));
+                    sb=new StringBuffer();
+                    sb.append("join:true");
+                
+                }
                 //예약정보를 String형태로 정리한다.
                 String reservationList=sb.toString();
                 System.out.println(reservationList);
                 
                 //Server에게 String형태의 검색결과자료를 broadcast하도록한다.
                 server.sendReservationList(reservationList);
+                
             }
             
             

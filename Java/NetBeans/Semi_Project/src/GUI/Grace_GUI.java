@@ -27,8 +27,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JTable;
+import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
 
@@ -335,6 +338,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         service.reservationListRefresh(datePicker,pw,member);
         //Server로부터 오는 새로운 정보를 처리한다.
         initTable();
+        //service.setReservationTable(this);
     }//GEN-LAST:event_reservationRefreshActionPerformed
 
     private void loginpwvMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_loginpwvMouseClicked
@@ -443,6 +447,28 @@ public class Grace_GUI extends javax.swing.JFrame {
     // End of variables declaration//GEN-END:variables
  
     
+    private void initService(){
+        //서비스 시작
+        service=new Service();
+        serviceIn=new ServiceIn();
+        //Test member
+        member=new Member("이순신","alizimara","password","010-1111-1111",false);
+        
+
+        //GUI 초기화
+        initComponents();
+        //Table클릭시 해당 Table정보의 상세정보를 GUI출력시켜주는 메소드
+        initAdditional();
+        //GUI에 시간,달력을 초기화
+        initClock();
+
+        //connect to server!
+        //서버에 연결하는 메소드
+        initServer();
+        //예약정보리스트 테이블을 업데이트하는 메소드 
+        
+    }
+    
         private void initAdditional(){
             
             //첫 카드를 로그인화면으로 설정 및 카드레이아웃 초기화
@@ -450,43 +476,104 @@ public class Grace_GUI extends javax.swing.JFrame {
             card.show(cardPanel, "cardLogin");
             
             
-            reservationTable.addMouseListener(new java.awt.event.MouseAdapter() {
-                @Override
-                public void mouseClicked(java.awt.event.MouseEvent evt) {
-                    //예약리스트,table,선택된 행번호를 매게변수로 가져가
-                    //해당 행의 번호를 이용하여 예약정보리스트에서 선택된 정보가 들어있는 arraylist를 선택,
-                    //arraylist에들어있는 정보를 출력형태에 맞게 바꾸어 GUI에 표현한다.
-                    service.displayDetailedInfo(detailedInfo,reservationListArray,reservationTable.rowAtPoint(evt.getPoint()));
-                }
-            });
+            service.displayDetailedInfo(this);
     }
-    //GUI에 날짜,시간을 표시한다.
-    private void initClock(){
+         private void initClock(){
         //달력 2개를 보여주기위한 배열초기화.
             model=new UtilDateModel[2];
             datePanel=new JDatePanelImpl[2];
             datePicker=new JDatePickerImpl[2];
             //달력 패널을 만들어 해당 패널을 Frame에 추가시킨다.
             //timer는 swing API중 하나로, 초단위의 타이머역할을한다.
-            service.serviceStart(timer, model, datePanel, datePicker, currentYearMonthDay, currentHourMin
-                    , cardRervation);
+            service.serviceStart(this);
         
     }
+    //GUI에 날짜,시간을 표시한다.
+    
     private void initServer(){
         try {
             //서버소켓연결
             s=new Socket("localhost",9999);
             pw=new PrintWriter(s.getOutputStream(),true);
             
-            //처음 정해져있는 Default 기간내의 member의 예약을 불러옴
-            //service.reservationListRefresh(datePicker,pw,member);
-            
-            System.out.println("Server connected-user:"+member.getId());
+            System.out.println("Server connected");
             
                 } catch (IOException ex) {
             System.out.println("Error Log : Can't connect to the server.");
             JOptionPane.showMessageDialog(this,"Server connection fail");
         }
+    }
+
+    public ArrayList<String> getReservationListArray() {
+        return reservationListArray;
+    }
+
+    public void setReservationListArray(ArrayList<String> reservationListArray) {
+        this.reservationListArray = reservationListArray;
+    }
+
+    public UtilDateModel[] getModel() {
+        return model;
+    }
+
+    public void setModel(UtilDateModel[] model) {
+        this.model = model;
+    }
+
+    public JPanel getCardLogin() {
+        return cardLogin;
+    }
+
+    public void setCardLogin(JPanel cardLogin) {
+        this.cardLogin = cardLogin;
+    }
+
+    public JLabel getCurrentHourMin() {
+        return currentHourMin;
+    }
+
+    public void setCurrentHourMin(JLabel currentHourMin) {
+        this.currentHourMin = currentHourMin;
+    }
+
+    public JLabel getCurrentTime() {
+        return currentTime;
+    }
+
+    public void setCurrentTime(JLabel currentTime) {
+        this.currentTime = currentTime;
+    }
+
+    public JLabel getCurrentYearMonthDay() {
+        return currentYearMonthDay;
+    }
+
+    public void setCurrentYearMonthDay(JLabel currentYearMonthDay) {
+        this.currentYearMonthDay = currentYearMonthDay;
+    }
+
+    public JTextArea getDetailedInfo() {
+        return detailedInfo;
+    }
+
+    public void setDetailedInfo(JTextArea detailedInfo) {
+        this.detailedInfo = detailedInfo;
+    }
+
+    public JLabel getReservationStatus() {
+        return reservationStatus;
+    }
+
+    public void setReservationStatus(JLabel reservationStatus) {
+        this.reservationStatus = reservationStatus;
+    }
+
+    public JTable getReservationTable() {
+        return reservationTable;
+    }
+
+    public void setReservationTable(JTable reservationTable) {
+        this.reservationTable = reservationTable;
     }
 
     
@@ -539,67 +626,12 @@ public class Grace_GUI extends javax.swing.JFrame {
         }).start();
     }
     
-    private void initService(){
-        //서비스 시작
-        service=new Service();
-        serviceIn=new ServiceIn();
-        //Test member
-        member=new Member("이순신","alizimara","password","010-1111-1111",false);
-        
-
-        //GUI 초기화
-        initComponents();
-        //Table클릭시 해당 Table정보의 상세정보를 GUI출력시켜주는 메소드
-        initAdditional();
-        //GUI에 시간,달력을 초기화
-        initClock();
-
-        //connect to server!
-        //서버에 연결하는 메소드
-        initServer();
-        //예약정보리스트 테이블을 업데이트하는 메소드 
-        
-    }
+    
 
     private void login(){
         service.login(this);
-//        StringTokenizer st=null;
-//        BufferedReader br=null;
-//        try {
-//            br = new BufferedReader
-//                        (new InputStreamReader(s.getInputStream()));
-//            String readLine=br.readLine();
-//            st=new StringTokenizer(readLine, ":");
-//            String identifier=st.nextToken();
-//            if(identifier.equals("login")){
-//                String loginResult=st.nextToken();
-//                if (loginResult.equals("true")) {
-//                    JOptionPane.showMessageDialog(this, "로그인 되었습니다.");
-//                    member.setId(st.nextToken());
-//                    member.setName(st.nextToken());
-//                    member.setPassword(st.nextToken());
-//                    member.setCellphone(st.nextToken());
-//                    card.show(cardPanel, "cardReservation");
-//                    service.reservationListRefresh(datePicker,pw,member);
-//                    initTable();
-//                } else if (loginResult.equals("false")) {
-//                    JOptionPane.showMessageDialog(this, "비밀번호를 다시 입력해주세요.");
-//                    loginpwv.setText("");
-//
-//                } else if (loginResult.equals("none")) {
-//                    JOptionPane.showMessageDialog(this, "아이디가 없습니다.");
-//                    loginpwv.setText("");
-//                    loginidv.setText("");
-//                }else{
-//                    JOptionPane.showMessageDialog(this, "알수없는에러.");
-//                }
-//            }
-//        } catch (IOException ex) {
-//            Logger.getLogger(Grace_GUI.class.getName()).log(Level.SEVERE, null, ex);
-//        }
-//        
-        
     }
+   
 
     public PrintWriter getPw() {
         return pw;

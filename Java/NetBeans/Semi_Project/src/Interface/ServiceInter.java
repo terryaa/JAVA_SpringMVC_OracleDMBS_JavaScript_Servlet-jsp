@@ -24,9 +24,9 @@ import org.jdatepicker.impl.UtilDateModel;
  */
 public interface ServiceInter {
     
-    public void displayDetailedInfo(javax.swing.JTextArea detailedInfo,ArrayList<String> array,int row);
-    public void serviceStart(Timer timer,UtilDateModel[] model,JDatePanelImpl[] datePanel,JDatePickerImpl[] datePicker,
-            JLabel currentYearMonthDay,JLabel currentHourMin,javax.swing.JPanel cardRervation);
+    public void displayDetailedInfo(Grace_GUI gui);
+    public void serviceStart(Grace_GUI gui);
     public void reservationListRefresh(JDatePickerImpl[] datePicker,PrintWriter pw,Member member);
     public void login(Grace_GUI gui);
+    public void setReservationTable(Grace_GUI gui);
 }

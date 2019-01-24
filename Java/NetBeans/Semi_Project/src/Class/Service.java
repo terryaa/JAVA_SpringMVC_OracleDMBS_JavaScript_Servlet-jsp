@@ -7,6 +7,7 @@ package Class;
 
 import GUI.Grace_GUI;
 import Interface.ServiceInter;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -36,7 +37,7 @@ import javax.swing.table.DefaultTableModel;
  */
 public class Service implements ServiceInter{
     
-     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+     private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
      private final SimpleDateFormat sdf2=new SimpleDateFormat("HH:mm:ss");
     
      
@@ -61,9 +62,9 @@ public class Service implements ServiceInter{
                         sb.append("이름 : ").append(st.nextToken()).append("\n");
                         sb.append("예약시간 : ").append(st.nextToken()).append("\n");
                         sb.append("시술종류 : ").append(st.nextToken()).append("\n");
-                        sb.append("남은 보톡스 예약횟수 : ").append(st.nextToken()).append("\n");
-                        sb.append("남은 레이저 예약횟수 : ").append(st.nextToken()).append("\n");
-                        sb.append("남은 피부관리 예약횟수 : ").append(st.nextToken()).append("\n");
+//                        sb.append("남은 보톡스 예약횟수 : ").append(st.nextToken()).append("\n");
+//                        sb.append("남은 레이저 예약횟수 : ").append(st.nextToken()).append("\n");
+//                        sb.append("남은 피부관리 예약횟수 : ").append(st.nextToken()).append("\n");
                         sb.append("의사메모 : ").append(st.nextToken()).append("\n");
                      }
                      //출력창에 출력.
@@ -110,7 +111,7 @@ public class Service implements ServiceInter{
         model[i].setSelected(true);
         datePanel[i]=new JDatePanelImpl(model[i], p);
         datePicker[i]=new JDatePickerImpl(datePanel[i], new DateLabelFormatter());
-        datePicker[i].setBounds(10+140*i,75,130,30);
+        datePicker[i].setBounds(10+140*i,115,130,30);
         gui.getCardRervation().add(datePicker[i]);
         }
     }
@@ -192,11 +193,23 @@ public class Service implements ServiceInter{
                             gui.getMember().setName(st.nextToken());
                             gui.getMember().setPassword(st.nextToken());
                             gui.getMember().setCellphone(st.nextToken());
-                            gui.getCard().show(gui.getCardPanel(), "cardReservation");
+                            
                             if(gui.getMember().getId().equals("admin"))
+                            {
                                 gui.getMember().setAdmin(true);
+                                gui.getLabel_Admin().setVisible(true);
+                                gui.getTextField_Admin().setVisible(true);
+                                gui.getButton_Admin().setVisible(true);
+                            }
+                            else{
+                                gui.getMember().setAdmin(false);
+                                gui.getLabel_Admin().setVisible(false);
+                                gui.getTextField_Admin().setVisible(false);
+                                gui.getButton_Admin().setVisible(false);
+                            }
                             reservationListRefresh(gui);
-                            //gui.initTable();
+                            gui.getLabel_LoginID().setText(gui.getMember().getName());
+                            gui.getCard().show(gui.getCardPanel(), "cardReservation");
                         } else if (loginResult.equals("false")) {
                             JOptionPane.showMessageDialog(gui, "비밀번호를 다시 입력해주세요.");
                             gui.getLoginidv().setText("");
@@ -364,10 +377,110 @@ public class Service implements ServiceInter{
          
     }
    
+    @Override
+    public void makeReservation(Grace_GUI gui){
+        gui.Action();
+        
+        if(gui.getReserveinfo().length() >= 19){
+            //만약 길이가 19가 넘으면
+            gui.getLabelError().setForeground(Color.red);
+            //라벨 텍스트 색을 빨간색으로.
+            gui.getLabelError().setText("정확히 입력해주세요.");
+            //정확히 입력해주세요를 Label에 출력
+
+        }else if(gui.getReservememolength() >= 20){
+            gui.getLabelError().setForeground(Color.black);
+            gui.getLabelError().setText("메모의 글자수가 초과하였습니다.");
+
+        }else {
+            gui.getLabelError().setForeground(Color.blue);
+            gui.getLabelError().setText("예약이 완료되었습니다!");
+              if(initSocketPrintWriter(gui)){
+                  if(gui.getMember().isAdmin()){
+                      gui.getPw().println("make:"+gui.getReserveTockenAdmin());
+                  }
+                  else
+                      gui.getPw().println("make:"+gui.getReserveTocken());
+              }
+              BufferedReader br=null;
+              
+            try {
+                br = new BufferedReader(new InputStreamReader(gui.getS().getInputStream()));
+                String readLine=br.readLine();
+                if(readLine.equals("duplication")){
+                    gui.getLabelError().setForeground(Color.GREEN);
+                    //중복일시에 텍스트컬러를 초록색으로 바꿈.
+
+                    gui.getLabelError().setText("이미 예약되어 있습니다. 다른 시간에 예약하세요.");
+                    //다른시간에 예약되었다고 출력하게 만듬
+                }
+            } catch (IOException ex) {
+                Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        
+        
+         try {
+             gui.getS().close();
+             gui.getPw().close();
+         } catch (IOException ex) {
+             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+         }
+    }
 
     @Override
     public void setReservationTable(Grace_GUI gui) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public void checkID(Grace_GUI gui){
+         BufferedReader br = null;
+         try {
+             String msg=null;
+             String id=gui.getTextField_Admin().getText();
+             if (id.equals("")) { // idv가 빈칸인 상태에서 중복체크버튼을 눌렀을 때
+                 JOptionPane.showMessageDialog(gui, "아이디입력");
+             }else{
+                  // joinid 에 입력된 값을 id에 저장
+                 msg="id_search:" + id + ":";
+             }
+            if(initSocketPrintWriter(gui)){
+
+                 br = new BufferedReader(new InputStreamReader(gui.getS().getInputStream()));
+                 System.out.println(msg);
+                 gui.getPw().println(msg);
+                 gui.getPw().flush();
+                 String answer = br.readLine();
+
+                 System.out.println(answer);
+                 StringTokenizer stz = new StringTokenizer(answer, ":");
+                 String token = stz.nextToken();
+
+                 if (token.equals("id_search")) {
+                     if (stz.nextToken().equals("true")) {
+                         JOptionPane.showMessageDialog(gui, "회원 검색 완료");
+                         gui.setSearch_id(stz.nextToken());
+                         gui.setSearch_name(stz.nextToken());
+                     }
+                     else {
+                         JOptionPane.showMessageDialog(gui, "검색 아이디를 다시 확인하여주세요");
+                     }
+                 }
+             }
+         }
+         catch (IOException ex) {
+             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+         }finally{
+                 
+             try {
+                 gui.getS().close();
+                 gui.getPw().close();
+                 br.close();
+             } catch (IOException ex) {
+                 Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+             }
+         }
     }
         
 }

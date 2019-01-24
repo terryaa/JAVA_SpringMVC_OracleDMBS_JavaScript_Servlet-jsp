@@ -31,7 +31,7 @@ public class Server {
             ss=new ServerSocket(9999);
             System.out.println("Server running...");
             cList=new ArrayList<>();
-            executorService=Executors.newFixedThreadPool(3);
+            executorService=Executors.newFixedThreadPool(5);
             //ss=new ServerSocket();
             //ss.bind(new InetSocketAddress(9999));
         } catch (IOException ex) {

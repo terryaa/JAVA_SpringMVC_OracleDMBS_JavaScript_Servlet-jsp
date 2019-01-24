@@ -31,4 +31,6 @@ public interface ServiceInter {
     public void setReservationTable(Grace_GUI gui);
     public void join(Grace_GUI gui);
     public void idCheck(Grace_GUI gui);
+    public void makeReservation(Grace_GUI gui);
+    public void checkID(Grace_GUI gui);
 }

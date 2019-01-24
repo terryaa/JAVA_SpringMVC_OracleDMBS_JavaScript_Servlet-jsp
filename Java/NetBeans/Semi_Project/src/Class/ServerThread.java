@@ -16,6 +16,7 @@ import java.util.Date;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
@@ -40,7 +41,7 @@ public class ServerThread implements Runnable{
     private Server server;
     private BufferedReader br;
     private PrintWriter pw;
-    private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd");
+    private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
     private final String path="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
                     + "/Java/NetBeans/Semi_Project/src/Data/";
    
@@ -108,7 +109,6 @@ public class ServerThread implements Runnable{
                     Date endDate=setDate(sdf.parse(st.nextToken()));
                     //스캐너와 파일연결
                     sc=new Scanner(file);
-                    
                     //스캐너를 이용 한줄씩 읽어들이며 저장된 자료가
                     //기간내에 있는지, 예약ID와 사용자ID가 일치하는지 비교한다.
                     firstWhile:
@@ -118,7 +118,6 @@ public class ServerThread implements Runnable{
                         st=new StringTokenizer(readLine, ":");
 
                         String id=st.nextToken();st.nextToken();
-
                         Date date=sdf.parse(st.nextToken());
                         if(startDate.compareTo(date)==0 ||
                                 startDate.compareTo(date)<0){
@@ -126,7 +125,7 @@ public class ServerThread implements Runnable{
                             while(sc.hasNext()){
                                 //보낼자료를 StringBuffer에저장
                                 if(clientId.equals(id)||clientId.equals("admin"))
-                                    sb.append(readLine).append("\n");
+                                    sb.append("date^").append(readLine).append("\n");
                                 //:을 기준으로 나눠진 자료를 구별한다.
                                 readLine=sc.nextLine();
                                 st=new StringTokenizer(readLine, ":");
@@ -139,7 +138,7 @@ public class ServerThread implements Runnable{
                                 }
                             }
                             if(clientId.equals(id)||clientId.equals("admin"))
-                                sb.append(readLine).append("\n");
+                                sb.append("date^").append(readLine).append("\n");
                         }
                     }
                 }
@@ -200,11 +199,55 @@ public class ServerThread implements Runnable{
                     memberInfo.put("Cell2", st.nextToken()); //입력한 값을 JSon에 저장
                     memberInfo.put("Cell3", st.nextToken()); //입력한 값을 JSon에 저장
                     
-                    members.put(memberInfo,memberInfo.get("ID"));
+                    members.put(memberInfo.get("ID"),memberInfo);
+                    FileWriter fw = new FileWriter(path+"member.json");
+                    fw.write(members.toJSONString());
+                    fw.flush();
+                    fw.close();
                     sb=new StringBuffer();
                     sb.append("join:true");
                 
                 }
+                 else if(identifier.equals("make")){
+                     
+                     sb=new StringBuffer();
+                     StringTokenizer rt = new StringTokenizer(fromClient, "^");
+                     st=new StringTokenizer(rt.nextToken(),":");
+                     st.nextToken();
+                     DataCheck dc=new DataCheck();
+                     DataInput di=new DataInput();
+                     HandleReservation hr=new HandleReservation();
+                     //년,월,일,시간 중복체크
+                    if(dc.Check(st.nextToken())==true){
+                       //중복이아니라면 텍스트파일 생성
+                    //다음 토큰에는 예약저장에 필요한 모든정보 포함.
+                        
+                        di.execWriter(rt.nextToken());
+                        //순번정렬
+                        hr.TextArray();
+                        sb.append("make");
+                    }
+                    else
+                        sb.append("duplication");
+//                    pw.println("duplication");
+                }
+                 else if(identifier.equals("id_search")){
+                     members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+                     sb=new StringBuffer();
+                    Set ids = members.keySet();
+                    String id=st.nextToken();
+                    if (ids.contains(id)) {
+                        //pw.println("id_check:true:");
+                        JSONObject member_id = (JSONObject) members.get(id);
+                        sb.append("id_search:true:");
+                        sb.append(id).append(":");
+                        sb.append((String) member_id.get("Name")).append(":");
+                        
+                    } else {
+                        pw.println("id_check:false:");
+                    }
+                 }
+                
                 //예약정보를 String형태로 정리한다.
                 String reservationList=sb.toString();
                 System.out.println(reservationList);

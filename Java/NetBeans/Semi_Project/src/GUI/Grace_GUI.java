@@ -18,13 +18,10 @@ import org.jdatepicker.impl.UtilDateModel;
 import Interface.ServiceInter;
 import POJO.Member;
 import Class.Service;
-import Class.ServiceIn;
-import Interface.ServiceInInter;
 import java.awt.CardLayout;
+import java.awt.Color;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -58,11 +55,37 @@ public class Grace_GUI extends javax.swing.JFrame {
     private Member member;
     //비즈니스 로직 클래스
     private ServiceInter service;
-    private ServiceInInter serviceIn;
     
     private String id;
     boolean check=false;
             
+    
+    private String reserveinfo;
+    private String reserveinfofull;
+    private String reserveymdh;
+    private String reserveTocken;
+    private String reserveinfofull_admin;
+    private String reserveTockenAdmin;
+    private int reservememolength;
+    
+    private String search_id="";
+    private String search_name="";
+
+    public String getSearch_id() {
+        return search_id;
+    }
+
+    public void setSearch_id(String search_id) {
+        this.search_id = search_id;
+    }
+
+    public String getSearch_name() {
+        return search_name;
+    }
+
+    public void setSearch_name(String search_name) {
+        this.search_name = search_name;
+    }
     
     
 
@@ -119,6 +142,28 @@ public class Grace_GUI extends javax.swing.JFrame {
         detailedInfo = new javax.swing.JTextArea();
         reservationRefresh = new javax.swing.JButton();
         fromInfoToLogin = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel8 = new javax.swing.JLabel();
+        jLabel9 = new javax.swing.JLabel();
+        jLabel10 = new javax.swing.JLabel();
+        Label_LoginID = new javax.swing.JLabel();
+        jLabel11 = new javax.swing.JLabel();
+        jPanel2 = new javax.swing.JPanel();
+        jLabel12 = new javax.swing.JLabel();
+        jPanel3 = new javax.swing.JPanel();
+        ComboYear = new javax.swing.JComboBox<String>();
+        ComboMonth = new javax.swing.JComboBox<String>();
+        ComboDay = new javax.swing.JComboBox<String>();
+        ComboHour = new javax.swing.JComboBox<String>();
+        ComboProsedure = new javax.swing.JComboBox<String>();
+        ButtonReservation = new javax.swing.JButton();
+        jLabel13 = new javax.swing.JLabel();
+        LabelError = new javax.swing.JLabel();
+        TextFieldMemo = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        TextField_Admin = new javax.swing.JTextField();
+        Label_Admin = new javax.swing.JLabel();
+        Button_Admin = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -188,7 +233,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         cardLoginLayout.setHorizontalGroup(
             cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cardLoginLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(122, Short.MAX_VALUE)
                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 325, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(67, 67, 67)
                 .addGroup(cardLoginLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -226,7 +271,7 @@ public class Grace_GUI extends javax.swing.JFrame {
                     .addGroup(cardLoginLayout.createSequentialGroup()
                         .addGap(79, 79, 79)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 461, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(245, Short.MAX_VALUE))
         );
 
         cardPanel.add(cardLogin, "cardLogin");
@@ -301,7 +346,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         cardJoinLayout.setHorizontalGroup(
             cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(cardJoinLayout.createSequentialGroup()
-                .addContainerGap(412, Short.MAX_VALUE)
+                .addContainerGap(528, Short.MAX_VALUE)
                 .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                         .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -359,7 +404,7 @@ public class Grace_GUI extends javax.swing.JFrame {
                 .addGroup(cardJoinLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(joinBtn)
                     .addComponent(joinBackBtn))
-                .addContainerGap(105, Short.MAX_VALUE))
+                .addContainerGap(344, Short.MAX_VALUE))
         );
 
         cardPanel.add(cardJoin, "cardJoin");
@@ -415,6 +460,204 @@ public class Grace_GUI extends javax.swing.JFrame {
             }
         });
 
+        jPanel1.setBackground(new java.awt.Color(0, 102, 102));
+
+        jLabel9.setText("회원정보");
+
+        jLabel10.setText("반갑습니다!");
+
+        Label_LoginID.setText("Admin");
+
+        jLabel11.setText("님");
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
+                        .addComponent(jLabel8))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addComponent(Label_LoginID)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 23, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel10))
+                            .addComponent(jLabel9))))
+                .addContainerGap(223, Short.MAX_VALUE))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel9)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(Label_LoginID)
+                    .addComponent(jLabel11)
+                    .addComponent(jLabel10))
+                .addGap(10, 10, 10)
+                .addComponent(jLabel8))
+        );
+
+        jPanel2.setBackground(new java.awt.Color(51, 255, 51));
+
+        jLabel12.setText("새로운 예약");
+
+        jPanel3.setBackground(new java.awt.Color(153, 153, 153));
+
+        ComboYear.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "----년도----", "2019", "2020" }));
+
+        ComboMonth.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "----월----", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12" }));
+
+        ComboDay.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "----일----", "01", "02", "03", "04", "05", "06", "07", "08", "09", "10", "11", "12", "13", "14", "15", "16", "17", "18", "19", "20", "21", "22", "23", "24", "25", "26", "27", "28", "29", "30", "31" }));
+        ComboDay.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ComboDayActionPerformed(evt);
+            }
+        });
+
+        ComboHour.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "----예약시간----", "09", "10", "11", "12", "14", "15", "16", "17" }));
+
+        ComboProsedure.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "------시술선택------", "보톡스", "레이저", "피부관리" }));
+
+        ButtonReservation.setText("예약하기");
+        ButtonReservation.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ButtonReservationActionPerformed(evt);
+            }
+        });
+
+        jLabel13.setText("예약 일정을 정해주세요.");
+
+        LabelError.setFont(new java.awt.Font("굴림", 1, 12)); // NOI18N
+
+        TextFieldMemo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextFieldMemoActionPerformed(evt);
+            }
+        });
+
+        jLabel14.setText("메모 (20자이내)");
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addGap(20, 20, 20)
+                        .addComponent(jLabel13))
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(ComboProsedure, javax.swing.GroupLayout.PREFERRED_SIZE, 232, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addGroup(jPanel3Layout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(LabelError)
+                                            .addComponent(jLabel14)
+                                            .addComponent(TextFieldMemo, javax.swing.GroupLayout.PREFERRED_SIZE, 206, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                                .addGap(40, 40, 40)
+                                .addComponent(ButtonReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel3Layout.createSequentialGroup()
+                                .addComponent(ComboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ComboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(ComboDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(ComboHour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addContainerGap(96, Short.MAX_VALUE))
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel3Layout.createSequentialGroup()
+                .addGap(5, 5, 5)
+                .addComponent(jLabel13)
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(ComboYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComboMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComboDay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(ComboHour, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel3Layout.createSequentialGroup()
+                        .addComponent(ComboProsedure, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(LabelError)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel14)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(TextFieldMemo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(ButtonReservation, javax.swing.GroupLayout.PREFERRED_SIZE, 74, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(77, Short.MAX_VALUE))
+        );
+
+        TextField_Admin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextField_AdminActionPerformed(evt);
+            }
+        });
+
+        Label_Admin.setText("ID입력");
+
+        Button_Admin.setText("확인");
+        Button_Admin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                Button_AdminActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
+        jPanel2.setLayout(jPanel2Layout);
+        jPanel2Layout.setHorizontalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGap(29, 29, 29)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel12)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(Label_Admin)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(TextField_Admin, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(Button_Admin, javax.swing.GroupLayout.PREFERRED_SIZE, 89, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(5, 5, 5))))
+        );
+        jPanel2Layout.setVerticalGroup(
+            jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel2Layout.createSequentialGroup()
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(11, 11, 11)
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel12)
+                            .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(TextField_Admin, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(Label_Admin))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(Button_Admin)))
+                .addGap(28, 28, 28)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(19, Short.MAX_VALUE))
+        );
+
         javax.swing.GroupLayout cardRervationLayout = new javax.swing.GroupLayout(cardRervation);
         cardRervation.setLayout(cardRervationLayout);
         cardRervationLayout.setHorizontalGroup(
@@ -423,50 +666,54 @@ public class Grace_GUI extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(cardRervationLayout.createSequentialGroup()
-                        .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(107, 107, 107)
-                        .addComponent(reservationRefresh)
-                        .addGap(0, 0, Short.MAX_VALUE))
+                        .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 328, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(fromInfoToLogin))
                     .addGroup(cardRervationLayout.createSequentialGroup()
-                        .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
-                                .addComponent(currentTime)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(86, 86, 86)
-                                .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(reservationDetail))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, cardRervationLayout.createSequentialGroup()
-                                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 306, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(30, 30, 30)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 304, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 114, Short.MAX_VALUE)
-                        .addComponent(fromInfoToLogin)))
-                .addContainerGap())
+                        .addComponent(currentTime)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(currentHourMin, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(cardRervationLayout.createSequentialGroup()
+                        .addGap(328, 328, 328)
+                        .addComponent(reservationDetail))
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(cardRervationLayout.createSequentialGroup()
+                        .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 99, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(reservationRefresh)))
+                .addGap(240, 410, Short.MAX_VALUE))
         );
         cardRervationLayout.setVerticalGroup(
             cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, cardRervationLayout.createSequentialGroup()
-                .addGap(21, 21, 21)
+            .addGroup(cardRervationLayout.createSequentialGroup()
+                .addGap(15, 15, 15)
+                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(reservationStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(reservationRefresh))
-                .addGap(65, 65, 65)
+                .addGap(12, 12, 12)
                 .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(currentTime)
                         .addComponent(currentYearMonthDay, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(currentHourMin)
-                        .addComponent(reservationDetail))
-                    .addComponent(currentTime))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 322, Short.MAX_VALUE)
+                        .addComponent(currentHourMin))
                     .addGroup(cardRervationLayout.createSequentialGroup()
-                        .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 233, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(reservationDetail)
+                        .addGap(22, 22, 22)))
+                .addGroup(cardRervationLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addComponent(jScrollPane2, javax.swing.GroupLayout.DEFAULT_SIZE, 241, Short.MAX_VALUE)
+                    .addGroup(cardRervationLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addComponent(fromInfoToLogin)))
-                .addContainerGap())
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
 
         cardPanel.add(cardRervation, "cardReservation");
@@ -483,7 +730,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
+                .addContainerGap()
                 .addComponent(cardPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
@@ -539,6 +786,7 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     private void loginBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_loginBtnActionPerformed
 
+        
         login();
         
     }//GEN-LAST:event_loginBtnActionPerformed
@@ -596,6 +844,67 @@ public class Grace_GUI extends javax.swing.JFrame {
         card.show(cardPanel,"cardLogin");
     }//GEN-LAST:event_fromInfoToLoginActionPerformed
 
+    private void Button_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AdminActionPerformed
+
+        service.checkID(this);
+        //        service.makeReservation(this);
+        //        Action();
+        //        if(reserveinfo.length() >= 19){
+            //            //만약 길이가 19가 넘으면
+            //            LabelError.setForeground(Color.red);
+            //            //라벨 텍스트 색을 빨간색으로.
+            //            LabelError.setText("정확히 입력해주세요.");
+            //            //정확히 입력해주세요를 Label에 출력
+            //
+            //        }else if(reservememolength >= 20){
+            //            LabelError.setForeground(Color.black);
+            //            LabelError.setText("메모의 글자수가 초과하였습니다.");
+            //
+            //        }else {
+            //
+            //            LabelError.setForeground(Color.blue);
+            //            LabelError.setText("예약이 완료되었습니다!");
+            //            pw.println(reserveTockenAdmin);
+            //        }
+
+        // TODO add your handling code here:
+    }//GEN-LAST:event_Button_AdminActionPerformed
+
+    private void TextField_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextField_AdminActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextField_AdminActionPerformed
+
+    private void TextFieldMemoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextFieldMemoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextFieldMemoActionPerformed
+
+    private void ButtonReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonReservationActionPerformed
+
+        service.makeReservation(this);
+        //        Action();
+        //        if(reserveinfo.length() >= 19){
+            //            //만약 길이가 19가 넘으면
+            //            LabelError.setForeground(Color.red);
+            //            //라벨 텍스트 색을 빨간색으로.
+            //            LabelError.setText("정확히 입력해주세요.");
+            //            //정확히 입력해주세요를 Label에 출력
+            //
+            //        }else if(reservememolength >= 20){
+            //            LabelError.setForeground(Color.black);
+            //            LabelError.setText("메모의 글자수가 초과하였습니다.");
+            //
+            //        }else {
+            //            LabelError.setForeground(Color.blue);
+            //            LabelError.setText("예약이 완료되었습니다!");
+            //            pw.println(reserveTocken);
+            //        }
+
+    }//GEN-LAST:event_ButtonReservationActionPerformed
+
+    private void ComboDayActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboDayActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_ComboDayActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -637,6 +946,18 @@ public class Grace_GUI extends javax.swing.JFrame {
    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton ButtonReservation;
+    private javax.swing.JButton Button_Admin;
+    private javax.swing.JComboBox<String> ComboDay;
+    private javax.swing.JComboBox<String> ComboHour;
+    private javax.swing.JComboBox<String> ComboMonth;
+    private javax.swing.JComboBox<String> ComboProsedure;
+    private javax.swing.JComboBox<String> ComboYear;
+    private javax.swing.JLabel LabelError;
+    private javax.swing.JLabel Label_Admin;
+    private javax.swing.JLabel Label_LoginID;
+    private javax.swing.JTextField TextFieldMemo;
+    private javax.swing.JTextField TextField_Admin;
     private javax.swing.JPanel cardJoin;
     private javax.swing.JPanel cardLogin;
     private javax.swing.JPanel cardPanel;
@@ -647,12 +968,22 @@ public class Grace_GUI extends javax.swing.JFrame {
     private javax.swing.JTextArea detailedInfo;
     private javax.swing.JButton fromInfoToLogin;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JButton joinBackBtn;
@@ -678,7 +1009,6 @@ public class Grace_GUI extends javax.swing.JFrame {
     private void initService(){
         //서비스 시작
         service=new Service();
-        serviceIn=new ServiceIn();
         //Test member
         member=new Member("이순신","alizimara","password","010-1111-1111",false);
         
@@ -703,7 +1033,6 @@ public class Grace_GUI extends javax.swing.JFrame {
             //첫 카드를 로그인화면으로 설정 및 카드레이아웃 초기화
             card=(CardLayout) cardPanel.getLayout();
             card.show(cardPanel, "cardLogin");
-            
             
             service.displayDetailedInfo(this);
     }
@@ -733,6 +1062,136 @@ public class Grace_GUI extends javax.swing.JFrame {
 //            JOptionPane.showMessageDialog(this,"Server connection fail");
 //        }
     }
+    
+    public void Action(){
+       String reserveyear = (String) ComboYear.getSelectedItem();
+        //년도 정보 가져오기
+        String reservemonth = (String) ComboMonth.getSelectedItem();
+        //월 정보 가져오기
+        String reserveday = (String) ComboDay.getSelectedItem();
+        //일 정보 가져오기
+        String reservehour = (String) ComboHour.getSelectedItem();
+        //시간 정보 가져오기
+        String reserveprosedure = (String) ComboProsedure.getSelectedItem();
+        //시술 정보 가져오기
+        String reservememo = (String) TextFieldMemo.getText();
+        
+        reservememolength = reservememo.length();
+        
+        String reserveAdminTypeId = (String) TextField_Admin.getText();
+        
+        reserveinfo = (String) reserveyear +"/"+ reservemonth +"/"+ reserveday +"/"+ reservehour +":"+ reserveprosedure;
+        //예약 정보(Full) 가져오기
+        reserveinfofull = (String) member.getId() + ":" +member.getName()+":"
+                + reserveyear +"/"+ reservemonth +"/"+ reserveday +"/"+ reservehour 
+                +":"+ reserveprosedure +":"+ reservememo;
+        //여기고쳐야
+        reserveinfofull_admin = (String) this.search_id + ":" + this.search_name+":"+
+                reserveyear +"/"+ reservemonth +"/"+ reserveday +"/"+ 
+                reservehour +":"+ reserveprosedure +":"+ reservememo ;
+                
+        reserveymdh = (String) reserveyear + "/" + reservemonth + "/" + reserveday +"/" + reservehour;
+        //예약 년월일시간 가져오기
+        
+       reserveTocken = reserveymdh + "^" +reserveinfofull;
+       reserveTockenAdmin = reserveymdh + "^" + reserveinfofull_admin;
+}
+
+    public String getReserveinfo() {
+        return reserveinfo;
+    }
+
+    public void setReserveinfo(String reserveinfo) {
+        this.reserveinfo = reserveinfo;
+    }
+
+    public String getReserveinfofull() {
+        return reserveinfofull;
+    }
+
+    public void setReserveinfofull(String reserveinfofull) {
+        this.reserveinfofull = reserveinfofull;
+    }
+
+    public String getReserveymdh() {
+        return reserveymdh;
+    }
+
+    public void setReserveymdh(String reserveymdh) {
+        this.reserveymdh = reserveymdh;
+    }
+
+    public String getReserveTocken() {
+        return reserveTocken;
+    }
+
+    public void setReserveTocken(String reserveTocken) {
+        this.reserveTocken = reserveTocken;
+    }
+
+    public String getReserveinfofull_admin() {
+        return reserveinfofull_admin;
+    }
+
+    public void setReserveinfofull_admin(String reserveinfofull_admin) {
+        this.reserveinfofull_admin = reserveinfofull_admin;
+    }
+
+    public String getReserveTockenAdmin() {
+        return reserveTockenAdmin;
+    }
+
+    public JLabel getLabelError() {
+        return LabelError;
+    }
+
+    public void setLabelError(JLabel LabelError) {
+        this.LabelError = LabelError;
+    }
+
+    public JLabel getLabel_Admin() {
+        return Label_Admin;
+    }
+
+    public void setLabel_Admin(JLabel Label_Admin) {
+        this.Label_Admin = Label_Admin;
+    }
+
+    public JLabel getLabel_LoginID() {
+        return Label_LoginID;
+    }
+
+    public void setLabel_LoginID(JLabel Label_LoginID) {
+        this.Label_LoginID = Label_LoginID;
+    }
+
+    public JTextField getTextFieldMemo() {
+        return TextFieldMemo;
+    }
+
+    public void setTextFieldMemo(JTextField TextFieldMemo) {
+        this.TextFieldMemo = TextFieldMemo;
+    }
+
+    public JTextField getTextField_Admin() {
+        return TextField_Admin;
+    }
+
+    public void setTextField_Admin(JTextField TextField_Admin) {
+        this.TextField_Admin = TextField_Admin;
+    }
+
+    public void setReserveTockenAdmin(String reserveTockenAdmin) {
+        this.reserveTockenAdmin = reserveTockenAdmin;
+    }
+
+    public int getReservememolength() {
+        return reservememolength;
+    }
+
+    public void setReservememolength(int reservememolength) {
+        this.reservememolength = reservememolength;
+    }
 
     
     
@@ -748,13 +1207,12 @@ public class Grace_GUI extends javax.swing.JFrame {
                         (new InputStreamReader(s.getInputStream()));
                 while(true){
                     String readLine=br.readLine();
-                    if(readLine.equals("no data:")){
-                        System.out.println("no data to fetch");
-                        dtm.setRowCount(0);
-                    }
-                    else{
-                        
-                        StringTokenizer st1=new StringTokenizer(readLine,"\n");
+                    if(!readLine.equals("")){
+                    StringTokenizer st=new StringTokenizer(readLine,"^");
+                    String str=st.nextToken();
+                    if(str.equals("date"))
+                    {
+                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
                         
                         
                         while(st1.hasMoreTokens())
@@ -776,6 +1234,16 @@ public class Grace_GUI extends javax.swing.JFrame {
                             }
                             
                         }
+                    }
+                    else if(str.contains("login")||str.contains("join")||
+                            str.contains("id_check")||str.contains("make")
+                            ||str.contains("id_search")||str.contains("duplication")){
+                        System.out.println("no data to fetch");
+                    }
+                    else{
+                          System.out.println("no data to fetch");
+                        dtm.setRowCount(0);
+                    }
                     }
 
                 }
@@ -1040,6 +1508,15 @@ public class Grace_GUI extends javax.swing.JFrame {
     public void setCheck(boolean check) {
         this.check = check;
     }
+
+    public JButton getButton_Admin() {
+        return Button_Admin;
+    }
+
+    public void setButton_Admin(JButton Button_Admin) {
+        this.Button_Admin = Button_Admin;
+    }
+
     
  
 }

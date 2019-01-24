@@ -146,7 +146,9 @@ public class Service implements ServiceInter{
                 }
         
     }
-    
+    //로그인 조건을 만족시킬시, 아이디와 패스워드를 서버에 전송하여
+    //로그인 성공여부를 전송받아 결과를 알려준다.
+    //로그인을 위한 칸들의 조건이 구현되어있다.
     @Override
     public void login(Grace_GUI gui){
         
@@ -242,6 +244,8 @@ public class Service implements ServiceInter{
         
     }
 
+    //회원가입의 모든 조건을 확인하여 조건에 맞을시 회원가입요청을 서버에 전송한다.
+    //회원가입 항목 모든 칸에대한 조건이 구현되어있다.
     @Override
     public void join(Grace_GUI gui){
          
@@ -314,6 +318,8 @@ public class Service implements ServiceInter{
         }
         
     }
+    //회원가입시 아이디가 이미 등록되어있는지 체크를위해 서버에 아이디를 전송하여
+    //중복여부를 결과로 받아 알려준다.
     @Override
     public void idCheck(Grace_GUI gui){
         BufferedReader br = null;
@@ -363,7 +369,7 @@ public class Service implements ServiceInter{
          }
     }
    
-    
+    //소켓과 프린트라이터 초기화 메소드
     private boolean initSocketPrintWriter(Grace_GUI gui){
         
          try {
@@ -376,7 +382,10 @@ public class Service implements ServiceInter{
          }
          
     }
+   //예약하기 버튼을 누를경우 admin/일반사용자를 나누어
+    //예약정보를 서버에 전송하여 예약을 저장한뒤 결과를 받는다.
    
+    
     @Override
     public void makeReservation(Grace_GUI gui){
         gui.Action();
@@ -428,12 +437,10 @@ public class Service implements ServiceInter{
          }
     }
 
-    @Override
-    public void setReservationTable(Grace_GUI gui) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-    }
+
     
     @Override
+    //관리자가 검색을 눌렀을시 서버와 통신하여 아이디가 존재하는지여부를 검색한뒤 결과를 GUI에서알려줌. 
     public void checkID(Grace_GUI gui){
          BufferedReader br = null;
          try {

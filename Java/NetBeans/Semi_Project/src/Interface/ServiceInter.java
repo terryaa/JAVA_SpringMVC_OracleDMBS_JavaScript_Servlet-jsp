@@ -6,17 +6,6 @@
 package Interface;
 
 import GUI.Grace_GUI;
-import POJO.Member;
-import java.io.PrintWriter;
-import java.util.ArrayList;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-import javax.swing.Timer;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 
 /**
  *
@@ -28,7 +17,6 @@ public interface ServiceInter {
     public void serviceStart(Grace_GUI gui);
     public void reservationListRefresh(Grace_GUI gui);
     public void login(Grace_GUI gui);
-    public void setReservationTable(Grace_GUI gui);
     public void join(Grace_GUI gui);
     public void idCheck(Grace_GUI gui);
     public void makeReservation(Grace_GUI gui);

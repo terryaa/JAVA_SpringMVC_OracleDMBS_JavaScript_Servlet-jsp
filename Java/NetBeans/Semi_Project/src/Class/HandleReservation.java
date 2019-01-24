@@ -101,20 +101,6 @@ public class HandleReservation implements HandleData {
      ArrayList.set(j, Temp);
        }
 
-//    if (ArrayList.get(i).compareTo(ArrayList.get(j)) > 0) {
-//     Temp = ArrayList.get(i);
-//     ArrayList.set(i, ArrayList.get(j));
-//     ArrayList.set(j, Temp);
-//    }
-
-
-
-//    
-//    if (ArrayList.get(i).compareTo(ArrayList.get(j)) > 0) {
-//     Temp = ArrayList.get(i);
-//     ArrayList.set(i, ArrayList.get(j));
-//     ArrayList.set(j, Temp);
-//    }
    }
   }
   NewArrayList = ArrayList;

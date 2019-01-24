@@ -841,32 +841,14 @@ public class Grace_GUI extends javax.swing.JFrame {
     private void fromInfoToLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_fromInfoToLoginActionPerformed
         // TODO add your handling code here:
         member=new Member();
+        loginidv.setText("");
+        loginpwv.setText("");
         card.show(cardPanel,"cardLogin");
     }//GEN-LAST:event_fromInfoToLoginActionPerformed
 
     private void Button_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AdminActionPerformed
 
         service.checkID(this);
-        //        service.makeReservation(this);
-        //        Action();
-        //        if(reserveinfo.length() >= 19){
-            //            //만약 길이가 19가 넘으면
-            //            LabelError.setForeground(Color.red);
-            //            //라벨 텍스트 색을 빨간색으로.
-            //            LabelError.setText("정확히 입력해주세요.");
-            //            //정확히 입력해주세요를 Label에 출력
-            //
-            //        }else if(reservememolength >= 20){
-            //            LabelError.setForeground(Color.black);
-            //            LabelError.setText("메모의 글자수가 초과하였습니다.");
-            //
-            //        }else {
-            //
-            //            LabelError.setForeground(Color.blue);
-            //            LabelError.setText("예약이 완료되었습니다!");
-            //            pw.println(reserveTockenAdmin);
-            //        }
-
         // TODO add your handling code here:
     }//GEN-LAST:event_Button_AdminActionPerformed
 

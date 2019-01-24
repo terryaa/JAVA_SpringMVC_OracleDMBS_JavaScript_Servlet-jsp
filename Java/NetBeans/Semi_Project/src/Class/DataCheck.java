@@ -17,13 +17,6 @@ import java.util.ArrayList;
  * @author KOSTA
  */
 public class DataCheck {
-//    
-//    private ServerSocket ss;
-//    public DataCheck(ServerSocket ss) {
-//        this.ss = ss;
-//    }
-//
-//   
     
     
     

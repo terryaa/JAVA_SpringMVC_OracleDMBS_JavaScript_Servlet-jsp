@@ -90,6 +90,7 @@ public class ServerThread implements Runnable{
 //            String token = stz.nextToken();
             
             //readLine을 통해 client가 보내는 자료를 읽어온다.
+            //client의 요청에따라 예약확인/중복확인/아이디검색/로그인/예약등록으로 나뉜다.
             while(true){
                 String fromClient=br.readLine();
                 st=new StringTokenizer(fromClient,":");
@@ -142,6 +143,8 @@ public class ServerThread implements Runnable{
                         }
                     }
                 }
+                //로그인 요청이들어올경우
+                //Json파일에서 ID와 비밀번호 비교후 비밀번호가 맞을경우 로그인성공 메세지를 보내준다.
                 else if(identifier.equals("login")) {
                     sb=new StringBuffer();
                     sb.append("login:");
@@ -174,6 +177,8 @@ public class ServerThread implements Runnable{
                         // 회원가입하는 로직
                     }
                 }
+                
+                //관리자가 회원의 아이디를 검색하여 중복확인 결과를 알려준다
                 else if(identifier.equals("id_check")){
                     // "id_check/아이디/null/null"
                     
@@ -186,6 +191,8 @@ public class ServerThread implements Runnable{
                     }
                     // 아이디 체크하는 로직
                 }
+                //회원가입
+                //Json파일에 Map형태로 저장
                  else if (identifier.equals("join")) {
                     // "join/아이디/비밀번호/연락처"
                     //String id = stz.nextToken();
@@ -208,6 +215,9 @@ public class ServerThread implements Runnable{
                     sb.append("join:true");
                 
                 }
+                 
+                 //예약 생성.
+                 //예약을 원하는 아이디정보를 불러와 예약을 Reservation에저장한다.
                  else if(identifier.equals("make")){
                      
                      sb=new StringBuffer();
@@ -224,13 +234,15 @@ public class ServerThread implements Runnable{
                         
                         di.execWriter(rt.nextToken());
                         //순번정렬
-                        hr.TextArray();
+                        //hr.TextArray();
                         sb.append("make");
                     }
                     else
                         sb.append("duplication");
 //                    pw.println("duplication");
                 }
+                 //관리자가 아이디를 검색하여 예약을 등록할떄 아이디검색을 하는 부분
+                 //Json에서 아이디를 검색하여 결과를 보내줌.
                  else if(identifier.equals("id_search")){
                      members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
                      sb=new StringBuffer();

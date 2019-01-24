@@ -12,6 +12,7 @@ import javax.swing.JFormattedTextField.AbstractFormatter;
 
 /**
  *
+ * //달력에 표시할 날짜및년도의 Format을 정의하는 클래스
  * @author younghoonkim
  */
 public class DateLabelFormatter extends AbstractFormatter {
@@ -25,6 +26,7 @@ public class DateLabelFormatter extends AbstractFormatter {
     }
 
     @Override
+    //현재시간을 구하여 날짜형식을만든다
     public String valueToString(Object value) throws ParseException {
         if (value != null) {
             Calendar cal = (Calendar) value;

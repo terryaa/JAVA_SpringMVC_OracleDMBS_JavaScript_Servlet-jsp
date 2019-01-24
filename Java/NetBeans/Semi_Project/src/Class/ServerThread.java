@@ -80,7 +80,7 @@ public class ServerThread implements Runnable{
             
             //필요변수 초기화
             File file=new File(path+"reservation.txt");
-            Scanner sc=new Scanner(file);
+            
             StringTokenizer st;
             StringBuffer sb=null;
             JSONObject members=null;
@@ -93,6 +93,7 @@ public class ServerThread implements Runnable{
             //client의 요청에따라 예약확인/중복확인/아이디검색/로그인/예약등록으로 나뉜다.
             while(true){
                 String fromClient=br.readLine();
+                Scanner sc=new Scanner(file);
                 st=new StringTokenizer(fromClient,":");
                 String identifier=st.nextToken();
                 //클라이언트가 날짜를 골랐을경우,시작일과 끝일을 비교하여 그 기간내에

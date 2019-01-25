@@ -40,8 +40,7 @@ public class DataInput {
 //    }
     
     
-private String path ="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
-                    + "/Java/NetBeans/Semi_Project/src/Data/"; //path생성. 보안이므로 private로
+private String path ="C:\\bigdata\\KOSTA_MAC\\Java\\NetBeans\\Semi_Project\\src\\Data\\"; //path생성. 보안이므로 private로
 
     ///////////////데이터 입력/////////////
 //    public class testWrite {

@@ -27,10 +27,8 @@ public class HandleReservation implements HandleData {
  *
  * @author shin
  */
-    private String path = "/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
-                    + "/Java/NetBeans/Semi_Project/src/Data/"+"reservation.txt";
-    private String path2 = "/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
-                    + "/Java/NetBeans/Semi_Project/src/Data/"+"reservationArray.txt";
+    private String path = "C:\\bigdata\\KOSTA_MAC\\Java\\NetBeans\\Semi_Project\\src\\Data\\"+"reservation.txt";
+    private String path2 = "C:\\bigdata\\KOSTA_MAC\\Java\\NetBeans\\Semi_Project\\src\\Data\\"+"reservationArray.txt";
     ////////////////////내림차순 정렬/////////////////////////
     public void TextArray() throws IOException{                     
 

@@ -29,8 +29,7 @@ public class DataCheck {
         String sss = null;
         
         
-        File file = new File("/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
-                    + "/Java/NetBeans/Semi_Project/src/Data/"+"reservation.txt");
+        File file = new File("C:\\bigdata\\KOSTA_MAC\\Java\\NetBeans\\Semi_Project\\src\\Data\\"+"reservation.txt");
         //파일 저장
         BufferedReader buf = new BufferedReader(new FileReader(file));
         //버퍼드리더 buf는 새로운 버퍼드리더인데 그걸 파일이름으로 하는 버퍼드리더이다.

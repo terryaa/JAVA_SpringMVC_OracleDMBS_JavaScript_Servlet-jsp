@@ -193,3 +193,35 @@ select sname,deptno, case when deptno>10 then '개발부' else '총관리부' end AS GR
 select sname||'의 급여는 '||sapay||' 입니다. 이번달 보너스는 급여의 50%('||sapay/2||') 입니다.' AS 급여조회  from sawon where sname='김길동';
 select '부서번호'||deptno as deptno, sname||'님의 급여는 '||sapay||'입니다.' as message from sawon where sapay>=2000 and sapay<=3000 and deptno=20;
 select sname as 사원명, sapay as 급여, round(sapay/12,-1) as 월급 , floor(sapay*3.3/100) as 세금 from sawon;
+select goname as 고객명, substr(gojumin,1,7)||'*******' as 주민번호 from gogek;
+select goname as 고객명, gojumin as 주민번호 , 
+case when substr(gojumin,8,1)=1 then '남자' when substr(gojumin,8,1)=2 then '여자' else '성별알수없음' end as 성별 from gogek;
+select sname as 사원명, sapay as 급여, case when sapay<1000 then round(sapay*10/100,0) when sapay>1000 and sapay<2000 then round(sapay*15/100,0)
+when sapay>2000 then round(sapay*20/100,0) when sapay=null then 0 else 0 end as 보너스 from sawon;
+
+select * from sawon where not regexp_like(sname,'[가-다]');
+select * from sawon where not regexp_like(sname,'[0-9]');
+select * from sawon where regexp_like(sname,'!');
+select * from sawon where regexp_like(sname,'?');
+select * from sawon where regexp_like(sname,'*');
+select * from sawon where regexp_like(sname,'\?');
+select * from sawon where regexp_like(sname,'\*');
+select * from sawon where not regexp_like(sname,'\*');
+col "no->char" for a20
+select sahire, regexp_replace(sahire,'[[:digit:]]','*') "no->char" from sawon;
+col "add char" for a20
+select sahire, regexp_replace(sahire,'([0-9])','\1-*') "add char" from sawon;
+set line 200col no for 999
+col "dot remove" for a20
+select sabun, sahire,regexp_replace(sahire,'\/','') "dot remove" from sawon;
+col replace for a20
+select sabun, sahire,regexp_replace(sahire,'\/','*',1,1) "replace" from sawon;
+select regexp_replace('aaa bbb','( ){2,}','') "one",
+regexp_replace('aaa  bbb','( ){2,}','') "two" from dual;
+select regexp_replace('aaa bbb','( ){2,}','*') "one",
+regexp_replace('aaa  bbb','( ){2,}','*') "two" ,
+regexp_replace('aaa   bbb','( ){2,}','*') "three" from dual;
+set verify off
+select sname, sabun from sawon where sname=regexp_replace('&id','( ){1,}','');
+select regexp_replace('20120324', '([[:digit:]]{4})([[:digit:]]{2})([[:digit:]]{2})','\1-\2-\3') from dual;
+select regexp_substr('ABC* *DEF $GHI %KJL','[^ ]+[DEF]') from dual;

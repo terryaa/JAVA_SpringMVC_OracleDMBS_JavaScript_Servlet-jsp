@@ -9,6 +9,6 @@ package Interface;
  *
  * @author younghoonkim
  */
-public class ServerThreadHandlerInter {
+public interface ServerThreadHandlerInter {
     
 }

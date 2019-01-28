@@ -28,18 +28,29 @@ public class ServerThreadHandler implements ServerThreadHandlerInter{
     
     
      public String idcheck(String msg){
+         StringTokenizer st=new StringTokenizer(msg, ":");
+         if(!containsId(st.nextToken())){
+             return "false";
+         }
+         for(int i=0;i<10;i++ ){
+             System.out.println("hahahaha");
+         }
+         else
+             
+         
+         
+     }
+     public boolean containsId(String id){
          JSONParser parser = new JSONParser(); // 불러오기?
         JSONObject memberInfo = new JSONObject(); // 값에 대한 객체 생성
         JSONObject members=null;
-         StringTokenizer st=new StringTokenizer(msg);
-    
-        try {
+         try {
             members=(JSONObject) parser.parse(new FileReader(path+"member.json"));
             JSONObject member_id = (JSONObject) members.get(id);
                     if (member_id!=null) {
-                        return "id_check:true:";
+                       return true;
                     } else {
-                        return "id_check:false:";
+                        return false;
                     }
             
         } catch (FileNotFoundException ex) {

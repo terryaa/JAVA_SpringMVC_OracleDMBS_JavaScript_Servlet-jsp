@@ -195,7 +195,7 @@ select '부서번호'||deptno as deptno, sname||'님의 급여는 '||sapay||'입니다.' as 
 select sname as 사원명, sapay as 급여, round(sapay/12,-1) as 월급 , floor(sapay*3.3/100) as 세금 from sawon;
 select goname as 고객명, substr(gojumin,1,7)||'*******' as 주민번호 from gogek;
 select goname as 고객명, gojumin as 주민번호 , 
-case when substr(gojumin,8,1)=1 then '남자' when substr(gojumin,8,1)=2 then '여자' else '성별알수없음' end as 성별 from gogek;
+case when substr(gojumin,8,1)=1 or (gojumin,8,1)=3  then '남자' when substr(gojumin,8,1)=2 or (gojumin,8,1)=4 then '여자' else '성별알수없음' end as 성별 from gogek;
 select sname as 사원명, sapay as 급여, case when sapay<1000 then round(sapay*10/100,0) when sapay>1000 and sapay<2000 then round(sapay*15/100,0)
 when sapay>2000 then round(sapay*20/100,0) when sapay=null then 0 else 0 end as 보너스 from sawon;
 
@@ -225,3 +225,11 @@ set verify off
 select sname, sabun from sawon where sname=regexp_replace('&id','( ){1,}','');
 select regexp_replace('20120324', '([[:digit:]]{4})([[:digit:]]{2})([[:digit:]]{2})','\1-\2-\3') from dual;
 select regexp_substr('ABC* *DEF $GHI %KJL','[^ ]+[DEF]') from dual;
+col url for a20
+select sname ltrim(regexp_substr(sname,'/([[:alnum:]]+\.?){3,4}?'),'/') "URL" from sawon where sname is not null;
+col email for a20
+col name for a20
+col domain for a20
+select sname ltrim(regexp_substr(sname,'@([[:alnum:]]+\.?){3,4}?'),'@') "URL" from sawon where deptno in(10,20);
+col result for a10
+select regexp_substr('sys/oracle@racdb:1521:racdb','[^:]+',1,3) result from dual;

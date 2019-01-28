@@ -6,6 +6,7 @@
 
 package day22_01_28;
 
+import exam.MyConn;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -92,7 +93,7 @@ public class JDBCSelectDemo {
         String sql="select sabun,sname,deptno,sajob,sapay,sahire,sgender,samgr from sawon where sname like ?";
         PreparedStatement pstmt=con.prepareStatement(sql);
         pstmt.setString(1,"%"+dname+"%");
-        //select의 경우 검색된 결과값(인스턴스)를 crsor로 반환.
+        //select의 경우 검색된 결과값(인스턴스)를 cursor로 반환.
         ResultSet rs=pstmt.executeQuery();
         while(rs.next()){
             Sawon vo=new Sawon();

@@ -124,5 +124,72 @@ select round(88.888,2) from dual;
 select round(88.888,-2) from dual;
 --wkfltnfmfqjfla
 select trunc(888.888) from dual;
+--상한값(ceil),하한값(fllor)
+select ceil(10.001), floor(10.99) from dual;
+select mod(10,2) from dual;
 
+select length('kostaBigdata Oracle') from dual;
+select lower('kostabigdata Oracle'), upper('kostaBigdata Oracle')
+from dual;
+--이니셜을 대문자로
+select initcap('kosta bigdata oracle') from dual;
+select * from nls_database_parameters where parameter like '%CHARACTERSET%';
+--AL32utf8 :한글정렬기능을 지원,3바이트공간을차지함
+select lengthb('kosta'),length('kosta') from dual;
+--lengthb는 문자열의 바이트수반환
+select lengthb('오라클'), length('오라클') from dual;
+--문자열 자르기 (trim), rtrim,ltrim
+select trim(' kosta bigdata ' ),length(' kosta bigdata '),
+length(trim(' kosta bigdata ')) from dual;
+select ltrim('%%%kosta bigdata ','%'), rtrim('%%%kosta bigdata%%%','%') from dual;
+--instr(문자열,찾을문자열,검색시작,n번째)
+--문자열중에서 지정한 탁정문자가 포함된 위치를 반환하는 함수 : indexOf
+select instr('kosta_kosta','k',1,2) from dual;
+--Substr(문자열,n부터,n개)
+-- 오라클인덱스는 1부터시작
+select substr('Welcomee to Oracle',4) from dual;
 
+--연습문제) 실습테이블 만들기
+create table memphone(
+num number(3) constraint memphone_num_pk primary key,
+name varchar2(20),
+pnum varchar2 (30));
+create sequence memphone_seq
+increment by 1
+start with 1;
+
+insert into memphone values (memphone_seq.nextVal,'김길동','02)567-1235');
+insert into memphone values (memphone_seq.nextVal,'하지동','032)227-8235');
+insert into memphone values (memphone_seq.nextVal,'김노래','031)167-8495');
+insert into memphone values (memphone_seq.nextVal,'김헤헤','031)837-8475');
+insert into memphone values (memphone_seq.nextVal,'김오오','032)967-6235');
+commit;
+--memberphone 테이블에서 사용저의 전화번호 중에
+--사용자,국번,전화번호 형태로 출력하시오.
+select name as '사용자', substr(pnum,instr(pnum,')',1,1)) from memphone;
+
+select name ,substr(pnum,1,instr(pnum,')',1,1)-1) AS "phone", substr(pnum,instr(pnum,')',1,1)+1) from memphone;
+
+--문자 채우기 함수
+select rpad(sname,9,'★'), lpad(sname,8,'★') from sawon;
+
+--decode 함수 : oracle 에서만 제공하는 SQL함수
+--decode(기준값,조건1,결과1조건2,결과2,,그외) "컬럼"
+--case함수 : decode 의 기능을 확장한 함수
+
+/*
+    case[기준값] when 기준값 조건값1  then 결과 1
+    when 기준값 조건값2 then 결과2
+    else 그외의결과
+    end "칼럼명"
+*/
+--차이 : decode 함수는 기준값을 비교하는 컬럼값이 "=" 비교를 통해서만 조건과 일치
+--case 산술,논리,관계 다양한 비교가 가능하다.
+select deptno,dname from dept;
+select sname,deptno,decode(deptno,50,'개발부',20,'영업부',30,'전산부','총관리부') from sawon order by 2 asc;
+--case문으로바궈보기
+select sname,deptno, case when deptno>10 then '개발부' else '총관리부' end AS GRADE  from sawon;
+
+select sname||'의 급여는 '||sapay||' 입니다. 이번달 보너스는 급여의 50%('||sapay/2||') 입니다.' AS 급여조회  from sawon where sname='김길동';
+select '부서번호'||deptno as deptno, sname||'님의 급여는 '||sapay||'입니다.' as message from sawon where sapay>=2000 and sapay<=3000 and deptno=20;
+select sname as 사원명, sapay as 급여, round(sapay/12,-1) as 월급 , floor(sapay*3.3/100) as 세금 from sawon;

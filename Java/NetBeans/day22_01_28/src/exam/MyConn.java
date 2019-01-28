@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package day22_01_28;
+package exam;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * @author KOSTA
  */
 public class MyConn {
-   //ì´ˆê¸°ìì› : ìŠ¤íƒœí‹±ìì›ì˜ ì´ˆê¸°í™” : ë©”ì¸ë©”ì„œë“œë³´ë‹¤ ë¨¼ì €ì‹¤í–‰ë¨ 
+   //ÃÊ±âÀÚ¿ø : ½ºÅÂÆ½ÀÚ¿øÀÇ ÃÊ±âÈ­ : ¸ŞÀÎ¸Ş¼­µåº¸´Ù ¸ÕÀú½ÇÇàµÊ 
     static{
         try {
             Class.forName("oracle.jdbc.driver.OracleDriver");

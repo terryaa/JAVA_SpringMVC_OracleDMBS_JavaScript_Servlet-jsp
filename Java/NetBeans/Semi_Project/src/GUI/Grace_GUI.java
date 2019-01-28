@@ -1235,6 +1235,60 @@ public class Grace_GUI extends javax.swing.JFrame {
             }
             
         }).start();
+        
+//        try {
+//                Socket s;
+//                s=new Socket("localhost",9999);
+//                reservationListArray=new ArrayList<>();
+//                DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
+//                BufferedReader br=new BufferedReader
+//                        (new InputStreamReader(s.getInputStream()));
+//                while(true){
+//                    String readLine=br.readLine();
+//                    if(!readLine.equals("")){
+//                    StringTokenizer st=new StringTokenizer(readLine,"^");
+//                    String str=st.nextToken();
+//                    if(str.equals("date"))
+//                    {
+//                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
+//                        
+//                        
+//                        while(st1.hasMoreTokens())
+//                        {
+//                            reservationListArray.add(st1.nextToken());
+//                            
+//                            
+//                            for(int col=0;col<reservationListArray.size();col++){
+//                                StringTokenizer st2=new StringTokenizer(
+//                                        reservationListArray.get(col),":");
+//                                st2.nextToken();
+//                                
+//                                dtm.setRowCount(reservationListArray.size());
+//                                //reservationTable.se
+//                                for(int row=0;row<3;row++)
+//                                {
+//                                    reservationTable.setValueAt(st2.nextToken(), col, row);
+//                                }
+//                            }
+//                            
+//                        }
+//                    }
+//                    else if(str.contains("login")||str.contains("join")||
+//                            str.contains("id_check")||str.contains("make")
+//                            ||str.contains("id_search")||str.contains("duplication")){
+//                        System.out.println("no data to fetch");
+//                    }
+//                    else{
+//                          System.out.println("no data to fetch");
+//                        dtm.setRowCount(0);
+//                    }
+//                    }
+//
+//                }
+//            } catch (IOException ex) {
+//                System.out.println("Data transmission failed from Server");
+//            }finally{
+//            }
     }
     
     public ArrayList<String> getReservationListArray() {

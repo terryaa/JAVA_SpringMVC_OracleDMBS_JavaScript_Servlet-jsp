@@ -137,6 +137,7 @@ public class Service implements ServiceInter{
         if(initSocketPrintWriter(gui)){
             gui.getPw().println(startEndDate);
             gui.getPw().flush();
+            gui.initTable();
         }
                 try {
                     gui.getS().close();

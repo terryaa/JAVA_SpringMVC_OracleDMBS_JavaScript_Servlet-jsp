@@ -6,9 +6,11 @@
 package Class;
 
 import Interface.ServerThreadHandlerInter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
@@ -28,6 +30,7 @@ public class ServerThreadHandler implements ServerThreadHandlerInter{
     JSONParser parser = null; // 불러오기?
     JSONObject memberInfo = null; // 값에 대한 객체 생성
     JSONObject members=null;
+    File file=new File(path+"reservation.txt");
 //     JSONParser parser = new JSONParser(); // 불러오기?
 //    JSONObject memberInfo = new JSONObject(); // 값에 대한 객체 생성
     
@@ -36,12 +39,24 @@ public class ServerThreadHandler implements ServerThreadHandlerInter{
          String identifier=st.nextToken();
          String userId=st.nextToken();
          StringBuffer sb=new StringBuffer();
+        try {
+            Scanner sc=new Scanner(file);
+            members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(ServerThreadHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ServerThreadHandler.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (ParseException ex) {
+            Logger.getLogger(ServerThreadHandler.class.getName()).log(Level.SEVERE, null, ex);
+        }
+         
          if(identifier.equals("date")){
+             String ClientId=st.nextToken();
              
          }
          else{
                  try {
-                members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+                
                 memberInfo= (JSONObject) members.get(userId);
                 if(memberInfo==null) {
                     return "false:";

@@ -83,7 +83,7 @@ public class ServerThread implements Runnable{
             StringTokenizer st;
             StringBuffer sb=null;
             JSONObject members=null;
-            
+            JSONObject memberInfo=null;
             
 //            StringTokenizer stz = new StringTokenizer(clientMsg, "/");
 //            String token = stz.nextToken();
@@ -95,6 +95,9 @@ public class ServerThread implements Runnable{
                 Scanner sc=new Scanner(file);
                 st=new StringTokenizer(fromClient,":");
                 String identifier=st.nextToken();
+                String userId=st.nextToken();
+                StringBuffer sb=new StringBuffer();
+                
                 //클라이언트가 날짜를 골랐을경우,시작일과 끝일을 비교하여 그 기간내에
                 //존재하는 예약들을 불러온다.
                 //관리자의경우 모든 예약이, 일반사용자의경우 기간내의 자신의 예약이조회된다. 

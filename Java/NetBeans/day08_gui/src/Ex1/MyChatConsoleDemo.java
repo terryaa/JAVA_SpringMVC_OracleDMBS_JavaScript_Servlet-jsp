@@ -5,7 +5,6 @@
  */
 package Ex1;
 
-import com.sun.xml.internal.stream.Entity;
 import java.util.Scanner;
 
 /**
@@ -15,6 +14,7 @@ import java.util.Scanner;
 public class MyChatConsoleDemo {
     public static void main(String[] args) {
         Scanner sc=new Scanner(System.in);
+        
         System.out.println("Name:");
         String name=sc.nextLine();
         //입력 받은 이름에 출력을 "안녕하세요 000님"으로한다.

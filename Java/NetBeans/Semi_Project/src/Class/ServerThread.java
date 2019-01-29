@@ -42,8 +42,7 @@ public class ServerThread implements Runnable{
     private BufferedReader br;
     private PrintWriter pw;
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
-    private final String path="/Users/younghoonkim/Documents/KOSTA_Git/KOSTA_MAC"
-                    + "/Java/NetBeans/Semi_Project/src/Data/";
+    private final String path="C:\\bigdata\\KOSTA_MAC\\Java\\NetBeans\\Semi_Project\\src\\Data\\";
    
     JSONParser parser = new JSONParser(); // 불러오기?
     JSONObject memberInfo = new JSONObject(); // 값에 대한 객체 생성

@@ -36,37 +36,46 @@ public class ServerThreadHandler implements ServerThreadHandlerInter{
          String identifier=st.nextToken();
          String userId=st.nextToken();
          StringBuffer sb=new StringBuffer();
-        try {
-            members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
-            memberInfo= (JSONObject) members.get(userId);
-            if(memberInfo==null) {
-                return "false";
-            }
-            else{//나중에 check으로통일가능하면통일
-                if(identifier.equals("search") || identifier.equals("check")){
-                    sb.append("true");
-                }
-                
-            }
-            
-        } catch (IOException ex) {
-            Logger.getLogger(ServerThreadHandler.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(ServerThreadHandler.class.getName()).log(Level.SEVERE, null, ex);
-        }
-         
-         
-         if(!containsId(st.nextToken())){
-             return "false";
-         }
-         for(int i=0;i<10;i++ ){
-             System.out.println("hahahaha");
-         }
-         else
+         if(identifier.equals("date")){
              
+         }
+         else{
+                 try {
+                members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
+                memberInfo= (JSONObject) members.get(userId);
+                if(memberInfo==null) {
+                    return "false:";
+                }
+                else{//나중에 check으로통일가능하면통일
+                    if(identifier.equals("search") || identifier.equals("check")){
+                        sb.append("true:").append(userId).append(":");
+                    }
+                    else if(identifier.equals("login")){
+                        String password=st.nextToken();
+                        if(((String)memberInfo.get("password")).equals(password)){
+                            sb.append("true:").append(userId).append(":");
+                            sb.append((String) memberInfo.get("Name")).append(":");
+                            sb.append((String) memberInfo.get("password")).append(":");
+                            sb.append((String) memberInfo.get("Cell1")).append("-");
+                            sb.append((String) memberInfo.get("Cell2")).append("-");
+                            sb.append((String) memberInfo.get("Cell3")).append(":");
+                        }
+                        else
+                            sb.append("false:");
+                    }
+
+                }
+
+            } catch (IOException ex) {
+                Logger.getLogger(ServerThreadHandler.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ParseException ex) {
+                Logger.getLogger(ServerThreadHandler.class.getName()).log(Level.SEVERE, null, ex);
+            }
+         }
+        
          
-                      
-         
+     }
+     public boolean join(String msg){
          
      }
      public boolean containsId(String id){

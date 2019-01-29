@@ -116,7 +116,61 @@ public class Service implements ServiceInter{
         }
     }
     
-    
+    public void initTable(Grace_GUI gui){
+          try {
+                Socket s;
+                s=new Socket("localhost",9999);
+                ArrayList<String> reservationListArray=new ArrayList<>();
+                DefaultTableModel dtm = (DefaultTableModel) gui.getReservationTable().getModel();
+                BufferedReader br=new BufferedReader
+                        (new InputStreamReader(s.getInputStream()));
+                while(true){
+                    String readLine=br.readLine();
+                    if(!readLine.equals("")){
+                    StringTokenizer st=new StringTokenizer(readLine,"^");
+                    String str=st.nextToken();
+                    if(str.equals("date"))
+                    {
+                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
+                        
+                        
+                        while(st1.hasMoreTokens())
+                        {
+                            reservationListArray.add(st1.nextToken());
+                            
+                            
+                            for(int col=0;col<reservationListArray.size();col++){
+                                StringTokenizer st2=new StringTokenizer(
+                                        reservationListArray.get(col),":");
+                                st2.nextToken();
+                                
+                                dtm.setRowCount(reservationListArray.size());
+                                //reservationTable.se
+                                for(int row=0;row<3;row++)
+                                {
+                                    gui.getReservationTable().setValueAt(st2.nextToken(), col, row);
+                                }
+                            }
+                            
+                        }
+                    }
+                    else if(str.contains("login")||str.contains("join")||
+                            str.contains("id_check")||str.contains("make")
+                            ||str.contains("id_search")||str.contains("duplication")){
+                        System.out.println("no data to fetch");
+                    }
+                    else{
+                          System.out.println("no data to fetch");
+                        dtm.setRowCount(0);
+                    }
+                    }
+
+                }
+            } catch (IOException ex) {
+                System.out.println("Data transmission failed from Server");
+            }finally{
+            }
+    }
     //선택되어있는 날짜사이에 있는 예약정보들로 얻어와 예약정보리스트를 새로고침한다. 
      @Override
     public void reservationListRefresh(Grace_GUI gui){
@@ -137,7 +191,8 @@ public class Service implements ServiceInter{
         if(initSocketPrintWriter(gui)){
             gui.getPw().println(startEndDate);
             gui.getPw().flush();
-            gui.initTable();
+           // gui.initTable();
+            initTable(gui);
         }
                 try {
                     gui.getS().close();

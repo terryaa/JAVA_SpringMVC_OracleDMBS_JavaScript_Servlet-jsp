@@ -191,18 +191,18 @@ public class Service implements ServiceInter{
         //검색 끝일
         date=(Date)gui.getDatePicker()[1].getModel().getValue();
         startEndDate+="^"+sdf.format(date);
-        if(initSocketPrintWriter(gui)){
+        //if(initSocketPrintWriter(gui)){
             gui.getPw().println(startEndDate);
-            gui.getPw().flush();
+//            gui.getPw().flush();
             //gui.initTable();
             initTable(gui);
-        }
-                try {
-                    gui.getS().close();
-                    gui.getPw().close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
-                }
+        //}
+//                try {
+//                    gui.getS().close();
+//                    gui.getPw().close();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+//                }
         
     }
     //로그인 조건을 만족시킬시, 아이디와 패스워드를 서버에 전송하여
@@ -235,7 +235,7 @@ public class Service implements ServiceInter{
                     
                 String login = "login^" + id + "^" + password + "^";
                 gui.getPw().println(login);
-                gui.getPw().flush();
+                //gui.getPw().flush();
                 
             
                 StringTokenizer st=null;
@@ -273,15 +273,16 @@ public class Service implements ServiceInter{
                     
                 } catch (IOException ex) {
                 Logger.getLogger(Grace_GUI.class.getName()).log(Level.SEVERE, null, ex);
-                }finally{
-                try {
-                    br.close();
-                    gui.getS().close();
-                    gui.getPw().close();
-                } catch (IOException ex) {
-                    Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }
+//                finally{
+//                try {
+//                    br.close();
+//                    gui.getS().close();
+//                    gui.getPw().close();
+//                } catch (IOException ex) {
+//                    Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+//                }
+//            }
         
             }
         }

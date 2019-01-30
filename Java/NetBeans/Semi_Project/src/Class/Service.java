@@ -119,40 +119,40 @@ public class Service implements ServiceInter{
     public void initTable(Grace_GUI gui){
           try {
                 Socket s;
-                s=new Socket("localhost",9999);
+               // s=gui.getS();
                 ArrayList<String> reservationListArray=new ArrayList<>();
                 DefaultTableModel dtm = (DefaultTableModel) gui.getReservationTable().getModel();
                 BufferedReader br=new BufferedReader
-                        (new InputStreamReader(s.getInputStream()));
-                while(true){
-                    String readLine=br.readLine();
-                    if(!readLine.equals("")){
-                    StringTokenizer st=new StringTokenizer(readLine,"^");
-                    String str=st.nextToken();
-                    if(str.equals("date"))
+                        (new InputStreamReader(gui.getS()
+                                .getInputStream()));
+                String readLine=br.readLine();
+                if(!readLine.equals("")){
+                StringTokenizer st=new StringTokenizer(readLine,"^");
+                String str=st.nextToken();
+                if(str.equals("date"))
+                {
+                    StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
+
+
+                    while(st1.hasMoreTokens())
                     {
-                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
-                        
-                        
-                        while(st1.hasMoreTokens())
-                        {
-                            reservationListArray.add(st1.nextToken());
-                            
-                            
-                            for(int col=0;col<reservationListArray.size();col++){
-                                StringTokenizer st2=new StringTokenizer(
-                                        reservationListArray.get(col),":");
-                                st2.nextToken();
-                                
-                                dtm.setRowCount(reservationListArray.size());
-                                //reservationTable.se
-                                for(int row=0;row<3;row++)
-                                {
-                                    gui.getReservationTable().setValueAt(st2.nextToken(), col, row);
-                                }
+                        reservationListArray.add(st1.nextToken());
+
+
+                        for(int col=0;col<reservationListArray.size();col++){
+                            StringTokenizer st2=new StringTokenizer(
+                                    reservationListArray.get(col),":");
+                            st2.nextToken();
+
+                            dtm.setRowCount(reservationListArray.size());
+                            //reservationTable.se
+                            for(int row=0;row<3;row++)
+                            {
+                                gui.getReservationTable().setValueAt(st2.nextToken(), col, row);
                             }
-                            
                         }
+
+                    }
                     }
                     else if(str.contains("login")||str.contains("join")||
                             str.contains("id_check")||str.contains("make")
@@ -165,7 +165,7 @@ public class Service implements ServiceInter{
                     }
                     }
 
-                }
+                
             } catch (IOException ex) {
                 System.out.println("Data transmission failed from Server");
             }finally{
@@ -174,24 +174,27 @@ public class Service implements ServiceInter{
     //선택되어있는 날짜사이에 있는 예약정보들로 얻어와 예약정보리스트를 새로고침한다. 
      @Override
     public void reservationListRefresh(Grace_GUI gui){
-        
+         //connection 두번날리는 오류발생중!!!!!!!!!!!!!!!!!!!
         gui.setReservationListArray(new ArrayList<>());
         //DatePicker로부터 날짜들을 가져온다.
+        //검색 시작일
         Date date=(Date)gui.getDatePicker()[0].getModel().getValue();
         String startEndDate;
         //일반회원과 admin구별, 서버에 자료를 요청한다.
-        if(gui.getMember().isAdmin()){
-            startEndDate="date:"+"admin:"+sdf.format(date);
-        }
-        else{
-            startEndDate="date:"+gui.getMember().getId()+":"+sdf.format(date);
-        }
+        startEndDate="date^"+gui.getMember().getId()+"^"+sdf.format(date);
+//        if(gui.getMember().isAdmin()){
+//            startEndDate="date^"+"admin^"+sdf.format(date);
+//        }
+//        else{
+//            startEndDate="date^"+gui.getMember().getId()+"^"+sdf.format(date);
+//        }
+        //검색 끝일
         date=(Date)gui.getDatePicker()[1].getModel().getValue();
-        startEndDate+=":"+sdf.format(date);
+        startEndDate+="^"+sdf.format(date);
         if(initSocketPrintWriter(gui)){
             gui.getPw().println(startEndDate);
             gui.getPw().flush();
-           // gui.initTable();
+            //gui.initTable();
             initTable(gui);
         }
                 try {
@@ -230,7 +233,7 @@ public class Service implements ServiceInter{
             else {
                     
                     
-                String login = "login:" + id + ":" + password + ":";
+                String login = "login^" + id + "^" + password + "^";
                 gui.getPw().println(login);
                 gui.getPw().flush();
                 
@@ -241,45 +244,33 @@ public class Service implements ServiceInter{
                     br = new BufferedReader
                                 (new InputStreamReader(gui.getS().getInputStream()));
                     String readLine=br.readLine();
-                    st=new StringTokenizer(readLine, ":");
-                    String identifier=st.nextToken();
-                    if(identifier.equals("login")){
-                        String loginResult=st.nextToken();
-                        if (loginResult.equals("true")) {
-                            JOptionPane.showMessageDialog(gui, "로그인 되었습니다.");
-                            gui.getMember().setId(st.nextToken());
-                            gui.getMember().setName(st.nextToken());
-                            gui.getMember().setPassword(st.nextToken());
-                            gui.getMember().setCellphone(st.nextToken());
-                            
-                            if(gui.getMember().getId().equals("admin"))
-                            {
-                                gui.getMember().setAdmin(true);
-                                gui.getLabel_Admin().setVisible(true);
-                                gui.getTextField_Admin().setVisible(true);
-                                gui.getButton_Admin().setVisible(true);
-                            }
-                            else{
-                                gui.getMember().setAdmin(false);
-                                gui.getLabel_Admin().setVisible(false);
-                                gui.getTextField_Admin().setVisible(false);
-                                gui.getButton_Admin().setVisible(false);
-                            }
-                            reservationListRefresh(gui);
-                            gui.getLabel_LoginID().setText(gui.getMember().getName());
-                            gui.getCard().show(gui.getCardPanel(), "cardReservation");
-                        } else if (loginResult.equals("false")) {
-                            JOptionPane.showMessageDialog(gui, "비밀번호를 다시 입력해주세요.");
-                            gui.getLoginidv().setText("");
-
-                        } else if (loginResult.equals("none")) {
-                            JOptionPane.showMessageDialog(gui, "아이디가 없습니다.");
-                            gui.getLoginpwv().setText("");
-                            gui.getLoginidv().setText("");
-                        }else{
-                            JOptionPane.showMessageDialog(gui, "알수없는에러.");
-                        }
+                    st=new StringTokenizer(readLine, "^");
+                    String loginResult=st.nextToken();
+                    //로그인 성공시 필드멤버인 Member의 값을 채워줌
+                    //회원정보를 인메모리에 저장
+                    gui.getMember().setId(st.nextToken());
+                    gui.getMember().setName(st.nextToken());
+                    gui.getMember().setPassword(st.nextToken());
+                    gui.getMember().setCellphone(st.nextToken());
+                    
+                    
+                    if (loginResult.equals("true")) {
+                        setAdminSearchBox(id, gui);
+                        reservationListRefresh(gui);
+                        gui.getLabel_LoginID().setText(gui.getMember().getName());
+                        JOptionPane.showMessageDialog(gui, "로그인 되었습니다.");
+                        gui.getCard().show(gui.getCardPanel(), "cardReservation");
                     }
+                    //비밀번호 오류
+                    else if (loginResult.equals("false")) {
+                        JOptionPane.showMessageDialog(gui, "비밀번호를 다시 입력해주세요.");
+                        gui.getLoginidv().setText("");
+
+                    } 
+                    else{
+                        JOptionPane.showMessageDialog(gui, "아이디가 없습니다.");
+                    }
+                    
                 } catch (IOException ex) {
                 Logger.getLogger(Grace_GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }finally{
@@ -298,6 +289,22 @@ public class Service implements ServiceInter{
         
             
         
+    }
+    
+    private void setAdminSearchBox(String id,Grace_GUI gui){
+        if(id.equals("admin")){
+           
+                            gui.getMember().setAdmin(true);
+                            gui.getLabel_Admin().setVisible(true);
+                            gui.getTextField_Admin().setVisible(true);
+                            gui.getButton_Admin().setVisible(true);
+                        }
+                        else{
+                            gui.getMember().setAdmin(false);
+                            gui.getLabel_Admin().setVisible(false);
+                            gui.getTextField_Admin().setVisible(false);
+                            gui.getButton_Admin().setVisible(false);
+                        }
     }
 
     //회원가입의 모든 조건을 확인하여 조건에 맞을시 회원가입요청을 서버에 전송한다.
@@ -335,7 +342,7 @@ public class Service implements ServiceInter{
             else {
             if(initSocketPrintWriter(gui)){
                 StringBuffer sb=new StringBuffer();
-                sb.append("join:");
+                sb.append("join^");
                 sb.append(namev).append(":");
                 sb.append(idv).append(":");
                 sb.append(passwordv).append(":");
@@ -385,7 +392,7 @@ public class Service implements ServiceInter{
                  JOptionPane.showMessageDialog(gui, "아이디입력");
              }else{
                  gui.setId(gui.getJoinid().getText()); // joinid 에 입력된 값을 id에 저장
-                 msg="id_check:" + gui.getId() + ":";
+                 msg="check^" + gui.getId() + "^";
              }
             if(initSocketPrintWriter(gui)){
 
@@ -399,16 +406,15 @@ public class Service implements ServiceInter{
                  StringTokenizer stz = new StringTokenizer(answer, ":");
                  String token = stz.nextToken();
 
-                 if (token.equals("id_check")) {
-                     if (stz.nextToken().equals("true")) {
-                         JOptionPane.showMessageDialog(gui, "사용가능한 아이디입니다.");
-                         gui.setCheck(true);
-                     }
-                     else {
-                         JOptionPane.showMessageDialog(gui, "이미 존재하는 아이디입니다.");
-                         gui.setCheck(false);
-                     }
+                 if (stz.nextToken().equals("true")) {
+                     JOptionPane.showMessageDialog(gui, "사용가능한 아이디입니다.");
+                     gui.setCheck(true);
                  }
+                 else {
+                     JOptionPane.showMessageDialog(gui, "이미 존재하는 아이디입니다.");
+                     gui.setCheck(false);
+                 }
+                 
              }
          }
          catch (IOException ex) {
@@ -462,10 +468,10 @@ public class Service implements ServiceInter{
             gui.getLabelError().setText("예약이 완료되었습니다!");
               if(initSocketPrintWriter(gui)){
                   if(gui.getMember().isAdmin()){
-                      gui.getPw().println("make:"+gui.getReserveTockenAdmin());
+                      gui.getPw().println("make^"+gui.getReserveTockenAdmin());
                   }
                   else
-                      gui.getPw().println("make:"+gui.getReserveTocken());
+                      gui.getPw().println("make^"+gui.getReserveTocken());
               }
               BufferedReader br=null;
               
@@ -506,7 +512,7 @@ public class Service implements ServiceInter{
                  JOptionPane.showMessageDialog(gui, "아이디입력");
              }else{
                   // joinid 에 입력된 값을 id에 저장
-                 msg="id_search:" + id + ":";
+                 msg="check^" + id + "^";
              }
             if(initSocketPrintWriter(gui)){
 

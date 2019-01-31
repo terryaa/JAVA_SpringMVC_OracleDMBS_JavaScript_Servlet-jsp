@@ -228,7 +228,8 @@ public class ServerThread implements Runnable{
                 System.out.println(reservationList);
                 
                 //Server에게 String형태의 검색결과자료를 broadcast하도록한다.
-                server.sendReservationList(reservationList);
+                //server.sendReservationList(reservationList);
+                pw.println(reservationList);
                 
             }
             

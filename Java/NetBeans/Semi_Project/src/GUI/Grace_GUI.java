@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
@@ -42,6 +43,7 @@ public class Grace_GUI extends javax.swing.JFrame {
     //네트워크를 위한 소켓과 printwriter
     private Socket s;
     private PrintWriter pw;
+    private BufferedReader br;
     //JFrame 요소
     private CardLayout card;
     //예약정보 리스트 어레이
@@ -818,7 +820,7 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     private void joinCheckBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCheckBtnActionPerformed
         
-        service.idCheck(this);
+        service.idCheck(this,joinid.getText());
     }//GEN-LAST:event_joinCheckBtnActionPerformed
 
     private void joinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinBtnActionPerformed
@@ -848,7 +850,7 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     private void Button_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AdminActionPerformed
 
-        service.checkID(this);
+        service.idSearch(this,TextField_Admin.getText());
         // TODO add your handling code here:
     }//GEN-LAST:event_Button_AdminActionPerformed
 
@@ -975,7 +977,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         //서비스 시작
         service=new Service();
         //Test member
-        member=new Member("이순신","alizimara","password","010-1111-1111",false);
+        member=new Member("이순신","alizimara","password","010-1111-1111");
         
 
         //GUI 초기화
@@ -1015,17 +1017,17 @@ public class Grace_GUI extends javax.swing.JFrame {
     //GUI에 날짜,시간을 표시한다.
     
     private void initServer(){
-//        try {
-//            //서버소켓연결
-//            //s=new Socket("localhost",9999);
-//            //pw=new PrintWriter(s.getOutputStream(),true);
-//            
-//            System.out.println("Server connected");
-//            
-//                } catch (IOException ex) {
-//            System.out.println("Error Log : Can't connect to the server.");
-//            JOptionPane.showMessageDialog(this,"Server connection fail");
-//        }
+        try {
+            
+            s=new Socket("localhost",9999);
+            pw=new PrintWriter(s.getOutputStream(),true);
+            br=new BufferedReader(new InputStreamReader(s.getInputStream()));
+            System.out.println("Server connected");
+            
+                } catch (IOException ex) {
+            System.out.println("Error Log : Can't connect to the server.");
+            JOptionPane.showMessageDialog(this,"Server connection fail");
+        }
     }
     
     public void Action(){
@@ -1534,6 +1536,14 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     public void setReservememolength(int reservememolength) {
         this.reservememolength = reservememolength;
+    }
+
+    public BufferedReader getBr() {
+        return br;
+    }
+
+    public void setBr(BufferedReader br) {
+        this.br = br;
     }
 
 

@@ -330,15 +330,16 @@ public class Service implements ServiceInter{
      @Override
     public void login(Grace_GUI gui){
         ltic=new loginTextInputChecker();
-        
-            String login = "login^" + id + "^" + password + "^";
-            gui.getPw().println(login);
+        if (ltic.textIntputCheck(gui))
+        {
+            StringBuffer sb=new StringBuffer();
+            sb.append("login^").append(gui.getMember().getId()).append("^");
+            sb.append(gui.getMember().getPassword()).append("^");
+            gui.getPw().println(sb.toString());
 
 
                 StringTokenizer st=null;
                 try {
-                    //br = new BufferedReader
- //                               (new InputStreamReader(gui.getS().getInputStream()));
                     String readLine=gui.getBr().readLine();
                     st=new StringTokenizer(readLine, "^");
                     String loginResult=st.nextToken();
@@ -369,8 +370,10 @@ public class Service implements ServiceInter{
                 }
 
             }
+        else
+            JOptionPane.showMessageDialog(gui, "알수없는 에러");
     }
-        @Override
+    @Override
     public void join(Grace_GUI gui){
          
         jtic=new joinTextInputChecker();

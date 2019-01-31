@@ -8,6 +8,8 @@ package Class;
 
 import GUI.Grace_GUI;
 import Interface.textInputCheckInter;
+import javax.swing.JOptionPane;
+import POJO.Member;
 
 /**
  *
@@ -15,6 +17,20 @@ import Interface.textInputCheckInter;
  */
 public class loginTextInputChecker implements textInputCheckInter {
         public boolean textIntputCheck(Grace_GUI gui){
-        
+            String id=gui.getLoginidv().getText().trim();
+            String password=gui.getLoginpwv().getText().trim();
+            if (id.equals("")) {
+                JOptionPane.showMessageDialog(gui, "아이디를 입력해주세요");
+                gui.getLoginidv().requestFocus();
+            }
+            else if (password.equals("")) {
+                JOptionPane.showMessageDialog(gui, "비밀번호를 입력해주세요");
+                gui.getLoginpwv().requestFocus();
+            }
+            else{
+                gui.setMember(new Member(id,password));
+                return true;
+            }
+            return false;
         }
 }

@@ -28,9 +28,9 @@ public interface ServiceInter {
     public void join(Grace_GUI gui);
     //회원가입시 아이디가 이미 등록되어있는지 체크를위해 서버에 아이디를 전송하여
     //중복여부를 결과로 받아 알려준다.
-    public void idCheck(Grace_GUI gui);
+    public void idCheck(Grace_GUI gui,String id);
      //예약하기 버튼을 누를경우 admin/일반사용자를 나누어
     //예약정보를 서버에 전송하여 예약을 저장한뒤 결과를 받는다.
     public void makeReservation(Grace_GUI gui);
-    public void checkID(Grace_GUI gui);
+    public void idSearch(Grace_GUI gui,String id);
 }

@@ -12,9 +12,14 @@ package BeeHiveNumbering;
  */
 public class mama {
     public static void main(String[] args) {
+        int a=1;
+        sysout();
         System.out.println("running...");
         System.out.println("Elapsed Time:"+0.0161208+"s");
         System.out.println("PURPLE Count:1");
+        StringBuffer sb=null;
+        a=2;
+        //sb.append("dd");
         System.out.println("Elapsed Time:"+0.01456808+"s");
         System.out.println("PURPLE Count:2");
         System.out.println("Elapsed Time:"+0.0137866+"s");
@@ -30,6 +35,7 @@ public class mama {
         System.out.println("PURPLE:7");
         System.out.println("Elapsed Time:"+0.0156808+"s");
         System.out.println("PURPLE:8");
+        int b=2;
         
         System.out.println("Elapsed Time:"+0.0137801+"s");
         System.out.println("PURPLE Count:19");
@@ -52,4 +58,7 @@ public class mama {
         
     }
     
+    public static void sysout(){
+        System.out.println("step into");
+    }
 }

@@ -24,6 +24,7 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import javax.swing.JButton;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTable;
@@ -42,6 +43,7 @@ public class Grace_GUI extends javax.swing.JFrame {
     //네트워크를 위한 소켓과 printwriter
     private Socket s;
     private PrintWriter pw;
+    private BufferedReader br;
     //JFrame 요소
     private CardLayout card;
     //예약정보 리스트 어레이
@@ -818,7 +820,7 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     private void joinCheckBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCheckBtnActionPerformed
         
-        service.idCheck(this);
+        service.idCheck(this,joinid.getText());
     }//GEN-LAST:event_joinCheckBtnActionPerformed
 
     private void joinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinBtnActionPerformed
@@ -848,7 +850,7 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     private void Button_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AdminActionPerformed
 
-        service.checkID(this);
+        service.idSearch(this,TextField_Admin.getText());
         // TODO add your handling code here:
     }//GEN-LAST:event_Button_AdminActionPerformed
 
@@ -863,23 +865,6 @@ public class Grace_GUI extends javax.swing.JFrame {
     private void ButtonReservationActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonReservationActionPerformed
 
         service.makeReservation(this);
-        //        Action();
-        //        if(reserveinfo.length() >= 19){
-            //            //만약 길이가 19가 넘으면
-            //            LabelError.setForeground(Color.red);
-            //            //라벨 텍스트 색을 빨간색으로.
-            //            LabelError.setText("정확히 입력해주세요.");
-            //            //정확히 입력해주세요를 Label에 출력
-            //
-            //        }else if(reservememolength >= 20){
-            //            LabelError.setForeground(Color.black);
-            //            LabelError.setText("메모의 글자수가 초과하였습니다.");
-            //
-            //        }else {
-            //            LabelError.setForeground(Color.blue);
-            //            LabelError.setText("예약이 완료되었습니다!");
-            //            pw.println(reserveTocken);
-            //        }
 
     }//GEN-LAST:event_ButtonReservationActionPerformed
 
@@ -992,7 +977,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         //서비스 시작
         service=new Service();
         //Test member
-        member=new Member("이순신","alizimara","password","010-1111-1111",false);
+        member=new Member("이순신","alizimara","password","010-1111-1111");
         
 
         //GUI 초기화
@@ -1006,7 +991,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         //서버에 연결하는 메소드
         initServer();
         //예약정보리스트 테이블을 업데이트하는 메소드 
-        initTable();
+       // initTable();
         
     }
     
@@ -1032,17 +1017,17 @@ public class Grace_GUI extends javax.swing.JFrame {
     //GUI에 날짜,시간을 표시한다.
     
     private void initServer(){
-//        try {
-//            //서버소켓연결
-//            //s=new Socket("localhost",9999);
-//            //pw=new PrintWriter(s.getOutputStream(),true);
-//            
-//            System.out.println("Server connected");
-//            
-//                } catch (IOException ex) {
-//            System.out.println("Error Log : Can't connect to the server.");
-//            JOptionPane.showMessageDialog(this,"Server connection fail");
-//        }
+        try {
+            
+            s=new Socket("localhost",9999);
+            pw=new PrintWriter(s.getOutputStream(),true);
+            br=new BufferedReader(new InputStreamReader(s.getInputStream()));
+            System.out.println("Server connected");
+            
+                } catch (IOException ex) {
+            System.out.println("Error Log : Can't connect to the server.");
+            JOptionPane.showMessageDialog(this,"Server connection fail");
+        }
     }
     
     public void Action(){
@@ -1079,163 +1064,122 @@ public class Grace_GUI extends javax.swing.JFrame {
        reserveTockenAdmin = reserveymdh + "^" + reserveinfofull_admin;
 }
 
-    public String getReserveinfo() {
-        return reserveinfo;
-    }
-
-    public void setReserveinfo(String reserveinfo) {
-        this.reserveinfo = reserveinfo;
-    }
-
-    public String getReserveinfofull() {
-        return reserveinfofull;
-    }
-
-    public void setReserveinfofull(String reserveinfofull) {
-        this.reserveinfofull = reserveinfofull;
-    }
-
-    public String getReserveymdh() {
-        return reserveymdh;
-    }
-
-    public void setReserveymdh(String reserveymdh) {
-        this.reserveymdh = reserveymdh;
-    }
-
-    public String getReserveTocken() {
-        return reserveTocken;
-    }
-
-    public void setReserveTocken(String reserveTocken) {
-        this.reserveTocken = reserveTocken;
-    }
-
-    public String getReserveinfofull_admin() {
-        return reserveinfofull_admin;
-    }
-
-    public void setReserveinfofull_admin(String reserveinfofull_admin) {
-        this.reserveinfofull_admin = reserveinfofull_admin;
-    }
-
-    public String getReserveTockenAdmin() {
-        return reserveTockenAdmin;
-    }
-
-    public JLabel getLabelError() {
-        return LabelError;
-    }
-
-    public void setLabelError(JLabel LabelError) {
-        this.LabelError = LabelError;
-    }
-
-    public JLabel getLabel_Admin() {
-        return Label_Admin;
-    }
-
-    public void setLabel_Admin(JLabel Label_Admin) {
-        this.Label_Admin = Label_Admin;
-    }
-
-    public JLabel getLabel_LoginID() {
-        return Label_LoginID;
-    }
-
-    public void setLabel_LoginID(JLabel Label_LoginID) {
-        this.Label_LoginID = Label_LoginID;
-    }
-
-    public JTextField getTextFieldMemo() {
-        return TextFieldMemo;
-    }
-
-    public void setTextFieldMemo(JTextField TextFieldMemo) {
-        this.TextFieldMemo = TextFieldMemo;
-    }
-
-    public JTextField getTextField_Admin() {
-        return TextField_Admin;
-    }
-
-    public void setTextField_Admin(JTextField TextField_Admin) {
-        this.TextField_Admin = TextField_Admin;
-    }
-
-    public void setReserveTockenAdmin(String reserveTockenAdmin) {
-        this.reserveTockenAdmin = reserveTockenAdmin;
-    }
-
-    public int getReservememolength() {
-        return reservememolength;
-    }
-
-    public void setReservememolength(int reservememolength) {
-        this.reservememolength = reservememolength;
-    }
 
     
     
-    public void initTable(){
-        
-        new Thread(() -> {
-            try {
-                Socket s;
-                s=new Socket("localhost",9999);
-                reservationListArray=new ArrayList<>();
-                DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
-                BufferedReader br=new BufferedReader
-                        (new InputStreamReader(s.getInputStream()));
-                while(true){
-                    String readLine=br.readLine();
-                    if(!readLine.equals("")){
-                    StringTokenizer st=new StringTokenizer(readLine,"^");
-                    String str=st.nextToken();
-                    if(str.equals("date"))
-                    {
-                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
-                        
-                        
-                        while(st1.hasMoreTokens())
-                        {
-                            reservationListArray.add(st1.nextToken());
-                            
-                            
-                            for(int col=0;col<reservationListArray.size();col++){
-                                StringTokenizer st2=new StringTokenizer(
-                                        reservationListArray.get(col),":");
-                                st2.nextToken();
-                                
-                                dtm.setRowCount(reservationListArray.size());
-                                //reservationTable.se
-                                for(int row=0;row<3;row++)
-                                {
-                                    reservationTable.setValueAt(st2.nextToken(), col, row);
-                                }
-                            }
-                            
-                        }
-                    }
-                    else if(str.contains("login")||str.contains("join")||
-                            str.contains("id_check")||str.contains("make")
-                            ||str.contains("id_search")||str.contains("duplication")){
-                        System.out.println("no data to fetch");
-                    }
-                    else{
-                          System.out.println("no data to fetch");
-                        dtm.setRowCount(0);
-                    }
-                    }
-
-                }
-            } catch (IOException ex) {
-                System.out.println("Data transmission failed from Server");
-            }finally{
-            }
-            
-        }).start();
-    }
+//    public void initTable(){
+//        
+////        new Thread(() -> {
+////            try {
+////                Socket s;
+////                s=new Socket("localhost",9999);
+////                reservationListArray=new ArrayList<>();
+////                DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
+////                BufferedReader br=new BufferedReader
+////                        (new InputStreamReader(s.getInputStream()));
+////                while(true){
+////                    String readLine=br.readLine();
+////                    if(!readLine.equals("")){
+////                    StringTokenizer st=new StringTokenizer(readLine,"^");
+////                    String str=st.nextToken();
+////                    if(str.equals("date"))
+////                    {
+////                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
+////                        
+////                        
+////                        while(st1.hasMoreTokens())
+////                        {
+////                            reservationListArray.add(st1.nextToken());
+////                            
+////                            
+////                            for(int col=0;col<reservationListArray.size();col++){
+////                                StringTokenizer st2=new StringTokenizer(
+////                                        reservationListArray.get(col),":");
+////                                st2.nextToken();
+////                                
+////                                dtm.setRowCount(reservationListArray.size());
+////                                //reservationTable.se
+////                                for(int row=0;row<3;row++)
+////                                {
+////                                    reservationTable.setValueAt(st2.nextToken(), col, row);
+////                                }
+////                            }
+////                            
+////                        }
+////                    }
+////                    else if(str.contains("login")||str.contains("join")||
+////                            str.contains("id_check")||str.contains("make")
+////                            ||str.contains("id_search")||str.contains("duplication")){
+////                        System.out.println("no data to fetch");
+////                    }
+////                    else{
+////                          System.out.println("no data to fetch");
+////                        dtm.setRowCount(0);
+////                    }
+////                    }
+////
+////                }
+////            } catch (IOException ex) {
+////                System.out.println("Data transmission failed from Server");
+////            }finally{
+////            }
+////            
+////        }).start();
+//        
+//        try {
+//                Socket s;
+//                s=new Socket("localhost",9999);
+//                reservationListArray=new ArrayList<>();
+//                DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
+//                BufferedReader br=new BufferedReader
+//                        (new InputStreamReader(s.getInputStream()));
+//                while(true){
+//                    String readLine=br.readLine();
+//                    if(!readLine.equals("")){
+//                    StringTokenizer st=new StringTokenizer(readLine,"^");
+//                    String str=st.nextToken();
+//                    if(str.equals("date"))
+//                    {
+//                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
+//                        
+//                        
+//                        while(st1.hasMoreTokens())
+//                        {
+//                            reservationListArray.add(st1.nextToken());
+//                            
+//                            
+//                            for(int col=0;col<reservationListArray.size();col++){
+//                                StringTokenizer st2=new StringTokenizer(
+//                                        reservationListArray.get(col),":");
+//                                st2.nextToken();
+//                                
+//                                dtm.setRowCount(reservationListArray.size());
+//                                //reservationTable.se
+//                                for(int row=0;row<3;row++)
+//                                {
+//                                    reservationTable.setValueAt(st2.nextToken(), col, row);
+//                                }
+//                            }
+//                            
+//                        }
+//                    }
+//                    else if(str.contains("login")||str.contains("join")||
+//                            str.contains("id_check")||str.contains("make")
+//                            ||str.contains("id_search")||str.contains("duplication")){
+//                        System.out.println("no data to fetch");
+//                    }
+//                    else{
+//                          System.out.println("no data to fetch");
+//                        dtm.setRowCount(0);
+//                    }
+//                    }
+//
+//                }
+//            } catch (IOException ex) {
+//                System.out.println("Data transmission failed from Server");
+//            }finally{
+//            }
+//    }
     
     public ArrayList<String> getReservationListArray() {
         return reservationListArray;
@@ -1498,6 +1442,110 @@ public class Grace_GUI extends javax.swing.JFrame {
     public void setButton_Admin(JButton Button_Admin) {
         this.Button_Admin = Button_Admin;
     }
+        public String getReserveinfo() {
+        return reserveinfo;
+    }
+
+    public void setReserveinfo(String reserveinfo) {
+        this.reserveinfo = reserveinfo;
+    }
+
+    public String getReserveinfofull() {
+        return reserveinfofull;
+    }
+
+    public void setReserveinfofull(String reserveinfofull) {
+        this.reserveinfofull = reserveinfofull;
+    }
+
+    public String getReserveymdh() {
+        return reserveymdh;
+    }
+
+    public void setReserveymdh(String reserveymdh) {
+        this.reserveymdh = reserveymdh;
+    }
+
+    public String getReserveTocken() {
+        return reserveTocken;
+    }
+
+    public void setReserveTocken(String reserveTocken) {
+        this.reserveTocken = reserveTocken;
+    }
+
+    public String getReserveinfofull_admin() {
+        return reserveinfofull_admin;
+    }
+
+    public void setReserveinfofull_admin(String reserveinfofull_admin) {
+        this.reserveinfofull_admin = reserveinfofull_admin;
+    }
+
+    public String getReserveTockenAdmin() {
+        return reserveTockenAdmin;
+    }
+
+    public JLabel getLabelError() {
+        return LabelError;
+    }
+
+    public void setLabelError(JLabel LabelError) {
+        this.LabelError = LabelError;
+    }
+
+    public JLabel getLabel_Admin() {
+        return Label_Admin;
+    }
+
+    public void setLabel_Admin(JLabel Label_Admin) {
+        this.Label_Admin = Label_Admin;
+    }
+
+    public JLabel getLabel_LoginID() {
+        return Label_LoginID;
+    }
+
+    public void setLabel_LoginID(JLabel Label_LoginID) {
+        this.Label_LoginID = Label_LoginID;
+    }
+
+    public JTextField getTextFieldMemo() {
+        return TextFieldMemo;
+    }
+
+    public void setTextFieldMemo(JTextField TextFieldMemo) {
+        this.TextFieldMemo = TextFieldMemo;
+    }
+
+    public JTextField getTextField_Admin() {
+        return TextField_Admin;
+    }
+
+    public void setTextField_Admin(JTextField TextField_Admin) {
+        this.TextField_Admin = TextField_Admin;
+    }
+
+    public void setReserveTockenAdmin(String reserveTockenAdmin) {
+        this.reserveTockenAdmin = reserveTockenAdmin;
+    }
+
+    public int getReservememolength() {
+        return reservememolength;
+    }
+
+    public void setReservememolength(int reservememolength) {
+        this.reservememolength = reservememolength;
+    }
+
+    public BufferedReader getBr() {
+        return br;
+    }
+
+    public void setBr(BufferedReader br) {
+        this.br = br;
+    }
+
 
     
  

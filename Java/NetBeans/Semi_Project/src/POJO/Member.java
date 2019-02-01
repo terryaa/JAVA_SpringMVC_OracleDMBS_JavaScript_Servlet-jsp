@@ -20,12 +20,15 @@ public class Member {
         
     }
 
-    public Member(String name, String id, String password, String cellphone, boolean admin) {
+    public Member(String name,String id){
+        this.name = name;
+        this.id = id;
+    }
+    public Member(String name, String id, String password, String cellphone) {
         this.name = name;
         this.id = id;
         this.password = password;
         this.cellphone = cellphone;
-        this.admin = admin;
     }
     public String getName() {
         return name;

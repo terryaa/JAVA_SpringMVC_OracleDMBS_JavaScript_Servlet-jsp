@@ -170,3 +170,19 @@ Synonym종류
 삭제: drop synonym tablename ;
 보안을위해서도 사용자이름.객체   로 접근하는게아니라 공용어로 만들어서 공용어만접근하게하여
 보안을 강화.;
+commit;
+
+select * from sawon;
+
+select sname 사원 , sajob 직책 from sawon where samgr=(select sabun from sawon where sname='한국남');
+
+select d.deptno 부서번호, sname 이름, sajob 직책, dname 부서명, loc 지역, sapay 급여
+from sawon s, dept d
+where sajob not in(select sajob from sawon where deptno=30) and d.deptno=10
+order by sapay desc;
+
+select sajob from sawon where deptno=30;
+
+select avg(sapay) from sawon where deptno=10;
+select s.deptno, dname, avg(sapay) ,dname
+	 from sawon s, dept d where s.deptno=&deptbun group by s.deptno,d.dname;

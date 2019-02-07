@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package Class;
+package TextInputChecker;
 
 import GUI.Grace_GUI;
 import Interface.TextInputCheckInter;
@@ -38,13 +38,14 @@ public class JoinTextInputChecker implements TextInputCheckInter {
             JOptionPane.showMessageDialog(gui, "핸드폰 번호를 다시 입력하세요");
         } else if (gui.isCheck() == false) { // 중복체크를 안했을 경우
             JOptionPane.showMessageDialog(gui, "중복 체크 하세요");
-        }else if(!(idv.equals(gui.getId()))) { // 입력된 idv와 현재joinid가 같지 않을 경우
+        }else if(!(idv.equals(gui.getSearch_id()))) { // 입력된 idv와 현재joinid가 같지 않을 경우
+            System.out.println(gui.getSearch_id());
             JOptionPane.showMessageDialog(gui, "중복체크를 다시 하세요");
         }else{
             gui.setMember(new Member(namev,idv,passwordv,cellphonev1+"-"+cellphonev2+"-"+cellphonev3));
-            return true;
+            return false;
         }
-        return false;
+        return true;
             
         
     }

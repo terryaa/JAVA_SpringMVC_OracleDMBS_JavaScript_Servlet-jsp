@@ -819,8 +819,8 @@ public class Grace_GUI extends javax.swing.JFrame {
     }//GEN-LAST:event_joincell1ActionPerformed
 
     private void joinCheckBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinCheckBtnActionPerformed
-        
-        service.idCheck(this,joinid.getText());
+        search_id=joinid.getText();
+        service.idCheck(this);
     }//GEN-LAST:event_joinCheckBtnActionPerformed
 
     private void joinBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_joinBtnActionPerformed
@@ -850,7 +850,8 @@ public class Grace_GUI extends javax.swing.JFrame {
 
     private void Button_AdminActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_Button_AdminActionPerformed
 
-        service.idSearch(this,TextField_Admin.getText());
+        search_id=TextField_Admin.getText();
+        service.idSearch(this);
         // TODO add your handling code here:
     }//GEN-LAST:event_Button_AdminActionPerformed
 

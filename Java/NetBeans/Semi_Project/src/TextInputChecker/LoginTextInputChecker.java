@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-package Class;
+package TextInputChecker;
 
 import GUI.Grace_GUI;
 import Interface.TextInputCheckInter;
@@ -29,8 +29,8 @@ public class LoginTextInputChecker implements TextInputCheckInter {
             }
             else{
                 gui.setMember(new Member(id,password));
-                return true;
+                return false;
             }
-            return false;
+            return true;
         }
 }

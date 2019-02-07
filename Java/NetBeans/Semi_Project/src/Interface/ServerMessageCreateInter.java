@@ -3,12 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
+
 package Interface;
+
+import org.json.simple.JSONObject;
 
 /**
  *
- * @author younghoonkim
+ * @author KOSTA
  */
-public interface ServerThreadHandlerInter {
-    
+public interface ServerMessageCreateInter {
+    public String createMessage(String msg, JSONObject members);
 }

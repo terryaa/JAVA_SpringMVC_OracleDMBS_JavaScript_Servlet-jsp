@@ -5,6 +5,12 @@
  */
 package Class;
 
+import HandleServerMessage.HandleServerIdDuplicationMessage;
+import HandleServerMessage.HandleServerLoginMessage;
+import HandleServerMessage.HandleServerJoinMessage;
+import TextInputChecker.LoginTextInputChecker;
+import TextInputChecker.IdDuplicationInputChecker;
+import TextInputChecker.JoinTextInputChecker;
 import GUI.Grace_GUI;
 import Interface.HandleServerMessage;
 import Interface.ServiceInter;
@@ -183,8 +189,8 @@ public class Service implements ServiceInter{
         //검색 시작일
         StringBuffer sb=new StringBuffer();
         sb.append("date^");
+        sb.append(datePick(gui,0)).append("^");
         sb.append(datePick(gui,1)).append("^");
-        sb.append(datePick(gui,2)).append("^");
         
         //일반회원과 admin구별, 서버에 자료를 요청한다.
         gui.getPw().println(sb.toString());
@@ -254,9 +260,9 @@ public class Service implements ServiceInter{
     
     @Override
     //관리자가 검색을 눌렀을시 서버와 통신하여 아이디가 존재하는지여부를 검색한뒤 결과를 GUI에서알려줌. 
-    public void idSearch(Grace_GUI gui,String id){
+    public void idSearch(Grace_GUI gui){
 
-             if (check(gui,id)==true) { 
+             if (check(gui)==true) { 
                 JOptionPane.showMessageDialog(gui, "회원 검색 완료");
                 gui.setCheck(true);
              }
@@ -269,9 +275,9 @@ public class Service implements ServiceInter{
     //회원가입시 아이디가 이미 등록되어있는지 체크를위해 서버에 아이디를 전송하여
     //중복여부를 결과로 받아 알려준다.
     @Override
-    public void idCheck(Grace_GUI gui,String id){
+    public void idCheck(Grace_GUI gui){
         
-                 if (check(gui,id)==true) {
+                 if (check(gui)==true) {
                      JOptionPane.showMessageDialog(gui, "사용가능한 아이디입니다.");
                      gui.setCheck(true);
                  }
@@ -283,34 +289,26 @@ public class Service implements ServiceInter{
     }
     
     
-    private boolean check(Grace_GUI gui,String id){
+    private boolean check(Grace_GUI gui){
           try {
-             String msg=null;
-             if (id.equals("")) { // idv가 빈칸인 상태에서 중복체크버튼을 눌렀을 때
-                 JOptionPane.showMessageDialog(gui, "아이디입력");
-             }else{
-                 gui.setId(id); // joinid 에 입력된 값을 id에 저장
-                 msg="check^" +id  + "^";
-             }
-                 //gui.setBr(new BufferedReader(new InputStreamReader(gui.getS().getInputStream())));
-                 gui.getPw().println(msg);
-                 gui.getPw().flush();
-                 String answer = gui.getBr().readLine();
-                 
-                 StringTokenizer stz = new StringTokenizer(answer, "^");
-                 String token = stz.nextToken();
-
-                 if (token.equals("true")) {
+             tici=new IdDuplicationInputChecker();
+             if (!tici.textIntputCheck(gui)) { // idv가 빈칸인 상태에서 중복체크버튼을 눌렀을 때
+                 hsm=new HandleServerIdDuplicationMessage();
+                 gui.getPw().println(hsm.createRequest(gui));
+                 String msg = gui.getBr().readLine();
+                 if(!hsm.processResponse(msg, gui))
+                     System.out.println("Data from Server is not correct");
+                 else
+                 {
                      return true;
                  }
-                 else {
-                     return false;
-                 }
-                 
-             
+                
+             }
+             else
+                System.out.println("잘못된 입력");
          }
          catch (IOException ex) {
-             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+             JOptionPane.showMessageDialog(gui, "서버 에러");
          }
           return false;
     }
@@ -318,56 +316,46 @@ public class Service implements ServiceInter{
      @Override
     public void login(Grace_GUI gui){
         tici=new LoginTextInputChecker();
-        if (tici.textIntputCheck(gui))
+        if (!tici.textIntputCheck(gui))
         {
-            StringBuffer sb=new StringBuffer();
-            sb.append("login^").append(gui.getMember().getId()).append("^");
-            sb.append(gui.getMember().getPassword()).append("^");
-            gui.getPw().println(sb.toString());
+            hsm=new HandleServerLoginMessage();
+            gui.getPw().println(hsm.createRequest(gui));
 
 
-                StringTokenizer st=null;
                 try {
                     String readLine=gui.getBr().readLine();
                     hsm=new HandleServerLoginMessage();
-                    if(hsm.handledata(readLine,gui)){
-                         reservationListRefresh(gui);
-                    }
+                    if(!hsm.processResponse(readLine,gui))
+                        System.out.println("Data from Server is not correct");
+                    else
+                        reservationListRefresh(gui);
                    
                 } catch (IOException ex) {
-                Logger.getLogger(Grace_GUI.class.getName()).log(Level.SEVERE, null, ex);
+                    JOptionPane.showMessageDialog(gui, "서버 에러");
                 }
             }
         else
-            JOptionPane.showMessageDialog(gui, "알수없는 에러");
+            System.out.println("잘못된 입력");
     }
     @Override
     public void join(Grace_GUI gui){
          
         tici=new JoinTextInputChecker();
-        if (tici.textIntputCheck(gui)){
-            Member mem=gui.getMember();
-            StringBuffer sb=new StringBuffer();
-                sb.append("join^");
-                sb.append(mem.getName()).append(":");
-                sb.append(mem.getId()).append(":");
-                sb.append(mem.getPassword()).append(":");
-                sb.append(mem.getCellphone()).append(":");
-                gui.getPw().println(sb.toString());
-                gui.getPw().flush();
-                try {
-                    String readLine=gui.getBr().readLine();
-                    if(readLine.contains("true")){
-                        JOptionPane.showMessageDialog(gui, "회원가입이 완료되었습니다.");
-                        gui.getCard().show(gui.getCardPanel(), "cardLogin");
-                    }
-                } catch (IOException ex) {
-                    System.out.println("Data Transmission failure");
-                    JOptionPane.showMessageDialog(gui, "서버 에러");
+        if (!tici.textIntputCheck(gui)){
+            hsm=new HandleServerJoinMessage();
+            gui.getPw().println(hsm.createRequest(gui));
+            gui.getPw().flush();
+            try {
+                String readLine=gui.getBr().readLine();
+                if(!hsm.processResponse(readLine, gui)){
+                     System.out.println("Data from Server is not correct");
                 }
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(gui, "서버 에러");
+            }
         }
         else {
-             JOptionPane.showMessageDialog(gui, "잘못된 입력");    
+             System.out.println("잘못된 입력");
         }
         
     }

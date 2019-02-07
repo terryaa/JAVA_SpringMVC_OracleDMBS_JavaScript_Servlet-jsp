@@ -20,9 +20,9 @@ public class Member {
         
     }
 
-    public Member(String name,String id){
-        this.name = name;
+    public Member(String id,String password){
         this.id = id;
+        this.password = password;
     }
     public Member(String name, String id, String password, String cellphone) {
         this.name = name;

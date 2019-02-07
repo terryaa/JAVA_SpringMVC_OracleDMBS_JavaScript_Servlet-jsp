@@ -18,5 +18,6 @@ public interface HandleServerMessage {
      *
      * @param msg
      */
-    public boolean handledata(String msg,Grace_GUI gui);
+    public String createRequest(Grace_GUI gui);
+    public boolean processResponse(String msg, Grace_GUI gui);
 }

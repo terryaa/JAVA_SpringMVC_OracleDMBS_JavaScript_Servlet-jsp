@@ -11,6 +11,7 @@ package Class;
  * and open the template in the editor.
  */
 
+import Interface.ServerMessageCreateInter;
 import java.util.Date;
 
 import java.io.BufferedReader;
@@ -44,6 +45,7 @@ public class ServerThread implements Runnable{
     private PrintWriter pw;
     private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
     private final String path="C:\\bigdata\\KOSTA_MAC\\Java\\NetBeans\\Semi_Project\\src\\Data\\";
+    private ServerMessageCreateInter smci;
    
     JSONParser parser = new JSONParser(); // 불러오기?
     JSONObject memberInfo = new JSONObject(); // 값에 대한 객체 생성
@@ -99,16 +101,17 @@ public class ServerThread implements Runnable{
                 String identifier=st.nextToken();
                 String clientId=st.nextToken();
                 members = (JSONObject) parser.parse(new FileReader(path+"member.json"));
-                memberInfo= (JSONObject) members.get(clientId);
+                
                 
                 
                 //관리자가 회원의 아이디를 검색하여 중복확인 결과를 알려준다
                 //데이터형식: check^
-                if(memberInfo==null) {
-                    sb.append("none^");
-                }
-                else if(identifier.equals("check")){
-                     sb.append("true^");
+//                if(memberInfo==null) {
+//                    sb.append("none^id^");
+//                }
+                if(identifier.equals("check")){
+                    smci=new ServerIdDuplicationMessageCreate();
+                    sb.append(smci.createMessage(clientId, members));
                 }
                 //데이터형식 : date^userId^2000/01/01^2000/01/01
                 //날짜를 받아서 테이블에 출력할 정보 생성
@@ -164,17 +167,8 @@ public class ServerThread implements Runnable{
                 //Json파일에서 ID와 비밀번호 비교후 비밀번호가 맞을경우 로그인성공 메세지를 보내준다.
                 //데이터형식: login^id^password
                 else if(identifier.equals("login")){
-                    String password=st.nextToken();
-                     if (((String) memberInfo.get("password")).equals(password)) {
-                                sb.append("true^").append(clientId).append("^");
-                                sb.append((String) memberInfo.get("Name")).append("^");
-                                sb.append((String) memberInfo.get("password")).append("^");
-                                sb.append((String) memberInfo.get("Cell1")).append("-");
-                                sb.append((String) memberInfo.get("Cell2")).append("-");
-                                sb.append((String) memberInfo.get("Cell3")).append("^");
-                     }
-                     else
-                         sb.append("login^false:");
+                    smci=new ServerLoginMessageCreate();
+                    sb.append(smci.createMessage(st.nextToken(), memberInfo));
                 }
                 
                 //회원가입
@@ -184,20 +178,13 @@ public class ServerThread implements Runnable{
                     // "join/아이디/비밀번호/연락처"
                     //String id = stz.nextToken();
                     // 회원가입하는 로직
-                    st=new StringTokenizer(st.nextToken(),":");
-                    memberInfo.put("Name", st.nextToken());        //입력한 값을 JSon에 저장
-                    memberInfo.put("ID",st.nextToken());            //입력한 값을 JSon에 저장
-                    memberInfo.put("password", st.nextToken());//입력한 값을 JSon에 저장
-                    memberInfo.put("Cell1", st.nextToken()); //입력한 값을 JSon에 저장
-                    memberInfo.put("Cell2", st.nextToken()); //입력한 값을 JSon에 저장
-                    memberInfo.put("Cell3", st.nextToken()); //입력한 값을 JSon에 저장
-                    
-                    members.put(memberInfo.get("ID"),memberInfo);
-                    FileWriter fw = new FileWriter(path+"member.json");
-                    fw.write(members.toJSONString());
-                    fw.flush();
-                    fw.close();
-                    sb.append("join^true:");
+                    smci=new ServerJoinMessageCreate();
+                    try{
+                    String str=st.nextToken();
+                    sb.append(  smci.createMessage(str, members));
+                    }catch(Exception e){
+                        e.getStackTrace();
+                    }
                 }
                  
                  //예약 생성.

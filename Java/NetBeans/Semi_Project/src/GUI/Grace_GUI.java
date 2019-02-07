@@ -977,7 +977,7 @@ public class Grace_GUI extends javax.swing.JFrame {
         //서비스 시작
         service=new Service();
         //Test member
-        member=new Member("이순신","alizimara","password","010-1111-1111");
+        //member=new Member("이순신","alizimara","password","010-1111-1111");
         
 
         //GUI 초기화

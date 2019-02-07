@@ -1,5 +1,4 @@
-INDEX VERSION 1.131+/Users/younghoonkim/Documents/KOSTA/Java/Eclipse/.metadata/.plugins/org.eclipse.jdt.core
-4292216604.index
-1864684076.index
-4288401341.index
-1348110370.index
+INDEX VERSION 1.131+C:\bigdata\KOSTA_MAC\Java\Eclipse\.metadata\.plugins\org.eclipse.jdt.core
+3227283350.index
+2309196122.index
+1766879252.index

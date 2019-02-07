@@ -6,7 +6,9 @@
 package Class;
 
 import GUI.Grace_GUI;
+import Interface.HandleServerMessage;
 import Interface.ServiceInter;
+import Interface.TextInputCheckInter;
 import POJO.Member;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
@@ -40,8 +42,8 @@ public class Service implements ServiceInter{
     
      private final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
      private final SimpleDateFormat sdf2=new SimpleDateFormat("HH:mm:ss");
-    joinTextInputChecker jtic;
-    loginTextInputChecker ltic;
+     TextInputCheckInter tici;
+     HandleServerMessage hsm;
      
      //예약을 클릭했을시 해당 Table의 행 번호를 얻어와 상세정보를 만들어 출력해준다. 
      @Override
@@ -202,21 +204,7 @@ public class Service implements ServiceInter{
     //회원가입 항목 모든 칸에대한 조건이 구현되어있다.
 
       
-    private void setAdminSearchBox(String id,Grace_GUI gui){
-        if(id.equals("admin")){
-
-            gui.getMember().setAdmin(true);
-            gui.getLabel_Admin().setVisible(true);
-            gui.getTextField_Admin().setVisible(true);
-            gui.getButton_Admin().setVisible(true);
-        }
-        else{
-            gui.getMember().setAdmin(false);
-            gui.getLabel_Admin().setVisible(false);
-            gui.getTextField_Admin().setVisible(false);
-            gui.getButton_Admin().setVisible(false);
-        }
-    }
+   
     
    //예약하기 버튼을 누를경우 admin/일반사용자를 나누어
     //예약정보를 서버에 전송하여 예약을 저장한뒤 결과를 받는다.
@@ -329,8 +317,8 @@ public class Service implements ServiceInter{
    
      @Override
     public void login(Grace_GUI gui){
-        ltic=new loginTextInputChecker();
-        if (ltic.textIntputCheck(gui))
+        tici=new LoginTextInputChecker();
+        if (tici.textIntputCheck(gui))
         {
             StringBuffer sb=new StringBuffer();
             sb.append("login^").append(gui.getMember().getId()).append("^");
@@ -341,34 +329,14 @@ public class Service implements ServiceInter{
                 StringTokenizer st=null;
                 try {
                     String readLine=gui.getBr().readLine();
-                    st=new StringTokenizer(readLine, "^");
-                    String loginResult=st.nextToken();
-                    //로그인 성공시 필드멤버인 Member의 값을 채워줌
-                    //회원정보를 인메모리에 저장
-                    gui.getMember().setId(st.nextToken());
-                    gui.getMember().setName(st.nextToken());
-                    gui.getMember().setPassword(st.nextToken());
-                    gui.getMember().setCellphone(st.nextToken());
-
-
-                    if (loginResult.equals("true")) {
-                        setAdminSearchBox(id, gui);
-                        reservationListRefresh(gui);
-                        gui.getLabel_LoginID().setText(gui.getMember().getName());
-                        JOptionPane.showMessageDialog(gui, "로그인 되었습니다.");
-                        gui.getCard().show(gui.getCardPanel(), "cardReservation");
+                    hsm=new HandleServerLoginMessage();
+                    if(hsm.handledata(readLine,gui)){
+                         reservationListRefresh(gui);
                     }
-                    //비밀번호 오류
-                    else if (loginResult.equals("false")||loginResult.equals("none")) {
-                        JOptionPane.showMessageDialog(gui, "비밀번호 혹은 아이디가 맞지 않습니다.");
-                        gui.getLoginidv().setText("");
-
-                    }
-
+                   
                 } catch (IOException ex) {
                 Logger.getLogger(Grace_GUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-
             }
         else
             JOptionPane.showMessageDialog(gui, "알수없는 에러");
@@ -376,8 +344,8 @@ public class Service implements ServiceInter{
     @Override
     public void join(Grace_GUI gui){
          
-        jtic=new joinTextInputChecker();
-        if (jtic.textIntputCheck(gui)){
+        tici=new JoinTextInputChecker();
+        if (tici.textIntputCheck(gui)){
             Member mem=gui.getMember();
             StringBuffer sb=new StringBuffer();
                 sb.append("join^");

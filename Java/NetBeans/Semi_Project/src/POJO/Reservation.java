@@ -5,6 +5,7 @@
  */
 package POJO;
 
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 
 /**
@@ -17,20 +18,32 @@ import java.text.SimpleDateFormat;
 //SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
 //	String date = sdf.format(new Date()); 
 //	System.out.println(date); //15/10/2013
-public class Reservation extends Member{
-    
-    SimpleDateFormat sdf;
+public class Reservation implements Serializable{
+    String id;
+    String name;
+    String date;
     String program;
-
-    public SimpleDateFormat getSdf() {
-        return sdf;
+    String memo;
+    public void setName(String name){
+        this.name=name;
+    }
+    public String getName(){
+        return this.name;
+    }
+    public String getId(){
+        return id;
+    }
+    public void setId(String id){
+        this.id=id;
     }
 
-    public void setSdf(SimpleDateFormat sdf) {
-        this.sdf = sdf;
+    public String getDate() {
+        return date;
     }
-    
-   
+
+    public void setDate(String date) {
+        this.date = date;
+    }
 
     public String getProgram() {
         return program;
@@ -39,5 +52,12 @@ public class Reservation extends Member{
     public void setProgram(String program) {
         this.program = program;
     }
-    
+
+    public String getMemo() {
+        return memo;
+    }
+
+    public void setMemo(String memo) {
+        this.memo = memo;
+    }
 }

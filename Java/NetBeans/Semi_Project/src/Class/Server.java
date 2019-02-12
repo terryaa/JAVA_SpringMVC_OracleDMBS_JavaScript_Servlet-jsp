@@ -66,16 +66,13 @@ public class Server {
         Server server=new Server();
         server.execute();
     }
+    /*
     public void sendReservationList(String clientMsg){
-        //All client's sockets are saved in ArrayList.
-        //Broadcast a message to all clients.
-        if(clientMsg.equals("")){
-            clientMsg="no data:";
-        }
         for(ServerThread e:cList){
             e.getPw().println(clientMsg);
             e.getPw().flush();
         }
     }
+    */
     
 }

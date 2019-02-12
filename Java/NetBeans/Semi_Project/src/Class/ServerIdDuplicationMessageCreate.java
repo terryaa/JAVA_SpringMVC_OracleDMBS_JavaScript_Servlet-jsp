@@ -23,7 +23,7 @@ public class ServerIdDuplicationMessageCreate implements ServerMessageCreateInte
             sb.append("none^id^");
         }
         else{
-            sb.append("true^");
+            sb.append("true^").append(memberInfo.get("Name")).append("^");
         }
         return sb.toString();
     }

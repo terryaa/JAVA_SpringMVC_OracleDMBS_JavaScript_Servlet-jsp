@@ -32,6 +32,7 @@ public class HandleServerIdDuplicationMessage implements HandleServerMessage{
              return true;
          }
          else {
+             gui.setSearch_name(stz.nextToken());
              return false;
          }
     }

@@ -37,6 +37,7 @@
          UserDatabaseRealm to authenticate users
     -->
     <Resource auth="Container" description="User database that can be updated and saved" factory="org.apache.catalina.users.MemoryUserDatabaseFactory" name="UserDatabase" pathname="conf/tomcat-users.xml" type="org.apache.catalina.UserDatabase"/>
+
   </GlobalNamingResources>
 
   <!-- A "Service" is a collection of one or more "Connectors" that share
@@ -149,7 +150,7 @@
              Note: The pattern used is equivalent to using pattern="common" -->
         <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs" pattern="%h %l %u %t &quot;%r&quot; %s %b" prefix="localhost_access_log" suffix=".txt"/>
 
-      <Context docBase="webApp02_07" path="/webApp02_07" reloadable="true" source="org.eclipse.jst.jee.server:webApp02_07"/></Host>
+      <Context docBase="webApp02_07" path="/webApp02_07" reloadable="true" source="org.eclipse.jst.jee.server:webApp02_07"/><Context docBase="webAppp0211" path="/webAppp0211" reloadable="true" source="org.eclipse.jst.jee.server:webAppp0211"/><Context docBase="webAppBoard" path="/webAppBoard" reloadable="true" source="org.eclipse.jst.jee.server:webAppBoard"/></Host>
     </Engine>
   </Service>
 </Server>

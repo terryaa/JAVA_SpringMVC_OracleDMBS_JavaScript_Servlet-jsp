@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+  <!-- member라는 이름공간을 줘야한다.생략하면안된다.
+  parameter에는 type만지정하고 직접넣지않는다. 
+  인자로는 object(포조),일반자료형,map 들이들어올수있따. 그러나 1개만 들어올수있다.
+   <insert id="memin" parameterType="vo.MemberVO"></insert>
+   써도되지만 package경로가 바뀌면 수정이힘들기떄문에, 알리아스사용.
+   -->
+  <mapper namespace="mem">
+  		<insert id="memin" parameterType="mvo">
+  				  insert into member values(member_seq.nextVal,
+  		#{id},#{pwd},#{name},#{email},#{tel},sysdate)
+  		</insert>
+  		<select id="memList" resultType="mvo">
+  			select num,id,name,email,tel,hiredate from
+  			member order by 1 desc
+  		</select>
+  		<select id="searchid" resultType="mvo" parameterType="String">
+  			select count(*) cnt from member where id=#{id}
+  		</select>
+  </mapper>

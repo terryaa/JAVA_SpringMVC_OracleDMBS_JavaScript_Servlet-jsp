@@ -5,22 +5,25 @@
  */
 package Class;
 
-import HandleServerMessage.HandleServerIdDuplicationMessage;
-import HandleServerMessage.HandleServerLoginMessage;
-import HandleServerMessage.HandleServerJoinMessage;
-import TextInputChecker.LoginTextInputChecker;
-import TextInputChecker.IdDuplicationInputChecker;
-import TextInputChecker.JoinTextInputChecker;
 import GUI.Grace_GUI;
+import HandleServerMessage.HandleServerIdDuplicationMessage;
+import HandleServerMessage.HandleServerJoinMessage;
+import HandleServerMessage.HandleServerLoginMessage;
 import Interface.HandleServerMessage;
 import Interface.ServiceInter;
 import Interface.TextInputCheckInter;
 import POJO.Member;
+import POJO.Reservation;
+import TextInputChecker.IdDuplicationInputChecker;
+import TextInputChecker.JoinTextInputChecker;
+import TextInputChecker.LoginTextInputChecker;
+import TextInputChecker.SearchIdInputChecker;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
 import java.text.SimpleDateFormat;
@@ -30,14 +33,14 @@ import java.util.Date;
 import java.util.Properties;
 import java.util.StringTokenizer;
 import java.util.TimeZone;
-import org.jdatepicker.impl.JDatePanelImpl;
-import org.jdatepicker.impl.JDatePickerImpl;
-import org.jdatepicker.impl.UtilDateModel;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
+import org.jdatepicker.impl.JDatePanelImpl;
+import org.jdatepicker.impl.JDatePickerImpl;
+import org.jdatepicker.impl.UtilDateModel;
 
 /**
  *
@@ -50,6 +53,7 @@ public class Service implements ServiceInter{
      private final SimpleDateFormat sdf2=new SimpleDateFormat("HH:mm:ss");
      TextInputCheckInter tici;
      HandleServerMessage hsm;
+     private ArrayList<Reservation> list=null;
      
      //예약을 클릭했을시 해당 Table의 행 번호를 얻어와 상세정보를 만들어 출력해준다. 
      @Override
@@ -67,15 +71,12 @@ public class Service implements ServiceInter{
                     //자료를 스트링버퍼에만들어 저장.
                   StringBuffer sb=new StringBuffer();
                      if (row >= 0) {
-                        StringTokenizer st=new StringTokenizer(gui.getReservationListArray().get(row),":");
-                        sb.append("아이디 : ").append(st.nextToken()).append("\n");
-                        sb.append("이름 : ").append(st.nextToken()).append("\n");
-                        sb.append("예약시간 : ").append(st.nextToken()).append("\n");
-                        sb.append("시술종류 : ").append(st.nextToken()).append("\n");
-//                        sb.append("남은 보톡스 예약횟수 : ").append(st.nextToken()).append("\n");
-//                        sb.append("남은 레이저 예약횟수 : ").append(st.nextToken()).append("\n");
-//                        sb.append("남은 피부관리 예약횟수 : ").append(st.nextToken()).append("\n");
-                        sb.append("의사메모 : ").append(st.nextToken()).append("\n");
+                        Reservation resv=list.get(row);
+                        sb.append("아이디 : ").append(resv.getId()).append("\n");
+                        sb.append("이름 : ").append(resv.getName()).append("\n");
+                        sb.append("예약시간 : ").append(resv.getDate()).append("\n");
+                        sb.append("시술종류 : ").append(resv.getProgram()).append("\n");
+                        sb.append("의사메모 : ").append(resv.getMemo()).append("\n");
                      }
                      //출력창에 출력.
                      gui.getDetailedInfo().append(sb.toString());
@@ -127,58 +128,37 @@ public class Service implements ServiceInter{
     }
     
     public void initTable(Grace_GUI gui){
-          try {
-                Socket s;
-               // s=gui.getS();
-                ArrayList<String> reservationListArray=new ArrayList<>();
-                DefaultTableModel dtm = (DefaultTableModel) gui.getReservationTable().getModel();
-                BufferedReader br=new BufferedReader
-                        (new InputStreamReader(gui.getS()
-                                .getInputStream()));
-                String readLine=br.readLine();
-                if(!readLine.equals("")){
-                StringTokenizer st=new StringTokenizer(readLine,"^");
-                String str=st.nextToken();
-                if(str.equals("date"))
-                {
-                    StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
+        ObjectInputStream ois=null;
+        try {
+            ois=new ObjectInputStream(gui.getS().getInputStream());
+            list= (ArrayList) ois.readObject();
 
+            ArrayList<String> reservationListArray=new ArrayList<>();
+            DefaultTableModel dtm = (DefaultTableModel) gui.getReservationTable().getModel();
+            if(list!=null)
+            {
+                dtm.setRowCount(list.size());
+                for(int row=0;row<list.size();row++){
+                    Reservation resv=list.get(row);
+                    gui.getReservationTable().setValueAt(resv.getName(), row, 0);
+                    gui.getReservationTable().setValueAt(resv.getDate(), row, 1);
+                    gui.getReservationTable().setValueAt(resv.getProgram(), row, 2);
+                }
+            }
 
-                    while(st1.hasMoreTokens())
-                    {
-                        reservationListArray.add(st1.nextToken());
-
-
-                        for(int col=0;col<reservationListArray.size();col++){
-                            StringTokenizer st2=new StringTokenizer(
-                                    reservationListArray.get(col),":");
-                            st2.nextToken();
-
-                            dtm.setRowCount(reservationListArray.size());
-                            //reservationTable.se
-                            for(int row=0;row<3;row++)
-                            {
-                                gui.getReservationTable().setValueAt(st2.nextToken(), col, row);
-                            }
-                        }
-
-                    }
-                    }
-                    else if(str.contains("login")||str.contains("join")||
-                            str.contains("id_check")||str.contains("make")
-                            ||str.contains("id_search")||str.contains("duplication")){
-                        System.out.println("no data to fetch");
-                    }
-                    else{
-                          System.out.println("no data to fetch");
-                        dtm.setRowCount(0);
-                    }
-                    }
 
                 
             } catch (IOException ex) {
                 System.out.println("Data transmission failed from Server");
-            }finally{
+            } catch (ClassNotFoundException ex) {
+             Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+         }finally{
+            try {
+                gui.setBr(new BufferedReader(new InputStreamReader(gui.getS().getInputStream())));
+            } catch (IOException ex) {
+                Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
             }
     }
     //선택되어있는 날짜사이에 있는 예약정보들로 얻어와 예약정보리스트를 새로고침한다. 
@@ -189,6 +169,7 @@ public class Service implements ServiceInter{
         //검색 시작일
         StringBuffer sb=new StringBuffer();
         sb.append("date^");
+        sb.append(gui.getMember().getId()).append("^");
         sb.append(datePick(gui,0)).append("^");
         sb.append(datePick(gui,1)).append("^");
         
@@ -200,17 +181,7 @@ public class Service implements ServiceInter{
         Date date=(Date)gui.getDatePicker()[num].getModel().getValue();
         return sdf.format(date);
     }
-    //로그인 조건을 만족시킬시, 아이디와 패스워드를 서버에 전송하여
-    //로그인 성공여부를 전송받아 결과를 알려준다.
-    //로그인을 위한 칸들의 조건이 구현되어있다.
-   
-  
 
-    //회원가입의 모든 조건을 확인하여 조건에 맞을시 회원가입요청을 서버에 전송한다.
-    //회원가입 항목 모든 칸에대한 조건이 구현되어있다.
-
-      
-   
     
    //예약하기 버튼을 누를경우 admin/일반사용자를 나누어
     //예약정보를 서버에 전송하여 예약을 저장한뒤 결과를 받는다.
@@ -219,36 +190,22 @@ public class Service implements ServiceInter{
     @Override
     public void makeReservation(Grace_GUI gui){
         gui.Action();
-        
-        if(gui.getReserveinfo().length() >= 19){
-            //만약 길이가 19가 넘으면
-            gui.getLabelError().setForeground(Color.red);
-            //라벨 텍스트 색을 빨간색으로.
-            gui.getLabelError().setText("정확히 입력해주세요.");
-            //정확히 입력해주세요를 Label에 출력
-
-        }else if(gui.getReservememolength() >= 20){
-            gui.getLabelError().setForeground(Color.black);
-            gui.getLabelError().setText("메모의 글자수가 초과하였습니다.");
-
-        }else {
-            gui.getLabelError().setForeground(Color.blue);
-            gui.getLabelError().setText("예약이 완료되었습니다!");
-                  if(gui.getMember().isAdmin()){
-                      gui.getPw().println("make^"+gui.getReserveTockenAdmin());
+        tici=new SearchIdInputChecker();
+        if(!tici.textIntputCheck(gui)){
+             if(gui.getMember().isAdmin()){
+                      gui.getPw().println("make^"+"id^"+gui.getReserveTockenAdmin());
                   }
                   else
-                      gui.getPw().println("make^"+gui.getReserveTocken());
-              
-            try {
+                      gui.getPw().println("make^"+"id^"+gui.getReserveTocken());
+             try {
                 String readLine=gui.getBr().readLine();
                 if(readLine.equals("duplication")){
                     gui.getLabelError().setForeground(Color.GREEN);
                     //중복일시에 텍스트컬러를 초록색으로 바꿈.
                 }
                     else{
-                    gui.getLabelError().setText("이미 예약되어 있습니다. 다른 시간에 예약하세요.");
-                    //다른시간에 예약되었다고 출력하게 만듬
+                      gui.getLabelError().setForeground(Color.blue);
+            gui.getLabelError().setText("예약이 완료되었습니다!");
                 }
             } catch (IOException ex) {
                 Logger.getLogger(Service.class.getName()).log(Level.SEVERE, null, ex);
@@ -277,6 +234,8 @@ public class Service implements ServiceInter{
     @Override
     public void idCheck(Grace_GUI gui){
         
+            tici=new IdDuplicationInputChecker();
+             if (!tici.textIntputCheck(gui)) { 
                  if (check(gui)==true) {
                      JOptionPane.showMessageDialog(gui, "사용가능한 아이디입니다.");
                      gui.setCheck(true);
@@ -285,34 +244,32 @@ public class Service implements ServiceInter{
                      JOptionPane.showMessageDialog(gui, "이미 존재하는 아이디입니다.");
                      gui.setCheck(false);
                  }
+             }
          
     }
     
     
     private boolean check(Grace_GUI gui){
           try {
-             tici=new IdDuplicationInputChecker();
-             if (!tici.textIntputCheck(gui)) { // idv가 빈칸인 상태에서 중복체크버튼을 눌렀을 때
                  hsm=new HandleServerIdDuplicationMessage();
                  gui.getPw().println(hsm.createRequest(gui));
                  String msg = gui.getBr().readLine();
-                 if(!hsm.processResponse(msg, gui))
+                 if(hsm.processResponse(msg, gui))
                      System.out.println("Data from Server is not correct");
                  else
                  {
                      return true;
                  }
                 
-             }
-             else
-                System.out.println("잘못된 입력");
          }
          catch (IOException ex) {
              JOptionPane.showMessageDialog(gui, "서버 에러");
          }
           return false;
     }
-   
+       //로그인 조건을 만족시킬시, 아이디와 패스워드를 서버에 전송하여
+    //로그인 성공여부를 전송받아 결과를 알려준다.
+    //로그인을 위한 칸들의 조건이 구현되어있다.
      @Override
     public void login(Grace_GUI gui){
         tici=new LoginTextInputChecker();
@@ -337,6 +294,9 @@ public class Service implements ServiceInter{
         else
             System.out.println("잘못된 입력");
     }
+    
+     //회원가입의 모든 조건을 확인하여 조건에 맞을시 회원가입요청을 서버에 전송한다.
+    //회원가입 항목 모든 칸에대한 조건이 구현되어있다.
     @Override
     public void join(Grace_GUI gui){
          

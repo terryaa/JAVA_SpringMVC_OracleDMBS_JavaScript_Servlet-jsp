@@ -17,13 +17,15 @@ import org.json.simple.JSONObject;
 public class ServerLoginMessageCreate implements ServerMessageCreateInter {
     @Override
       public String createMessage(String msg, JSONObject members){
-          StringTokenizer st=new StringTokenizer(msg,":");
+          StringTokenizer st=new StringTokenizer(msg,"^");
           StringBuffer sb=new StringBuffer();
-           JSONObject memberInfo= (JSONObject) members.get(st.nextToken());
+          st.nextToken();
+          String id=st.nextToken();
+           JSONObject memberInfo= (JSONObject) members.get(id);
            if( memberInfo!=null){
               
               if (((String) memberInfo.get("password")).equals(st.nextToken())) {
-                sb.append("true^").append(memberInfo.get("Id")).append("^"); 
+                sb.append("true^").append(memberInfo.get("ID")).append("^"); 
                 sb.append((String) memberInfo.get("Name")).append("^");
                 sb.append((String) memberInfo.get("password")).append("^");
                 sb.append((String) memberInfo.get("Cell1")).append("-");

@@ -73,21 +73,7 @@ public class Grace_GUI extends javax.swing.JFrame {
     private String search_id="";
     private String search_name="";
 
-    public String getSearch_id() {
-        return search_id;
-    }
-
-    public void setSearch_id(String search_id) {
-        this.search_id = search_id;
-    }
-
-    public String getSearch_name() {
-        return search_name;
-    }
-
-    public void setSearch_name(String search_name) {
-        this.search_name = search_name;
-    }
+   
     
     
 
@@ -1061,126 +1047,10 @@ public class Grace_GUI extends javax.swing.JFrame {
         reserveymdh = (String) reserveyear + "/" + reservemonth + "/" + reserveday +"/" + reservehour;
         //예약 년월일시간 가져오기
         
-       reserveTocken = reserveymdh + "^" +reserveinfofull;
-       reserveTockenAdmin = reserveymdh + "^" + reserveinfofull_admin;
+       reserveTocken = reserveymdh + "^" +reserveinfofull+"^";
+       reserveTockenAdmin = reserveymdh + "^" + reserveinfofull_admin+"^";
 }
 
-
-    
-    
-//    public void initTable(){
-//        
-////        new Thread(() -> {
-////            try {
-////                Socket s;
-////                s=new Socket("localhost",9999);
-////                reservationListArray=new ArrayList<>();
-////                DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
-////                BufferedReader br=new BufferedReader
-////                        (new InputStreamReader(s.getInputStream()));
-////                while(true){
-////                    String readLine=br.readLine();
-////                    if(!readLine.equals("")){
-////                    StringTokenizer st=new StringTokenizer(readLine,"^");
-////                    String str=st.nextToken();
-////                    if(str.equals("date"))
-////                    {
-////                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
-////                        
-////                        
-////                        while(st1.hasMoreTokens())
-////                        {
-////                            reservationListArray.add(st1.nextToken());
-////                            
-////                            
-////                            for(int col=0;col<reservationListArray.size();col++){
-////                                StringTokenizer st2=new StringTokenizer(
-////                                        reservationListArray.get(col),":");
-////                                st2.nextToken();
-////                                
-////                                dtm.setRowCount(reservationListArray.size());
-////                                //reservationTable.se
-////                                for(int row=0;row<3;row++)
-////                                {
-////                                    reservationTable.setValueAt(st2.nextToken(), col, row);
-////                                }
-////                            }
-////                            
-////                        }
-////                    }
-////                    else if(str.contains("login")||str.contains("join")||
-////                            str.contains("id_check")||str.contains("make")
-////                            ||str.contains("id_search")||str.contains("duplication")){
-////                        System.out.println("no data to fetch");
-////                    }
-////                    else{
-////                          System.out.println("no data to fetch");
-////                        dtm.setRowCount(0);
-////                    }
-////                    }
-////
-////                }
-////            } catch (IOException ex) {
-////                System.out.println("Data transmission failed from Server");
-////            }finally{
-////            }
-////            
-////        }).start();
-//        
-//        try {
-//                Socket s;
-//                s=new Socket("localhost",9999);
-//                reservationListArray=new ArrayList<>();
-//                DefaultTableModel dtm = (DefaultTableModel) reservationTable.getModel();
-//                BufferedReader br=new BufferedReader
-//                        (new InputStreamReader(s.getInputStream()));
-//                while(true){
-//                    String readLine=br.readLine();
-//                    if(!readLine.equals("")){
-//                    StringTokenizer st=new StringTokenizer(readLine,"^");
-//                    String str=st.nextToken();
-//                    if(str.equals("date"))
-//                    {
-//                        StringTokenizer st1=new StringTokenizer(st.nextToken(),"\n");
-//                        
-//                        
-//                        while(st1.hasMoreTokens())
-//                        {
-//                            reservationListArray.add(st1.nextToken());
-//                            
-//                            
-//                            for(int col=0;col<reservationListArray.size();col++){
-//                                StringTokenizer st2=new StringTokenizer(
-//                                        reservationListArray.get(col),":");
-//                                st2.nextToken();
-//                                
-//                                dtm.setRowCount(reservationListArray.size());
-//                                //reservationTable.se
-//                                for(int row=0;row<3;row++)
-//                                {
-//                                    reservationTable.setValueAt(st2.nextToken(), col, row);
-//                                }
-//                            }
-//                            
-//                        }
-//                    }
-//                    else if(str.contains("login")||str.contains("join")||
-//                            str.contains("id_check")||str.contains("make")
-//                            ||str.contains("id_search")||str.contains("duplication")){
-//                        System.out.println("no data to fetch");
-//                    }
-//                    else{
-//                          System.out.println("no data to fetch");
-//                        dtm.setRowCount(0);
-//                    }
-//                    }
-//
-//                }
-//            } catch (IOException ex) {
-//                System.out.println("Data transmission failed from Server");
-//            }finally{
-//            }
-//    }
     
     public ArrayList<String> getReservationListArray() {
         return reservationListArray;
@@ -1546,7 +1416,21 @@ public class Grace_GUI extends javax.swing.JFrame {
     public void setBr(BufferedReader br) {
         this.br = br;
     }
+ public String getSearch_id() {
+        return search_id;
+    }
 
+    public void setSearch_id(String search_id) {
+        this.search_id = search_id;
+    }
+
+    public String getSearch_name() {
+        return search_name;
+    }
+
+    public void setSearch_name(String search_name) {
+        this.search_name = search_name;
+    }
 
     
  

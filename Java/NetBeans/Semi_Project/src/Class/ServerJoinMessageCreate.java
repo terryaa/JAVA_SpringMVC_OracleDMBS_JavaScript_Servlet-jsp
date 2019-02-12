@@ -24,11 +24,20 @@ public class ServerJoinMessageCreate implements ServerMessageCreateInter {
 
     @Override
     public String createMessage(String msg, JSONObject members) {
-        StringTokenizer st=new StringTokenizer(msg,":");
-        JSONObject memberInfo=new JSONObject();
+        StringTokenizer st=new StringTokenizer(msg,"^");
+        st.nextToken();
+        String str=st.nextToken();
+        System.out.println(str);
+        st=new StringTokenizer(str,":");
+         JSONObject memberInfo=new JSONObject();
         memberInfo.put("Name", st.nextToken());        //입력한 값을 JSon에 저장
+        System.out.println(memberInfo.get("Name"));
         memberInfo.put("ID",st.nextToken());            //입력한 값을 JSon에 저장
-        memberInfo.put("password", st.nextToken());//입력한 값을 JSon에 저장
+        System.out.println(memberInfo.get("ID"));
+        memberInfo.put("password", st.nextToken());//입력한 값을 JSon에 
+        System.out.println(memberInfo.get("password"));
+        String cell=st.nextToken();
+        st=new StringTokenizer(cell,"-");
         memberInfo.put("Cell1", st.nextToken()); //입력한 값을 JSon에 저장
         memberInfo.put("Cell2", st.nextToken()); //입력한 값을 JSon에 저장
         memberInfo.put("Cell3", st.nextToken()); //입력한 값을 JSon에 저장

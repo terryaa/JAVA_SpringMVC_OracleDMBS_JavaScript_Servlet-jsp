@@ -12,27 +12,24 @@ package Class;
  */
 
 import Interface.ServerMessageCreateInter;
-import java.util.Date;
-
+import POJO.Reservation;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.Scanner;
-import java.util.Set;
 import java.util.StringTokenizer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
-import sun.util.locale.StringTokenIterator;
 
 /**
  *
@@ -43,7 +40,7 @@ public class ServerThread implements Runnable{
     private Server server;
     private BufferedReader br;
     private PrintWriter pw;
-    private final SimpleDateFormat sdf=new SimpleDateFormat("yyyy/MM/dd");
+    
     private final String path="C:\\bigdata\\KOSTA_MAC\\Java\\NetBeans\\Semi_Project\\src\\Data\\";
     private ServerMessageCreateInter smci;
    
@@ -93,6 +90,7 @@ public class ServerThread implements Runnable{
             
             //readLine을 통해 client가 보내는 자료를 읽어온다.
             //client의 요청에따라 예약확인/중복확인/아이디검색/로그인/예약등록으로 나뉜다.
+            firstWhile:
             while(true){
                 String fromClient=br.readLine();
                 st=new StringTokenizer(fromClient,"^");
@@ -106,9 +104,6 @@ public class ServerThread implements Runnable{
                 
                 //관리자가 회원의 아이디를 검색하여 중복확인 결과를 알려준다
                 //데이터형식: check^
-//                if(memberInfo==null) {
-//                    sb.append("none^id^");
-//                }
                 if(identifier.equals("check")){
                     smci=new ServerIdDuplicationMessageCreate();
                     sb.append(smci.createMessage(clientId, members));
@@ -120,55 +115,22 @@ public class ServerThread implements Runnable{
                 //관리자의경우 모든 예약이, 일반사용자의경우 기간내의 자신의 예약이조회된다. 
                 else if(identifier.equals("date")){
                     //Client가 선택한 날짜정보 저장
-                    Date startDate=setDate(sdf.parse(st.nextToken()));
-                    Date endDate=setDate(sdf.parse(st.nextToken()));
+                   smci=new ServerReservationMessageCreate();
+                   sb.append(smci.createMessage(fromClient, members));
+                   ReservationList rl=new ReservationList();
+                   ArrayList<Reservation> list=rl.makeList(sb.toString());
+                   ObjectOutputStream oos=new ObjectOutputStream(socket.getOutputStream());
+                   oos.writeObject(list);
+                   pw=new PrintWriter(socket.getOutputStream(),true);
+                   continue;
                     
-                    sc=new Scanner(new File(path+"reservation.txt"));
-                    
-                    
-                    
-                    firstWhile:
-                    while(sc.hasNext()){
-                        //Scanner에서 reservation.txt파일을 읽어온다.
-                        //reservation.txt - id:name:date:program
-                        //읽은 line을 :로 나누어 날짜를 추출, 날짜를 비교하여 
-                        //2개의 날짜사이의 예약정보를 저장한다.
-                        String readLineScanner=sc.nextLine();
-                        st=new StringTokenizer(readLineScanner, ":");
-                        
-                        //파일에있는 예약정보의 id와 날짜저장
-                        String idFromScanner=st.nextToken();
-                        st.nextToken();
-                        Date date=sdf.parse(st.nextToken());
-                        if(startDate.compareTo(date)==0 ||
-                                startDate.compareTo(date)<0){
-                            //시작일을 찾은경우, 시작일부터 끝일까지의 while문을 다시시작한다.
-                            while(sc.hasNext()){
-                                //보낼자료를 StringBuffer에저장
-                                if(clientId.equals(idFromScanner)||clientId.equals("admin"))
-                                    sb.append("date^").append(readLineScanner).append("\n");
-                                //:을 기준으로 나눠진 자료를 구별한다.
-                                readLineScanner=sc.nextLine();
-                                st=new StringTokenizer(readLineScanner, ":");
-                                idFromScanner=st.nextToken();st.nextToken();
-
-                                date=sdf.parse(st.nextToken());
-                                //끝일을 찾을경우 처음 while문 종료.읽기를 종료한다. 
-                                if(endDate.compareTo(date)<0){
-                                    break firstWhile;
-                                }
-                            }
-                            if(clientId.equals(idFromScanner)||clientId.equals("admin"))
-                                sb.append("date^").append(readLineScanner).append("\n");
-                        }
-                    }
                 }
                 //로그인 요청이들어올경우
                 //Json파일에서 ID와 비밀번호 비교후 비밀번호가 맞을경우 로그인성공 메세지를 보내준다.
                 //데이터형식: login^id^password
                 else if(identifier.equals("login")){
                     smci=new ServerLoginMessageCreate();
-                    sb.append(smci.createMessage(st.nextToken(), memberInfo));
+                    sb.append(smci.createMessage(fromClient, members));
                 }
                 
                 //회원가입
@@ -180,8 +142,7 @@ public class ServerThread implements Runnable{
                     // 회원가입하는 로직
                     smci=new ServerJoinMessageCreate();
                     try{
-                    String str=st.nextToken();
-                    sb.append(  smci.createMessage(str, members));
+                    sb.append(  smci.createMessage(fromClient, members));
                     }catch(Exception e){
                         e.getStackTrace();
                     }
@@ -191,9 +152,6 @@ public class ServerThread implements Runnable{
                  //예약을 원하는 아이디정보를 불러와 예약을 Reservation에저장한다.
                  //데이터형식 - make^id^date:
                  else if(identifier.equals("make")){
-                     
-                     //st=new StringTokenizer(st.nextToken(),":");
-                    // st.nextToken();
                      DataCheck dc=new DataCheck();
                      DataInput di=new DataInput();
                      HandleReservation hr=new HandleReservation();
@@ -211,12 +169,12 @@ public class ServerThread implements Runnable{
                  //Json에서 아이디를 검색하여 결과를 보내줌.
                 
                 //예약정보를 String형태로 정리한다.
-                String reservationList=sb.toString();
-                System.out.println(reservationList);
+                String serverMessage=sb.toString();
+                System.out.println(serverMessage);
                 
                 //Server에게 String형태의 검색결과자료를 broadcast하도록한다.
                 //server.sendReservationList(reservationList);
-                pw.println(reservationList);
+                pw.println(serverMessage);
                 
             }
             
@@ -224,9 +182,7 @@ public class ServerThread implements Runnable{
             //throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
         } catch (IOException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (ParseException ex) {
-            Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (org.json.simple.parser.ParseException ex) {
+        }  catch (org.json.simple.parser.ParseException ex) {
             Logger.getLogger(ServerThread.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

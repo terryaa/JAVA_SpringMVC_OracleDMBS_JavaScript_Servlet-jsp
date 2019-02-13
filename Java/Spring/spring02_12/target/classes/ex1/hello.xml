@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+
+<!--  HelloBean을 SpringContainer로 등록
+	bean으로 등록할 때, 값을 주입 할 수 있다.
+	생성자, setter로. 
+ -->
+ 
+ 
+	<bean id="hello" class="ex1.HelloBean">
+		<property name="msg" value="안녕하세요"/>
+	</bean>
+	
+
+</beans>

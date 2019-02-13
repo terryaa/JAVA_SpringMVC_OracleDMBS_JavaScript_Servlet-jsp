@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<bean id="list1" class="collection.Ex1List">
+		<property name="items">
+		<list>
+			<value>Spring 3.0</value>
+			<value>Spring 4.0</value>
+			<value>Spring 5.0</value>
+		</list>
+		</property>
+	</bean>
+	<bean id="list2" class="collection.Ex1List">
+		<property name="itemsf">
+		<list>
+			<value type="float"> 104410F</value>
+			<value type="float"> 105510F</value>
+			<value type="float"> 106610F</value>
+			
+		</list>
+		</property>
+	</bean>
+	<bean id="listf" class="java.util.ArrayList">
+		<constructor-arg>
+		<array>
+			<value>111.00F</value>
+			<value>142.00F</value>
+			<value>1711.00F</value>
+			<value>8821.00F</value>
+			<value>4121.00F</value>
+			<value>231.00F</value>
+			
+		</array>
+		</constructor-arg>
+	</bean>
+	<bean id="list3" class="collection.Ex1List">
+		<property name="itemsf" ref="listf"/>
+		
+	</bean>
+
+</beans>

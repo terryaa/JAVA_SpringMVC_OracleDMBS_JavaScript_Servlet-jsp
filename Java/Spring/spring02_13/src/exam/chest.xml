@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	<context:annotation-config/>
+	<bean id="sword" class="exam.Sword"/>
+	<bean id="axe" class="exam.Axe"/>
+	<bean id="spear" class="exam.Spear"/>
+	<bean id="shield" class="exam.Shield"/>
+	<bean id="LoggerBeforeAdvice" class="exam.MyBeanBeforeAdvice"/>
+	<bean id="LoggerAfterAdvice" class="exam.MyAfterAdvice"/>
+
+
+	<bean id="LoggerPointCut" class="org.springframework.aop.aspectj.AspectJExpressionPointcut">
+		<property name="expression" value="execution(* draw*(..))"></property>
+	</bean>
+	
+	<bean id="LoggerAfterAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="LoggerAfterAdvice"></property>
+		<property name="pointcut" ref="LoggerPointCut"></property>
+	</bean>
+	<bean id="LoggerAdvisor" class="org.springframework.aop.support.DefaultPointcutAdvisor">
+		<property name="advice" ref="LoggerBeforeAdvice"/>
+		<property name="pointcut" ref="LoggerPointCut"></property>
+	</bean>
+	<bean id="weapon1"
+	class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="sword"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>LoggerAfterAdvisor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="weapon2"
+	class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="axe"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>LoggerAfterAdvisor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="weapon3"
+	class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="spear"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>LoggerAfterAdvisor</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="weapon4"
+	class="org.springframework.aop.framework.ProxyFactoryBean">
+		<property name="target" ref="shield"></property>
+		<property name="interceptorNames">
+			<list>
+				<value>LoggerAdvisor</value>
+			</list>
+		</property>
+	</bean>
+</beans>

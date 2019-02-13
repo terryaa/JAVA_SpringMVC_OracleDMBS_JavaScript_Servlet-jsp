@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+<bean id="pvo" class="ex2.model.domain.ProductVO">
+<property name="name" value="javabook"/>
+<property name="price" value="100000"/>
+</bean>
+<bean id="productDao" class="ex2.model.dao.ProductDAOImple" 
+	p:product-ref="pvo">
+	</bean>
+	<bean id="productService" class="ex2.model.service.ProductServiceImple"
+	p:productDao-ref="productDao">
+	</bean>
+</beans>

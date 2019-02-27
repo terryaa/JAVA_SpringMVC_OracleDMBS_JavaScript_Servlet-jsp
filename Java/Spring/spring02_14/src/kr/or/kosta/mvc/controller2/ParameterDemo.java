@@ -16,7 +16,7 @@ public class ParameterDemo {
 		return "msg";
 	}
 	@RequestMapping(value="/todayMessage2")
-	public String todayParam2(Model m,MyMemberVO v) {
+	public String todayParam2(Model m,MyMemberVO2 v) {
 		m.addAttribute("vo",v);
 		return "msg2";
 	}

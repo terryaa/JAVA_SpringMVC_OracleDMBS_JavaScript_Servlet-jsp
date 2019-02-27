@@ -13,7 +13,7 @@
    <!-- component 스캔 : annotation지정. 해당 package에 잘 해 높은거임. 회사에 가면 도메인을 많이 씀.
     -->
    <mvc:annotation-driven></mvc:annotation-driven>
-    <!-- annotation-driven : 컨트롤러를 좀 더 수월하게 mvc에서 사용하기 위해서 지정 -->3e
+    <!-- annotation-driven : 컨트롤러를 좀 더 수월하게 mvc에서 사용하기 위해서 지정 -->
    
     <mvc:resources location="/resources/"
     mapping="/resources/**"></mvc:resources>

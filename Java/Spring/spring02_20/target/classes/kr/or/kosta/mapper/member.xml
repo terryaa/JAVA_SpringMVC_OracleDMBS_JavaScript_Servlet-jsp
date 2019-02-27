@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+  
+  <mapper namespace="mem">
+  <insert id="addMember" parameterType="mvo">
+  insert into member_tx
+  values(member_tx_seq.nextVal, #{id},#{password},#{name},#{address})
+  </insert>
+  <select id="idChk" parameterType="String" resultType="int">
+  		select count(*) cnt from member_tx
+  		where id=#{id}
+  	</select>
+  	<select id="loginchk" parameterType="mvo" resultType="mvo">
+  		select count(*) cnt, name from member_tx 
+  		where id=#{id} 
+  		and password=#{password} 
+  		group by name
+  	</select>
+  </mapper>
+  

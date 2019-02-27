@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+  
+  <mapper namespace="exam1">
+  
+<!--   1)case1 if문이 필요한 이유 -->
+<!--   만약에 if문으로 동적쿼리를 처리하지 않았을때는 전체데이터를 보여주는 쿼리와 사원의 이름을 보여주는 쿼리에 필요한 셀렉트문이 2개 존재 -->
+  <select id="iftest1" parameterType="hashmap" resultType="svo">
+  	select * from sawon
+  	<if test="saname != null and saname !=''">
+  	where saname like '%' || #{saname} || '%'
+  	</if>
+  	order by 1
+  </select>
+  </mapper>

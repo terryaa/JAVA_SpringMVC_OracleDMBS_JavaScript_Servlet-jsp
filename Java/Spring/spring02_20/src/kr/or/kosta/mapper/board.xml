@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd"> 
+  
+  
+  <mapper namespace="boarder">
+  <insert id="boain" parameterType="bvo">
+  insert into board_tx 
+  values(board_tx_seq.nextVal,#{id},#{title},#{content})
+  </insert>
+  
+  <select id="iftest1" parameterType="hashmap" resultType="bvo">
+  	select * from board_tx
+  	<if test="saname != null and saname !=''">
+  	where title like '%' || #{title} || '%'
+  	</if>
+  	order by 1
+  </select>
+  </mapper>

@@ -6,7 +6,7 @@
   <mapper namespace="mem">
   <insert id="addMember" parameterType="mvo">
   insert into member_tx
-  values(member_tx_seq.nextVal, #{id},#{password},#{name},#{address})
+  values(member_txt_seq.nextVal, #{id},#{password},#{name},#{address})
   </insert>
   <select id="idChk" parameterType="String" resultType="int">
   		select count(*) cnt from member_tx

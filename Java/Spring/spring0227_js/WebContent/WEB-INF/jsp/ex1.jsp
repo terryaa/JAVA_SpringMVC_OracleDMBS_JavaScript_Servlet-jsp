@@ -26,7 +26,7 @@
 // 	$('#wrap').css('background','green');
 // }); onclick="test('green')"onclick="test('orange')"
 
-//이건 비동기식으로안됨 이유는?
+//이건 비동기식으로안됨 이유는? --ready안해서.
 //$('#hide').click(test('orange'));
 //$('#show').click(test('green'));
 

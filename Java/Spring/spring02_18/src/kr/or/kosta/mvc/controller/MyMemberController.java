@@ -55,12 +55,12 @@ public class MyMemberController {
 	}
 	
 	@PostMapping("/loginProcess")
-	public ModelAndView loginProcess(HttpSession session, HttpServletRequest request,MyMemberVO vo
+	public ModelAndView loginProcess(HttpSession session, HttpServletRequest request,MyMemberVO vo,@RequestHeader("User-Agent")String userAgent
 			) 
-	{//,@RequestHeader("User-Agent")String userAgent
+	{
 		System.out.println("id: "+vo.getId());
 		System.out.println("pwd: "+vo.getPwd());
-//		System.out.println("UserAgent"+userAgent);
+		System.out.println("UserAgent"+userAgent);
 		MyMemberVO map = memberDaoInter.loginCheck(vo);
 		ModelAndView mav = new ModelAndView();
 		if(map == null) {

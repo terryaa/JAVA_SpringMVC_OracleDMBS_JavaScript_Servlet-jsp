@@ -19,7 +19,7 @@
 		setInterval(function(){
 			$('tr:odd').css("background", "yellow");
 			$('tr:even').css("background", "pink");
-		},700);
+		},500);
 		
 	});
 </script>

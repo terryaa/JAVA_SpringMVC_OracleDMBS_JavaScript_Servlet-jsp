@@ -14,6 +14,7 @@ to_date(날짜형식의문자열,'형식') : 날짜형식의 문자열을 지정한 형식의 날짜로 변환
 select regexp_replace(sysdate,'/','') from dual;
 
 select to_number('100') + 100 from dual;
+select to_date('1992','yyyy') from dual;
 select to_char(sysdate,'yyyy') to_char(sysdate,'CC'),
 to_char(sysdate,'RRRR')from dual;
 select to_char(sysdate,'YEAR')from dual; -- 영문표기
@@ -43,8 +44,8 @@ select last_day(sysdate) from dual;
 select sname,sahire,add_months(sahire,480) from sawon;
 
 --날짜에 연산되는 round/trunc함수
---기준으로 월에서 반올림
-select sname,sahire,round(sahire,'yyyy') from sawon;
+--기준으로 월에서 반올림, trunc는 소수점 이하를 버림.
+select saname,sahire,round(sahire,'yyyy') from sawon;
 
 --연산함수 ['년-개월']
 select sysdate - to_yminterval('10-01') from dual;
@@ -166,10 +167,10 @@ select deptno,max(sapay) from sawon group by deptno order by 2 desc;
 --rownum:가상 컬럼,임시로 컬럼에 부여되는 일련번호
 --where 절에서 행의 갯수를 제한할때 사용, 공지사항(다섯개의 최신 데이터만..)
 --급여가 많은 세명의 사원을 출력, 번호 함께 출력
-select rownum,sname,sapay  --
+select rownum,saname,sapay
 from sawon  --1번째 실행
-where rownum<=3   --2번째 실행
-order by sapay desc, sname;  --3번째 실행. 이미 rownum이 생성되어있기 떄문에 의미없다.
+where rownum<4   --2번째 실행
+order by sapay desc, saname;  --3번째 실행. 이미 rownum이 생성되어있기 떄문에 의미없다.
 --From -> where -> select -> order by 
 --from 절이 가장 먼저 실행되고 sawon테이블에 rownum가 부여된다.
 --그 이후에 where절이 실행되기 때문에 정렬이 이루어지기 전에 rownum<=3인 row가 선택된다. 
@@ -209,13 +210,13 @@ count(*) "합계" from sawon;
 -where~ : 사용된 테이블간의 관계 또는 조건을 포현
 2.Ansi 문법:on 조건절, 서술형태의 표현
 --조인되는 테이블간의 관계 컬럼명이 같은경우 -ansi
-select sname,deptno,dname from sawon natural join dept;
-select sname,deptno,dname from sawon join dept using(deptno);
+select saname,deptno,dname from sawon natural join dept;
+select saname,deptno,dname from sawon join dept using(deptno);
 --컬럼명이 같아야 되는것을 증명 , 달라서 partition이만들어져서 모든데이터가 합쳐진게아니라 순차적으로나옴 더해진게
-select goname,godam,sname from sawon natural join gogek;
-select goname,godam,sname from sawon join gogek using(godam);
+select goname,godam,saname from sawon natural join gogek;
+select goname,godam,saname from sawon join gogek using(godam);
 --사원명,부서번호,부서명을 출력
-select s.sname,s.deptno,d.dname from sawon s, dept d
+select s.saname,s.deptno,d.dname from sawon s, dept d
 where s.deptno=d.deptno;
 
 select sname,godam,sname from sawon s, gogek g
@@ -224,9 +225,9 @@ where g.godam=s.sabun(+);
 --inner은 join하는 atrribute가 둘다 null이아니여야한다.
 --outer는 left는 우항 null이허용, right은 좌항의 null이 허용 되는 join이다. 
 
-select s.sname,s.deptno,d.dname from safwon s join dept d on (s.deptno=d.deptno);--ansi
+select s.saname,s.deptno,d.dname from sawon s join dept d on (s.deptno=d.deptno);--ansi
 --고객명,전화번호,담당자명을 출력(단,담당자가 없는 고객도 출력)
-select g.goname,g.gotel,s.sname from gogek g, sawon s where g.godam=s.sabun(+);
+select g.goname,g.gotel,s.saname from gogek g, sawon s where g.godam=s.sabun(+);
 select g.goname,g.gotel,s.sname from gogek g left outer join sawon s on (g.godam=s.sabun);
 --사원명,직책,담당자명,직책을출력
 select s.sname, s.sajob,m.sname,m.sajob from sawon s, sawon m where s.samgr=m.sabun(+);
@@ -305,3 +306,10 @@ count(case when to_char(sahire,'yyyy')=1980  then 1 end) +
 count(case when to_char(sahire,'yyyy')=1981  then 1 end) +
 count(case when to_char(sahire,'yyyy')=1982  then 1 end) +
 count(case when to_char(sahire,'yyyy')=1983  then 1 end) !=0  order by 1 desc;
+
+
+--● 변환함수
+● to_char(“날짜 or 숫자”, ‘형식)  : 날짜 또는 숫자를 지정한 형식의 문자열로 반환
+● to_date(날짜형식의 문자열,‘형식’): 날짜형식의 문자열을 지정한 형식의 날짜로변환
+● select to_char(sysdate,'YEAR')from dual; -- 영문표기 //  TWENTY NINETEEN
+● select to_date('1992','yyyy') from =dual;  // 92/03/01

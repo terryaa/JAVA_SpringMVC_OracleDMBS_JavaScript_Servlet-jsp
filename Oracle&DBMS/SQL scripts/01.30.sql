@@ -6,7 +6,7 @@ select dname from dept where deptno=(select deptno from sawon where sname='류별�
 --as만 붙이면 테이블이 복제가된다.  where값에 dummy값(0 ,1등)을 들어오면 schema만 추출하고 데이터는 추출되지않는
 --복사가 이루어진다.
 create table sawon_test as select * from sawon;
-select deptno, sname from sawon_test;
+select deptno, sname from sawon_test
 update sawon_test set sname='류별나' where sabun=24;
 commit;
 select deptno, sname from sawon_test where sname = '류별나';
@@ -18,12 +18,12 @@ select dname from dept where deptno where=(select deptno from sawon_test where s
 select dname from dept where deptno in(select deptno from sawon_test where sname='류별나'); --in을 통하여 다중행 서브쿼리로변경
 --10번부서에 근무하는 사원의 이름과 10분 부서의 부서명을 조인으로 출력
 --group by를 넣으면 무궁화가 10이 1개출력, 안넣으면 2개출력된다. 중복처리가 되고안되고임. 
-select d.deptno,d.dname,s.sname from sawon s, dept d where s.deptno=d.deptno and d.deptno=10; group by d.deptno,d.dname,s.sname;
+select d.deptno,d.dname,s.saname from sawon s, dept d where s.deptno=d.deptno and d.deptno=10; group by d.deptno,d.dname,s.sname;
 select * from sawon s, dept d where d.deptno=10 and s.deptno=10;
 --인라인 뷰로 바꾸기
 --위의 join은 테이블의 모든 튜플에 대하여 join을 한 뒤에 deptno=10을 찾는다.
 --인라인뷰는 먼저 10 총무부 를 만든다음에 sawon과 비교를 하기때문에 전체비교+전체비교 보다는 인라인뷰가 더 속도가 빠르다.
-select s.sname,d.dname from sawon s, (select deptno,sname from dept where deptno=10) 
+select s.saname, s.deptno from sawon s, (select deptno from dept where deptno=10) d 
 where s.deptno=d.deptno;
 --사원들의 평균 급여보다 더 많은 급여를 받는 사원을 검색해보자. 
 select  sname , sapay from sawon where sapay > (select avg(nvl(sapay,0)) from sawon) ;
@@ -60,7 +60,7 @@ and sname!='강감찬';
 --distinct 중복된 컬럼의 값을 제거
 select distinct deptno from sawon where sapay>=3000;
 select deptno from sawon where sapay>=3000;
-select sname, deptno from sawon where deptno in(select distinct deptno from sawon where sapay>=3000);
+select saname, deptno from sawon where deptno in(select distinct deptno from sawon where sapay>=3000);
 --distinct : 를 사용하나 마나 같은 결과가 나오지만
 --어떤점이 다를것인가?
 
@@ -68,7 +68,7 @@ select sname, deptno from sawon where deptno in(select distinct deptno from sawo
 찾아진값에대해서 aand연산을 해서 모두 참이면 참이 되는 샘이다.
 < ALL : 최소값을 반환
 > ALL : 최대값 반환
-
+where sapay > ALL(select sapay from sawon where deptno=30);
 --부서번호가 30qjs사원들 중에서 급여를 가장 많이 받은 사원 보다 더 많은 급여를 받는 사람의 이름,급여를 출력하는 예제이다.
 4003보다 높은 사원들만 출력될것이다.
 select max(sapay) from sawon where deptno=30;
@@ -82,7 +82,7 @@ ANY,SOME 연산자
 <ANY 최대값
 --부서번호가 30번 사우너들의 급여중 가장 작은 값돕다 많은 급여를 받은 사우너의 이름과 급여를 출력
 select min(sapay from sawon where deptno=30;
-select sname,sapay from sawon where sapay > ANY(select sapay from sawon where deptno=30);
+select saname,sapay from sawon where sapay < ANY(select sapay from sawon where deptno=30);
 
 --부서번호가 10인 사원이 존재하면 모든 부서의 이름을 출력!
 select dname from dept where exists (select sabun from sawon where deptno=10);

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="sawon">
+	<!-- ResultMap 예제1 -->
+	<resultMap type="dvo" id="deptResultMap">
+		<constructor><!-- 생성자 -->
+			<idArg column="deptno" javaType="java.lang.Integer"/>
+			<!-- idArg 식별자 인덱스 기능이있는 컬럼 ex) pk arg 자료형 -->
+			<arg column="dname" javaType="java.lang.String"/>
+		</constructor>
+		<result property="loc" column="location" />
+	</resultMap>
+	<select id="showDept" resultMap="deptResultMap">
+		select deptno, dname, loc location from dept
+		order by 1
+	</select>
+	
+	
+	<!-- resultmap 예제 2/ Association -->
+<!-- 	 예제 1 hasone : 사원 한명당 phone를 가지는 관계  SawonVO에서 SawonPhoneVO 를 가지는 관계 -->
+<!-- 	 private SawonPhoneVO sphone; -->
+<!-- 	 resultMap의 타입을 sawonVO로 지정한다. -->
+	
+	<resultMap type="savo" id="sawonphoneResult">
+		<id property="sabun" column="sabun"/>
+		<association property="sphone" column="sabun" javaType="shvo" select="sawonPhone">
+		</association>
+	</resultMap>
+<!-- 	외부에서 사원이 가지고 있느 폰의 정보를 출력하기 위한 쿼리문을 각각 만든다. -->
+<!-- 	resultMap에서 select 속성으로 아래의 sawonPhone을 읽어와서 shvo에 넣어준다. -->
+	<select id="sawondetail" resultMap="sawonphoneResult" parameterType="int">
+		select sabun,saname,sajob from sawon
+		where sabun =#{sabun}
+	</select>
+	<select id="sawonPhone" resultType="shvo">
+		select pnum,pmodel,phnum,pdate from sawon_phone where pnum=#{pnum}
+	</select>
+	
+	
+<!-- 	resultMap 예제2/ Association 예제2 -->
+	<resultMap type="savo" id="sawonphoneResult2">
+		<id property="sabun" column="sabun" />
+		<result property="saname" column="saname" />
+		<result property="sajob" column="sajob" />
+		<association property="sphone" column="sabun"
+			javaType="shvo">
+			<id property="pnum" column="pnum" />
+			<result property="pnum" column="pnum" />
+			<result property="pmodel" column="pmodel" />
+			<result property="phnum" column="phnum" />
+		</association>
+	</resultMap>
+	<select id="sawonlist2" resultMap="sawonphoneResult2">
+		select s.sabun sabun,s.saname saname,s.sajob sajob, p.pnum pnum, 
+		p.pmodel pmodel, p.phnum phnum, p.pdate pdate 
+		from sawon s, sawon_phone p
+		where s.sabun=p.pnum(+)
+	</select>
+
+	<!-- resultMap예제3/ dept와 sawon은 1:N의 관계 public class DeptVO{//ResultMap 
+		-부서 1: N 관계 private List<SawonVO> sawon; -->
+	<resultMap type="dvo" id="deptsawonResult">
+		<id property="deptno" column="deptno" />
+		<result property="dname" column="dname" />
+		<collection property="sawon" javaType="java.util.List"
+			resultMap="sawonResult" ofType="savo" />
+	</resultMap>
+	<!-- collection 될 ResultMap -->
+	<resultMap type="savo" id="sawonResult">
+		<id property="sabun" column="sabun" javaType="int" />
+		<result property="saname" column="saname" />
+		<result property="sajob" column="sajob" />
+		<result property="sapay" column="sapay" />
+	</resultMap>
+	<select id="deptList" resultMap="deptsawonResult"
+		parameterType="int">
+		select s.sabun sabun, s.saname saname, s.sajob sajob,
+		s.sapay sapay,
+		d.deptno deptno, d.dname dname
+		from sawon s, dept d
+		where d.deptno=s.deptno and d.deptno=#{deptno}
+	</select>
+	
+	<!-- ................................................... -->
+	<select id="deptphonelist" resultMap="deptsawonPhoneResult"
+      parameterType="int">
+      select s.sabun sabun, s.saname saname, s.sajob sajob,
+      s.sapay sapay, d.deptno deptno, d.dname dname, p.pnum pnum, p.pmodel
+      pmodel, p.phnum phnum, p.pdate pdate from sawon s, dept d, sawon_phone p
+      where d.deptno=s.deptno and s.sabun=p.pnum(+) and d.deptno= #{deptno}
+   </select>
+   
+   
+   <resultMap type="dvo" id="deptsawonPhoneResult">
+      <id property="deptno" column="deptno" javaType="int" />
+      <result property="dname" column="dname" />
+      <collection property="sawon" javaType="java.util.List"
+         resultMap="sawon_Result" ofType="savo">
+      </collection>
+   </resultMap>
+
+   <!-- collection이 될 resultMap -->
+   <resultMap type="savo" id="sawon_Result">
+      <id property="sabun" column="sabun" javaType="int" />
+      <result property="sabun" column="sabun" />
+      <result property="saname" column="saname" />
+      <result property="sajob" column="sajob" />
+      <result property="sapay" column="sapay" />
+      <association property="sphone" column="sabun" javaType="shvo">
+         <id property="pnum" column="pnum"/>
+         <result property="pdate" column="pdate"/>
+         <result property="pmodel" column="pmodel"/>
+         <result property="phnum" column="phnum"/>
+      </association>
+   </resultMap>
+</mapper>

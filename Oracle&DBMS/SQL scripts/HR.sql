@@ -30,3 +30,5 @@ select first_name,last_name, salary from employees where department_id in
 ( select department_id from employees 
 where( regexp_like (first_name,'[s]|[S]') or regexp_like(last_name,'[s]||[S]') )  )
 and salary>(select avg(salary) from employees);
+
+select * from member_tx;

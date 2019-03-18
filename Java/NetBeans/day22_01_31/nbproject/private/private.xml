@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project-private xmlns="http://www.netbeans.org/ns/project-private/1">
+    <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
-        <group/>
+        <group>
+            <file>file:/C:/bigdata/KOSTA_MAC/Java/NetBeans/day22_01_31/src/day22_01_31/Sawon.java</file>
+            <file>file:/C:/bigdata/KOSTA_MAC/Java/NetBeans/day22_01_31/src/day22_01_31/SawonMain.java</file>
+            <file>file:/C:/bigdata/KOSTA_MAC/Java/NetBeans/day22_01_31/src/day22_01_31/MyConn.java</file>
+            <file>file:/C:/bigdata/KOSTA_MAC/Java/NetBeans/day22_01_31/src/day22_01_31/DeptVO.java</file>
+            <file>file:/C:/bigdata/KOSTA_MAC/Java/NetBeans/day22_01_31/src/day22_01_31/SawonDao.java</file>
+        </group>
     </open-files>
 </project-private>

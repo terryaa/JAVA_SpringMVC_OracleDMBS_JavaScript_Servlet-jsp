@@ -8,6 +8,7 @@
 <title>template.jsp</title>
 <link rel="stylesheet" href="resources/css/basic.css" type="text/css"/>
 <link rel="stylesheet" href="resources/css/style.css" type="text/css"/>
+<link rel="stylesheet" href="resources/css/default.css" type="text/css"/>
 </head>
 <body>
 	<div id="wrap">

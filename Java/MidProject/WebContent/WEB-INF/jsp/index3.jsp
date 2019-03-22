@@ -1,9 +1,10 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="kr">
 
 <head>
- <meta charset="UTF-8">
+  <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">
   <meta name="author" content="Dashboard">
@@ -15,7 +16,7 @@
   <link href="img/apple-touch-icon.png" rel="apple-touch-icon">
 
   <!-- Bootstrap core CSS -->
-   <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+  <link href="lib/bootstrap/css/bootstrap.min.css" rel="stylesheet">
   <!--external css-->
   <link href="lib/font-awesome/css/font-awesome.css" rel="stylesheet" />
   <link rel="stylesheet" type="text/css" href="css/zabuto_calendar.css">
@@ -361,6 +362,9 @@
       </div>
     </aside>
     <!--sidebar end-->
+      </div>
+    </aside>
+    <!--sidebar end-->
     <!-- **********************************************************************************************************************************************************
         MAIN CONTENT
         *********************************************************************************************************************************************************** -->
@@ -623,14 +627,14 @@
 												<table class="table table-hover">
 													<tr>
 														<td>판권 개수</td>
-														<td>${purchase_pastmonth } 개</td>
+														<td>123,356</td>
 													</tr>
 													<tr>
 														<td>판권 구매액</td>
-														<td>${copyrightcost_pastmonth} 원</td>
+														<td>123,1234원</td>
 												</table>
 											</td>
-											<td align="left">${investment_pastmonth }원</td>
+											<td align="left">123,456원</td>
 											<td align="left">60%</td>
 										</tr>
 										<tr>
@@ -639,14 +643,14 @@
 												<table class="table table-hover">
 													<tr>
 														<td>판권 개수</td>
-														<td>${purchase_thismonth } 개</td>
+														<td>6</td>
 													</tr>
 													<tr>
 														<td>판권 구매액</td>
-														<td>${copyrightcost_thismonth} 원</td>
+														<td>123,1234원</td>
 												</table>
 											</td>
-											<td align="left">${investment_thismonth } 원</td>
+											<td align="left">123,456원</td>
 											<td align="left">10%</td>
 										</tr>
 										<tr>
@@ -655,7 +659,7 @@
 												<table class="table table-hover">
 													<tr>
 														<td>판권 개수</td>
-														<td>6 개</td>
+														<td>6</td>
 													</tr>
 													<tr>
 														<td>판권 구매액</td>
@@ -691,13 +695,13 @@
                   }
                 ];
                 var myPie = new Chart(document.getElementById("newchart").getContext("2d")).Pie(pieData);
-//                 window.onload=function(){
-//               	  $('#newchart').on('click',function(){
-//               		 doughnutData[0].value=10;
-//               		 doughnutData[1].value=90;
-//               	  });
-//               	  console.log(doughnutData[0].value);
-//                 };
+                window.onload=function(){
+              	  $('#newchart').on('click',function(){
+              		 doughnutData[0].value=10;
+              		 doughnutData[1].value=90;
+              	  });
+              	  console.log(doughnutData[0].value);
+                };
                 
               </script>
             </div>
@@ -881,7 +885,7 @@
     $(document).ready(function() {
       var unique_id = $.gritter.add({
         // (string | mandatory) the heading of the notification
-           title: '와플렉스 관리자페이지입니다.',
+        title: '와플렉스 관리자페이지입니다.',
         // (string | mandatory) the text inside the notification
         text: '오늘은 어떤 관리를 하실 예정이십니까?',
         // (string | optional) the image to display on the left
@@ -939,7 +943,13 @@
       console.log('nav ' + nav + ' to: ' + to.month + '/' + to.year);
     }
   </script>
+  <script type="text/javascript">
+  $(document).ready(function() {
+
+  });
+  </script>
 </body>
+<!-- script for this page / canvasjs -->
 <!-- canvasJS 실행을 위한 부분 시작 -->
 <script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="lib/canvasjs-conf3.js" type="text/javascript"></script>
@@ -964,7 +974,11 @@ document.write(unescape("%"+"3Cscript src='" + tocplusHost + "kr07.tocplus007.co
 </script>
 <!-- End of Tocplus 채팅봇 설정 끝 -->
 
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script> -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+
+
 
 <!-- <script src="/webjars/jquery/2.1.3/dist/jquery.min.js"></script> -->
 <!-- <script src="/webjars/bootstrap/3.3.4/dist/js/bootstrap.min.js"></script> -->

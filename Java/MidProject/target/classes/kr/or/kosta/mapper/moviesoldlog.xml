@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="moviesoldlog">
+<!-- 모든 영화 구매 로그 카운트 -->
+	<select id="moviesoldlogcount_all" resultType="int">
+		select count (*) from moviesoldlog
+	</select>
+<!-- 오늘의 영화 구매로그 카운트 -->
+	<select id="moviesoldlogcount_currentdate" resultType="int">
+		select count (*) from moviesoldlog where movie_sold_date like sysdate
+	</select>
+		<!-- 최근 5일간의 영화 구매 수 카운트(배열) -->
+	<select id="moviesoldlogcount_days" resultType="int">
+		<![CDATA[
+		select count(*) from moviesoldlog
+		group by movie_sold_date
+		having movie_sold_date<=sysdate and movie_sold_date>=(sysdate-5) order by
+		movie_sold_date asc
+		]]>
+	</select>
+		<!-- 최근 5달간의  영화 구매 수 카운트(배열) -->
+	<select id="moviesoldlogcount_months" resultType="int">
+		<![CDATA[
+		select sum(count) from
+		(select movie_sold_date ,count(*) as count from moviesoldlog
+		group by movie_sold_date
+		having movie_sold_date <=last_day(sysdate) and movie_sold_date >=last_day(
+		add_months(sysdate,-5) )
+		order by movie_sold_date asc)
+		group by extract(month from movie_sold_date )
+		order by extract(month from movie_sold_date ) asc
+		]]>
+	</select>
+		<!-- 최근 5년간의  영화 구매 수 카운트(배열) -->
+	<select id="moviesoldlogcount_years" resultType="int">
+		<![CDATA[
+		select  count(*) from moviesoldlog
+		group by extract(year from movie_sold_date)
+		having
+		extract(year from movie_sold_date) <= extract(year from sysdate) and
+		extract(year from movie_sold_date) >= (extract(year from sysdate)-4)
+		order by extract(year from movie_sold_date) asc
+		]]>
+	</select>
+</mapper>

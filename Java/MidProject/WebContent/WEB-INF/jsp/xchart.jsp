@@ -3,6 +3,25 @@
 <html lang="kr">
 
 <head>
+<style>
+.chart {
+    position: absolute;
+    background: #EEE;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    -ms-border-radius: 3px;
+    -o-border-radius: 3px;
+    border-radius: 3px;
+    padding: 5px;
+    -webkit-box-shadow: 0 1px 3px #000;
+    -moz-box-shadow: 0 1px 3px #000;
+    -ms-box-shadow: 0 1px 3px #000;
+    -o-box-shadow: 0 1px 3px #000;
+    box-shadow: 0 1px 3px #000;
+    border-collapse: separate;
+    display: none;
+}
+</style>
  <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="">

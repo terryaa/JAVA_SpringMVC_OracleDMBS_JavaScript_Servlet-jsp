@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+
+<mapper namespace="loginlog">
+<!-- 모든 로그인 기록 수 카운트 -->
+	<select id="loginlogcount_all" resultType="int">
+		select count (*) from loginlog
+	</select>
+<!-- 오늘의 로그인로그 개수 카운트 -->
+	<select id="loginlogcount_currentdate" resultType="int">
+		select count
+		(*) from loginlog where loginglog_login like sysdate
+	</select>
+	<!-- 최근 5일간의 로그인 회원의 수 카운트(배열) -->
+	<select id="loginlogcount_days" resultType="int">
+	<![CDATA[
+select count(*) from loginlog
+group by loginglog_login 
+having loginglog_login<=sysdate and loginglog_login>=(sysdate-5) order by loginglog_login asc
+]]>
+	</select>
+		<!-- 최근 5달간의 로그인 회원의 수 카운트(배열) -->
+		<select id="loginlogcount_months" resultType="int">
+		
+			<![CDATA[
+select sum(count) from 
+(select loginglog_login ,count(*) as count from loginlog
+group by loginglog_login
+having loginglog_login <=last_day(sysdate) and loginglog_login>=last_day( add_months(sysdate,-5) )
+order by loginglog_login asc)
+group by extract(month from loginglog_login)
+order by extract(month from loginglog_login) asc
+]]>
+
+	</select>
+		<!-- 최근 5년간의 로그인 회원의 수 카운트(배열) -->
+	<select id="loginlogcount_years" resultType="int">
+				<![CDATA[
+select  count(*) from loginlog
+group by extract(year from loginglog_login)
+having 
+extract(year from loginglog_login) <= extract(year from sysdate) and
+extract(year from loginglog_login) >=  (extract(year from sysdate)-4)
+order by extract(year from loginglog_login) asc
+]]>
+	</select>
+
+</mapper>

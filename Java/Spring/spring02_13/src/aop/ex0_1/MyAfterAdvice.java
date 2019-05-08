@@ -4,7 +4,6 @@ import java.lang.reflect.Method;
 
 import org.springframework.aop.AfterReturningAdvice;
 
-import oracle.net.aso.r;
 
 public class MyAfterAdvice implements AfterReturningAdvice {
 

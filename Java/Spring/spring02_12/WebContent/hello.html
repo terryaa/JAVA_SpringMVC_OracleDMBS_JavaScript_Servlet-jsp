@@ -1,0 +1,24 @@
+<meta charset="EUC-KR">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>Insert title here</title>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+<script>
+	$(function(){
+		$('#btn').click(function(){
+			$('p').text("jQuery도 동장이 됩니다.");
+		});
+	});
+</script>
+</head>
+<body>
+<h1> render_templae 예제</h1>
+<p> 안녕하세요. Flask randerTemplate 예제입니다.</p>
+<input type='button' id='btn' value='click'>
+<ul>
+	<li><a href="/main?name=kim&msg=himan">main으로</a></li>
+</ul>
+</body>
+</html>

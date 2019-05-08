@@ -9,7 +9,7 @@
 	<configs>
 		<config>src/aop/ex1/ex1_aop.xml</config>
 		<config>src/aop/ex2/ex2_anno.xml</config>
-		<config>WebContent/WEB-INF/kosta-spring.xml</config>
+		<config>WebContent/WEB-INF/jsp/kosta-spring.xml</config>
 	</configs>
 	<autoconfigs>
 	</autoconfigs>
